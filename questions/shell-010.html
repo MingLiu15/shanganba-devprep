@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>awk文本处理 - Shell脚本面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**基本语法：** `awk &#039;pattern {action}&#039; file`  **内置变量：** - `$0` - 整行 - `$1,$2...` - 第n个字段 - `NF` - 字段数 - `NR` - 行号 - `FNR` - 当前文件行号 - `FS` - 字段分隔符（默认空格） - `OFS` - 输出分...">
+<meta name="keywords" content="awk文本处理,Shell脚本面试题,awk, 文本处理, 字段处理, 报表生成,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/shell-010.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="awk文本处理 - Shell脚本面试题">
+<meta property="og:description" content="**基本语法：** `awk &#039;pattern {action}&#039; file`  **内置变量：** - `$0` - 整行 - `$1,$2...` - 第n个字段 - `NF` - 字段数 - `NR` - 行号 - `FNR` - 当前文件行号 - `FS` - 字段分隔符（默认空格） - `OFS` - 输出分...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/shell-010.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "awk文本处理",
+    "text": "awk命令如何使用？有哪些常用操作？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**基本语法：** `awk &#039;pattern {action}&#039; file`  **内置变量：** - `$0` - 整行 - `$1,$2...` - 第n个字段 - `NF` - 字段数 - `NR` - 行号 - `FNR` - 当前文件行号 - `FS` - 字段分隔符（默认空格） - `OFS` - 输出分隔符 - `RS` - 记录分隔符 - `FILENAME` - 当前文件名  **常用模式：** - `/pattern/` - 正则匹配 - `expression` - 条件表达式 - `BEGIN` - 处理前执行 - `END` - 处理后执行  **内置函数：** - `print`、`printf` - 输出 - `length()` - 字符串长度 - `substr()` - 子串 - `split()` - 分割 - `gsub()/sub()` - 替换"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>awk文本处理</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Shell脚本</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：awk, 文本处理, 字段处理, 报表生成</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>awk命令如何使用？有哪些常用操作？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**基本语法：**</div><div class="answer-line">`awk &#039;pattern {action}&#039; file`</div><br><div class="answer-line">**内置变量：**</div><div class="answer-line">- `$0` - 整行</div><div class="answer-line">- `$1,$2...` - 第n个字段</div><div class="answer-line">- `NF` - 字段数</div><div class="answer-line">- `NR` - 行号</div><div class="answer-line">- `FNR` - 当前文件行号</div><div class="answer-line">- `FS` - 字段分隔符（默认空格）</div><div class="answer-line">- `OFS` - 输出分隔符</div><div class="answer-line">- `RS` - 记录分隔符</div><div class="answer-line">- `FILENAME` - 当前文件名</div><br><div class="answer-line">**常用模式：**</div><div class="answer-line">- `/pattern/` - 正则匹配</div><div class="answer-line">- `expression` - 条件表达式</div><div class="answer-line">- `BEGIN` - 处理前执行</div><div class="answer-line">- `END` - 处理后执行</div><br><div class="answer-line">**内置函数：**</div><div class="answer-line">- `print`、`printf` - 输出</div><div class="answer-line">- `length()` - 字符串长度</div><div class="answer-line">- `substr()` - 子串</div><div class="answer-line">- `split()` - 分割</div><div class="answer-line">- `gsub()/sub()` - 替换</div></div>
+  </div>
+  
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

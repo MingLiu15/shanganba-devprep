@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>awk自定义函数与关联数组 - Shell脚本面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**自定义函数：** - function name(params) { statements; return value } - 支持递归调用 - 可以定义在BEGIN块之前  **关联数组：** - 键可以是字符串或数字 - 自动创建，无需声明 - 支持in运算符检查键存在 - delete array[key]删...">
+<meta name="keywords" content="awk自定义函数与关联数组,Shell脚本面试题,awk, 自定义函数, 关联数组, 数组排序, 高级用法,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/shell-033.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="awk自定义函数与关联数组 - Shell脚本面试题">
+<meta property="og:description" content="**自定义函数：** - function name(params) { statements; return value } - 支持递归调用 - 可以定义在BEGIN块之前  **关联数组：** - 键可以是字符串或数字 - 自动创建，无需声明 - 支持in运算符检查键存在 - delete array[key]删...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/shell-033.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "awk自定义函数与关联数组",
+    "text": "awk的自定义函数和关联数组有哪些高级用法？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**自定义函数：** - function name(params) { statements; return value } - 支持递归调用 - 可以定义在BEGIN块之前  **关联数组：** - 键可以是字符串或数字 - 自动创建，无需声明 - 支持in运算符检查键存在 - delete array[key]删除元素  **数组操作：** - asort()：值排序 - asorti()：键排序 - split()：字符串分割 - PROCINFO[&quot;sorted_in&quot;]：控制遍历顺序  **高级技巧：** - 二维数组模拟 - 数组去重 - 动态键构建"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>awk自定义函数与关联数组</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Shell脚本</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：awk, 自定义函数, 关联数组, 数组排序, 高级用法</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>awk的自定义函数和关联数组有哪些高级用法？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**自定义函数：**</div><div class="answer-line">- function name(params) { statements; return value }</div><div class="answer-line">- 支持递归调用</div><div class="answer-line">- 可以定义在BEGIN块之前</div><br><div class="answer-line">**关联数组：**</div><div class="answer-line">- 键可以是字符串或数字</div><div class="answer-line">- 自动创建，无需声明</div><div class="answer-line">- 支持in运算符检查键存在</div><div class="answer-line">- delete array[key]删除元素</div><br><div class="answer-line">**数组操作：**</div><div class="answer-line">- asort()：值排序</div><div class="answer-line">- asorti()：键排序</div><div class="answer-line">- split()：字符串分割</div><div class="answer-line">- PROCINFO[&quot;sorted_in&quot;]：控制遍历顺序</div><br><div class="answer-line">**高级技巧：**</div><div class="answer-line">- 二维数组模拟</div><div class="answer-line">- 数组去重</div><div class="answer-line">- 动态键构建</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">awk_examples = &quot;&quot;&quot;
+# 定义函数
+function max(a, b) { return (a &gt; b) ? a : b }
+{ print max($1, $2) }
+
+# 关联数组
+{ count[$1]++ }
+END { for (name in count) print name, count[name] }
+
+# asort排序
+END { n = asort(count, s); for(i=1; i&lt;=n; i++) print s[i] }
+
+# split函数
+n = split($1, parts, &quot;:&quot;); for(i=1; i&lt;=n; i++) print parts[i]
+
+# 统计日志
+awk &#039;{count[$7]++} END { for(url in count) print count[url], url}&#039; access.log
+&quot;&quot;&quot;
+print(awk_examples)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

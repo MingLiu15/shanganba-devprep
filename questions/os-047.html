@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCP/IP协议栈详解 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**TCP/IP四层模型：**  1. **应用层：**    - HTTP/HTTPS：Web通信    - FTP：文件传输    - SMTP/POP3/IMAP：邮件    - DNS：域名解析    - SSH/Telnet：远程登录  2. **传输层：**    - TCP：面向连接，可靠传输    - ...">
+<meta name="keywords" content="TCP/IP协议栈详解,操作系统面试题,TCP/IP, 网络协议, OSI, socket, 网络编程,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-047.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP/IP协议栈详解 - 操作系统面试题">
+<meta property="og:description" content="**TCP/IP四层模型：**  1. **应用层：**    - HTTP/HTTPS：Web通信    - FTP：文件传输    - SMTP/POP3/IMAP：邮件    - DNS：域名解析    - SSH/Telnet：远程登录  2. **传输层：**    - TCP：面向连接，可靠传输    - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-047.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "TCP/IP协议栈详解",
+    "text": "TCP/IP协议栈的分层结构是什么？各层的主要协议有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**TCP/IP四层模型：**  1. **应用层：**    - HTTP/HTTPS：Web通信    - FTP：文件传输    - SMTP/POP3/IMAP：邮件    - DNS：域名解析    - SSH/Telnet：远程登录  2. **传输层：**    - TCP：面向连接，可靠传输    - UDP：无连接，快速传输    - 端口：标识应用进程  3. **网络层：**    - IP：逻辑寻址和路由    - ICMP：网络诊断（ping）    - ARP：IP地址转MAC地址  4. **链路层：**    - Ethernet：局域网通信    - MAC地址：物理寻址    - 帧：数据链路层传输单位"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>TCP/IP协议栈详解</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：TCP/IP, 网络协议, OSI, socket, 网络编程</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>TCP/IP协议栈的分层结构是什么？各层的主要协议有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**TCP/IP四层模型：**</div><br><div class="answer-line"><strong>1. **应用层：**</strong></div><div class="answer-line">   - HTTP/HTTPS：Web通信</div><div class="answer-line">   - FTP：文件传输</div><div class="answer-line">   - SMTP/POP3/IMAP：邮件</div><div class="answer-line">   - DNS：域名解析</div><div class="answer-line">   - SSH/Telnet：远程登录</div><br><div class="answer-line"><strong>2. **传输层：**</strong></div><div class="answer-line">   - TCP：面向连接，可靠传输</div><div class="answer-line">   - UDP：无连接，快速传输</div><div class="answer-line">   - 端口：标识应用进程</div><br><div class="answer-line"><strong>3. **网络层：**</strong></div><div class="answer-line">   - IP：逻辑寻址和路由</div><div class="answer-line">   - ICMP：网络诊断（ping）</div><div class="answer-line">   - ARP：IP地址转MAC地址</div><br><div class="answer-line"><strong>4. **链路层：**</strong></div><div class="answer-line">   - Ethernet：局域网通信</div><div class="answer-line">   - MAC地址：物理寻址</div><div class="answer-line">   - 帧：数据链路层传输单位</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># socket编程示例
+import socket
+
+# TCP客户端
+def tcp_client():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((&quot;example.com&quot;, 80))
+    s.send(b&quot;GET / HTTP/1.1\r\nHost: example.com\r\n\r\n&quot;)
+    data = s.recv(1024)
+    s.close()
+    return data
+
+# TCP服务器
+def tcp_server():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((&quot;0.0.0.0&quot;, 8080))
+    s.listen(5)
+    while True:
+        conn, addr = s.accept()
+        data = conn.recv(1024)
+        conn.send(b&quot;Hello&quot;)
+        conn.close()</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

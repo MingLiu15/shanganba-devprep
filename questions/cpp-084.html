@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++11/14 异常处理与noexcept - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**异常处理基础：** - try/catch/throw机制 - 异常类层次结构（std::exception） - 栈展开（stack unwinding）  **C++11改进：** - noexcept关键字替代throw() - 异常规范被弃用（dynamic exception specification）...">
+<meta name="keywords" content="C++11/14 异常处理与noexcept,C/C++面试题,C++11, 异常处理, noexcept, 异常安全, 现代C++,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-084.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11/14 异常处理与noexcept - C/C++面试题">
+<meta property="og:description" content="**异常处理基础：** - try/catch/throw机制 - 异常类层次结构（std::exception） - 栈展开（stack unwinding）  **C++11改进：** - noexcept关键字替代throw() - 异常规范被弃用（dynamic exception specification）...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-084.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++11/14 异常处理与noexcept",
+    "text": "C++11的异常处理机制有什么改进？noexcept关键字的作用是什么？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**异常处理基础：** - try/catch/throw机制 - 异常类层次结构（std::exception） - 栈展开（stack unwinding）  **C++11改进：** - noexcept关键字替代throw() - 异常规范被弃用（dynamic exception specification） - std::nested_exception和std::throw_with_nested - std::current_exception和std::rethrow_exception  **noexcept关键字：** - 承诺函数不抛出异常 - 用于移动构造函数、移动赋值运算符 - 编译器可以优化noexcept函数 - 条件noexcept：noexcept(expression)  **异常安全保证：** - 基本保证：异常发生时对象处于有效状态 - 强保证：异常发生时状态不变 - 不抛异常保证：承诺不抛出异常"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++11/14 异常处理与noexcept</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：C++11, 异常处理, noexcept, 异常安全, 现代C++</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++11的异常处理机制有什么改进？noexcept关键字的作用是什么？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**异常处理基础：**</div><div class="answer-line">- try/catch/throw机制</div><div class="answer-line">- 异常类层次结构（std::exception）</div><div class="answer-line">- 栈展开（stack unwinding）</div><br><div class="answer-line">**C++11改进：**</div><div class="answer-line">- noexcept关键字替代throw()</div><div class="answer-line">- 异常规范被弃用（dynamic exception specification）</div><div class="answer-line">- std::nested_exception和std::throw_with_nested</div><div class="answer-line">- std::current_exception和std::rethrow_exception</div><br><div class="answer-line">**noexcept关键字：**</div><div class="answer-line">- 承诺函数不抛出异常</div><div class="answer-line">- 用于移动构造函数、移动赋值运算符</div><div class="answer-line">- 编译器可以优化noexcept函数</div><div class="answer-line">- 条件noexcept：noexcept(expression)</div><br><div class="answer-line">**异常安全保证：**</div><div class="answer-line">- 基本保证：异常发生时对象处于有效状态</div><div class="answer-line">- 强保证：异常发生时状态不变</div><div class="answer-line">- 不抛异常保证：承诺不抛出异常</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;vector&gt;
+
+// noexcept函数
+void safe_function() noexcept {
+    // 承诺不抛出异常
+}
+
+// 条件noexcept
+template&lt;typename T&gt;
+void swap(T&amp; a, T&amp; b) noexcept(noexcept(T(std::declval&lt;T&gt;())) &amp;&amp; noexcept(std::declval&lt;T&gt;() = std::declval&lt;T&gt;())) {
+    T temp = std::move(a);
+    a = std::move(b);
+    b = std::move(temp);
+}
+
+// 异常类层次
+class MyException : public std::exception {
+    const char* msg;
+public:
+    MyException(const char* m) : msg(m) {}
+    const char* what() const noexcept override {
+        return msg;
+    }
+};
+
+// 异常安全示例
+class Resource {
+    int* data;
+public:
+    Resource() : data(new int[100]) {
+        std::cout &lt;&lt; &quot;Resource acquired&quot; &lt;&lt; std::endl;
+    }
+    
+    ~Resource() {
+        delete[] data;
+        std::cout &lt;&lt; &quot;Resource released&quot; &lt;&lt; std::endl;
+    }
+    
+    // 移动操作标记为noexcept
+    Resource(Resource&amp;&amp; other) noexcept : data(other.data) {
+        other.data = nullptr;
+    }
+    
+    Resource&amp; operator=(Resource&amp;&amp; other) noexcept {
+        if (this != &amp;other) {
+            delete[] data;
+            data = other.data;
+            other.data = nullptr;
+        }
+        return *this;
+    }
+};
+
+void risky_function(bool should_throw) {
+    Resource r;  // RAII保证资源释放
+    if (should_throw) {
+        throw MyException(&quot;Something went wrong&quot;);
+    }
+}
+
+int main() {
+    // 基本异常处理
+    try {
+        risky_function(true);
+    } catch (const MyException&amp; e) {
+        std::cout &lt;&lt; &quot;Caught: &quot; &lt;&lt; e.what() &lt;&lt; std::endl;
+    } catch (const std::exception&amp; e) {
+        std::cout &lt;&lt; &quot;Standard exception: &quot; &lt;&lt; e.what() &lt;&lt; std::endl;
+    } catch (...) {
+        std::cout &lt;&lt; &quot;Unknown exception&quot; &lt;&lt; std::endl;
+    }
+    
+    // noexcept检查
+    std::cout &lt;&lt; &quot;safe_function is noexcept: &quot; &lt;&lt; noexcept(safe_function()) &lt;&lt; std::endl;
+    
+    return 0;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

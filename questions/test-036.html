@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试数据管理与脱敏 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**测试数据类型：** - 生产数据脱敏 - 合成数据生成 - 子集抽样 - 模糊测试数据  **数据脱敏方法：** - 替换：姓名-&gt;随机名 - 遮蔽：身份证号-&gt;110***********1234 - 加密：敏感字段加密存储 - 泛化：年龄32-&gt;30-35年龄段  **脱敏工具：** - Faker：生成假数据...">
+<meta name="keywords" content="测试数据管理与脱敏,自动化测试面试题,测试数据, 数据脱敏, 数据生成, GDPR, 隐私保护,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-036.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试数据管理与脱敏 - 自动化测试面试题">
+<meta property="og:description" content="**测试数据类型：** - 生产数据脱敏 - 合成数据生成 - 子集抽样 - 模糊测试数据  **数据脱敏方法：** - 替换：姓名-&gt;随机名 - 遮蔽：身份证号-&gt;110***********1234 - 加密：敏感字段加密存储 - 泛化：年龄32-&gt;30-35年龄段  **脱敏工具：** - Faker：生成假数据...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-036.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "测试数据管理与脱敏",
+    "text": "如何管理测试数据？数据脱敏的方法有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**测试数据类型：** - 生产数据脱敏 - 合成数据生成 - 子集抽样 - 模糊测试数据  **数据脱敏方法：** - 替换：姓名-&gt;随机名 - 遮蔽：身份证号-&gt;110***********1234 - 加密：敏感字段加密存储 - 泛化：年龄32-&gt;30-35年龄段  **脱敏工具：** - Faker：生成假数据 - Mockaroo：在线数据生成 - Tonic.ai：智能数据脱敏"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>测试数据管理与脱敏</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：测试数据, 数据脱敏, 数据生成, GDPR, 隐私保护</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何管理测试数据？数据脱敏的方法有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**测试数据类型：**</div><div class="answer-line">- 生产数据脱敏</div><div class="answer-line">- 合成数据生成</div><div class="answer-line">- 子集抽样</div><div class="answer-line">- 模糊测试数据</div><br><div class="answer-line">**数据脱敏方法：**</div><div class="answer-line">- 替换：姓名-&gt;随机名</div><div class="answer-line">- 遮蔽：身份证号-&gt;110***********1234</div><div class="answer-line">- 加密：敏感字段加密存储</div><div class="answer-line">- 泛化：年龄32-&gt;30-35年龄段</div><br><div class="answer-line">**脱敏工具：**</div><div class="answer-line">- Faker：生成假数据</div><div class="answer-line">- Mockaroo：在线数据生成</div><div class="answer-line">- Tonic.ai：智能数据脱敏</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 测试数据管理
+print(&#039;&#039;&#039;
+# Faker生成假数据
+from faker import Faker
+import hashlib
+
+fake = Faker(&#039;zh_CN&#039;)
+
+def generate_test_user():
+    return {
+        &#039;name&#039;: fake.name(),
+        &#039;email&#039;: fake.email(),
+        &#039;phone&#039;: fake.phone_number(),
+        &#039;address&#039;: fake.address()
+    }
+
+# 数据脱敏函数
+def mask_phone(phone):
+    if len(phone) == 11:
+        return phone[:3] + &#039;****&#039; + phone[-4:]
+    return phone
+
+def mask_email(email):
+    if &#039;@&#039; in email:
+        local, domain = email.split(&#039;@&#039;)
+        return local[0] + &#039;***@&#039; + domain
+    return email
+
+# 使用示例
+user = generate_test_user()
+print(f&quot;Phone: {mask_phone(user[&#039;phone&#039;])}&quot;)
+print(f&quot;Email: {mask_email(user[&#039;email&#039;])}&quot;)
+&#039;&#039;&#039;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

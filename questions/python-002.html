@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深拷贝与浅拷贝的区别 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="浅拷贝：创建新对象，但只复制顶层引用。如果原对象包含嵌套的可变对象，浅拷贝和原对象共享这些嵌套对象。实现方式：copy.copy()、list()、dict()、切片[:]、list.copy()。  深拷贝：递归复制所有层级的对象，完全独立于原对象。修改深拷贝不会影响原对象。实现方式：copy.deepcopy()。...">
+<meta name="keywords" content="深拷贝与浅拷贝的区别,Python面试题,基础语法, 拷贝, copy模块,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-002.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深拷贝与浅拷贝的区别 - Python面试题">
+<meta property="og:description" content="浅拷贝：创建新对象，但只复制顶层引用。如果原对象包含嵌套的可变对象，浅拷贝和原对象共享这些嵌套对象。实现方式：copy.copy()、list()、dict()、切片[:]、list.copy()。  深拷贝：递归复制所有层级的对象，完全独立于原对象。修改深拷贝不会影响原对象。实现方式：copy.deepcopy()。...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-002.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "深拷贝与浅拷贝的区别",
+    "text": "解释Python中浅拷贝（shallow copy）和深拷贝（deep copy）的区别，并说明各自的实现方式。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "浅拷贝：创建新对象，但只复制顶层引用。如果原对象包含嵌套的可变对象，浅拷贝和原对象共享这些嵌套对象。实现方式：copy.copy()、list()、dict()、切片[:]、list.copy()。  深拷贝：递归复制所有层级的对象，完全独立于原对象。修改深拷贝不会影响原对象。实现方式：copy.deepcopy()。  区别总结： - 浅拷贝只复制第一层，嵌套对象仍共享引用。 - 深拷贝递归复制所有层级，完全独立。 - 深拷贝性能开销更大，尤其是对象层级很深或包含大量数据时。 - 对于只包含不可变类型的对象，浅拷贝和深拷贝效果相同。 - 对象的__copy__和__deepcopy__方法可以自定义拷贝行为。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>深拷贝与浅拷贝的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：基础语法, 拷贝, copy模块</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中浅拷贝（shallow copy）和深拷贝（deep copy）的区别，并说明各自的实现方式。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">浅拷贝：创建新对象，但只复制顶层引用。如果原对象包含嵌套的可变对象，浅拷贝和原对象共享这些嵌套对象。实现方式：copy.copy()、list()、dict()、切片[:]、list.copy()。</div><br><div class="answer-line">深拷贝：递归复制所有层级的对象，完全独立于原对象。修改深拷贝不会影响原对象。实现方式：copy.deepcopy()。</div><br><div class="answer-line">区别总结：</div><div class="answer-line">- 浅拷贝只复制第一层，嵌套对象仍共享引用。</div><div class="answer-line">- 深拷贝递归复制所有层级，完全独立。</div><div class="answer-line">- 深拷贝性能开销更大，尤其是对象层级很深或包含大量数据时。</div><div class="answer-line">- 对于只包含不可变类型的对象，浅拷贝和深拷贝效果相同。</div><div class="answer-line">- 对象的__copy__和__deepcopy__方法可以自定义拷贝行为。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import copy
+
+# 浅拷贝
+a = [1, [2, 3], 4]
+b = a[:]               # 浅拷贝
+b[1][0] = 99
+print(a)               # [1, [99, 3], 4] 被影响
+
+# 深拷贝
+c = [1, [2, 3], 4]
+d = copy.deepcopy(c)   # 深拷贝
+d[1][0] = 99
+print(c)               # [1, [2, 3], 4] 不受影响
+
+# copy模块
+import copy
+lst = [[1, 2], [3, 4]]
+shallow = copy.copy(lst)
+deep = copy.deepcopy(lst)
+shallow[0][0] = 99
+print(lst)  # [[99, 2], [3, 4]] 浅拷贝影响原对象</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

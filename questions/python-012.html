@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>__new__与__init__的区别 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="__new__：类方法（第一个参数是cls），负责创建并返回实例对象。是真正的构造方法，控制对象的创建过程。必须返回一个实例。在__init__之前调用。  __init__：实例方法（第一个参数是self），负责初始化已创建的实例。不返回值（返回None）。在对象创建后调用，设置实例属性。  执行顺序：__new__...">
+<meta name="keywords" content="__new__与__init__的区别,Python面试题,面向对象, 魔术方法, 对象创建,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-012.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="__new__与__init__的区别 - Python面试题">
+<meta property="og:description" content="__new__：类方法（第一个参数是cls），负责创建并返回实例对象。是真正的构造方法，控制对象的创建过程。必须返回一个实例。在__init__之前调用。  __init__：实例方法（第一个参数是self），负责初始化已创建的实例。不返回值（返回None）。在对象创建后调用，设置实例属性。  执行顺序：__new__...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-012.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "__new__与__init__的区别",
+    "text": "解释Python中__new__和__init__的区别、执行顺序及各自的使用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "__new__：类方法（第一个参数是cls），负责创建并返回实例对象。是真正的构造方法，控制对象的创建过程。必须返回一个实例。在__init__之前调用。  __init__：实例方法（第一个参数是self），负责初始化已创建的实例。不返回值（返回None）。在对象创建后调用，设置实例属性。  执行顺序：__new__ -&gt; __init__。如果__new__不返回当前类的实例，__init__不会被调用。  __new__的使用场景： - 实现单例模式：控制只创建一个实例。 - 继承不可变类型（如str、int、tuple）：需要在创建时修改值。 - 自定义元类中控制类的创建过程。 - 工厂模式：根据参数返回不同类的实例。  区别总结： - __new__负责创建对象，__init__负责初始化对象。 - __new__是类方法，__init__是实例方法。 - __new__必须返回实例，__init__不返回值。 - __new__只在需要控制对象创建时才需要重写。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>__new__与__init__的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：面向对象, 魔术方法, 对象创建</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中__new__和__init__的区别、执行顺序及各自的使用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">__new__：类方法（第一个参数是cls），负责创建并返回实例对象。是真正的构造方法，控制对象的创建过程。必须返回一个实例。在__init__之前调用。</div><br><div class="answer-line">__init__：实例方法（第一个参数是self），负责初始化已创建的实例。不返回值（返回None）。在对象创建后调用，设置实例属性。</div><br><div class="answer-line">执行顺序：__new__ -&gt; __init__。如果__new__不返回当前类的实例，__init__不会被调用。</div><br><div class="answer-line">__new__的使用场景：</div><div class="answer-line">- 实现单例模式：控制只创建一个实例。</div><div class="answer-line">- 继承不可变类型（如str、int、tuple）：需要在创建时修改值。</div><div class="answer-line">- 自定义元类中控制类的创建过程。</div><div class="answer-line">- 工厂模式：根据参数返回不同类的实例。</div><br><div class="answer-line">区别总结：</div><div class="answer-line">- __new__负责创建对象，__init__负责初始化对象。</div><div class="answer-line">- __new__是类方法，__init__是实例方法。</div><div class="answer-line">- __new__必须返回实例，__init__不返回值。</div><div class="answer-line">- __new__只在需要控制对象创建时才需要重写。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># __new__ 实现单例
+class Singleton:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self, name):
+        self.name = name
+
+a = Singleton(&#039;first&#039;)
+b = Singleton(&#039;second&#039;)
+print(a is b)      # True
+print(a.name)      # second（__init__被调用了两次）
+
+# 继承不可变类型
+class UpperStr(str):
+    def __new__(cls, value):
+        return super().__new__(cls, value.upper())
+
+s = UpperStr(&#039;hello&#039;)
+print(s)  # HELLO
+print(type(s))  # &lt;class &#039;__main__.UpperStr&#039;&gt;</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

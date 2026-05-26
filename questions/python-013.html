@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多继承与MRO（方法解析顺序） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="MRO（Method Resolution Order）是Python确定多继承中方法调用顺序的机制。当子类调用某个方法时，Python按照MRO顺序在基类链中查找。  Python 3使用C3线性化算法计算MRO，保证： 1. 子类在父类之前。 2. 如果类继承自多个父类，按声明顺序从左到右查找。 3. 保持一致的单...">
+<meta name="keywords" content="多继承与MRO（方法解析顺序）,Python面试题,面向对象, 多继承, MRO, C3线性化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-013.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多继承与MRO（方法解析顺序） - Python面试题">
+<meta property="og:description" content="MRO（Method Resolution Order）是Python确定多继承中方法调用顺序的机制。当子类调用某个方法时，Python按照MRO顺序在基类链中查找。  Python 3使用C3线性化算法计算MRO，保证： 1. 子类在父类之前。 2. 如果类继承自多个父类，按声明顺序从左到右查找。 3. 保持一致的单...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-013.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "多继承与MRO（方法解析顺序）",
+    "text": "解释Python多继承的MRO（方法解析顺序）及其C3线性化算法。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "MRO（Method Resolution Order）是Python确定多继承中方法调用顺序的机制。当子类调用某个方法时，Python按照MRO顺序在基类链中查找。  Python 3使用C3线性化算法计算MRO，保证： 1. 子类在父类之前。 2. 如果类继承自多个父类，按声明顺序从左到右查找。 3. 保持一致的单调性：子类的MRO中父类的顺序与父类自身的MRO一致。  查看MRO： - ClassName.__mro__：返回元组。 - ClassName.mro()：返回列表。  经典问题（菱形继承）： - Python 2使用深度优先（旧式类），可能导致非预期的父类方法被调用。 - Python 3统一使用C3算法（新式类），解决了菱形继承问题。  super()函数：在多继承中，super()按照MRO顺序调用下一个类的方法，不是简单的调用父类方法。这是协作式多重继承的基础。  注意事项： - 多继承虽然强大，但会增加代码复杂度，推荐优先使用组合（composition）。 - Mixin模式是多继承的推荐用法：将功能拆分为小的Mixin类。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>多继承与MRO（方法解析顺序）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：面向对象, 多继承, MRO, C3线性化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python多继承的MRO（方法解析顺序）及其C3线性化算法。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">MRO（Method Resolution Order）是Python确定多继承中方法调用顺序的机制。当子类调用某个方法时，Python按照MRO顺序在基类链中查找。</div><br><div class="answer-line">Python 3使用C3线性化算法计算MRO，保证：</div><div class="answer-line"><strong>1. 子类在父类之前。</strong></div><div class="answer-line"><strong>2. 如果类继承自多个父类，按声明顺序从左到右查找。</strong></div><div class="answer-line"><strong>3. 保持一致的单调性：子类的MRO中父类的顺序与父类自身的MRO一致。</strong></div><br><div class="answer-line">查看MRO：</div><div class="answer-line">- ClassName.__mro__：返回元组。</div><div class="answer-line">- ClassName.mro()：返回列表。</div><br><div class="answer-line">经典问题（菱形继承）：</div><div class="answer-line">- Python 2使用深度优先（旧式类），可能导致非预期的父类方法被调用。</div><div class="answer-line">- Python 3统一使用C3算法（新式类），解决了菱形继承问题。</div><br><div class="answer-line">super()函数：在多继承中，super()按照MRO顺序调用下一个类的方法，不是简单的调用父类方法。这是协作式多重继承的基础。</div><br><div class="answer-line">注意事项：</div><div class="answer-line">- 多继承虽然强大，但会增加代码复杂度，推荐优先使用组合（composition）。</div><div class="answer-line">- Mixin模式是多继承的推荐用法：将功能拆分为小的Mixin类。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">class A:
+    def greet(self): print(&#039;A&#039;)
+
+class B(A):
+    def greet(self): print(&#039;B&#039;)
+
+class C(A):
+    def greet(self): print(&#039;C&#039;)
+
+class D(B, C):
+    pass
+
+print(D.__mro__)
+# (&lt;class &#039;D&#039;&gt;, &lt;class &#039;B&#039;&gt;, &lt;class &#039;C&#039;&gt;, &lt;class &#039;A&#039;&gt;, &lt;class &#039;object&#039;&gt;)
+
+D().greet()  # B（先查找B，再C，再A）
+
+# super()在多继承中的行为
+class Base:
+    def __init__(self):
+        print(&#039;Base.__init__&#039;)
+        super().__init__()
+
+class Mixin1(Base):
+    def __init__(self):
+        print(&#039;Mixin1.__init__&#039;)
+        super().__init__()
+
+class Mixin2(Base):
+    def __init__(self):
+        print(&#039;Mixin2.__init__&#039;)
+        super().__init__()
+
+class Child(Mixin1, Mixin2):
+    pass
+
+Child()  # Mixin1 -&gt; Mixin2 -&gt; Base</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

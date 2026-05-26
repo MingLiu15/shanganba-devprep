@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mock与打桩测试 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Mock定义：** 模拟对象，用于隔离测试，替代真实依赖（数据库、API等）。  **unittest.mock核心：** 1. `Mock`：创建模拟对象 2. `MagicMock`：支持魔术方法的Mock 3. `patch`：临时替换对象 4. `call`：记录调用  **常用断言：** - `asser...">
+<meta name="keywords" content="Mock与打桩测试,自动化测试面试题,Mock, unittest.mock, 打桩, 隔离测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-020.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mock与打桩测试 - 自动化测试面试题">
+<meta property="og:description" content="**Mock定义：** 模拟对象，用于隔离测试，替代真实依赖（数据库、API等）。  **unittest.mock核心：** 1. `Mock`：创建模拟对象 2. `MagicMock`：支持魔术方法的Mock 3. `patch`：临时替换对象 4. `call`：记录调用  **常用断言：** - `asser...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-020.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Mock与打桩测试",
+    "text": "什么是Mock测试？如何使用unittest.mock？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Mock定义：** 模拟对象，用于隔离测试，替代真实依赖（数据库、API等）。  **unittest.mock核心：** 1. `Mock`：创建模拟对象 2. `MagicMock`：支持魔术方法的Mock 3. `patch`：临时替换对象 4. `call`：记录调用  **常用断言：** - `assert_called()`：被调用过 - `assert_called_once()`：只调用一次 - `assert_called_with()`：以指定参数调用 - `assert_not_called()`：未被调用"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Mock与打桩测试</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：Mock, unittest.mock, 打桩, 隔离测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是Mock测试？如何使用unittest.mock？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Mock定义：**</div><div class="answer-line">模拟对象，用于隔离测试，替代真实依赖（数据库、API等）。</div><br><div class="answer-line">**unittest.mock核心：**</div><div class="answer-line"><strong>1. `Mock`：创建模拟对象</strong></div><div class="answer-line"><strong>2. `MagicMock`：支持魔术方法的Mock</strong></div><div class="answer-line"><strong>3. `patch`：临时替换对象</strong></div><div class="answer-line"><strong>4. `call`：记录调用</strong></div><br><div class="answer-line">**常用断言：**</div><div class="answer-line">- `assert_called()`：被调用过</div><div class="answer-line">- `assert_called_once()`：只调用一次</div><div class="answer-line">- `assert_called_with()`：以指定参数调用</div><div class="answer-line">- `assert_not_called()`：未被调用</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from unittest.mock import Mock, MagicMock, patch, call
+import pytest
+
+# 基本Mock
+mock_obj = Mock()
+mock_obj.method()  # 返回另一个Mock
+mock_obj.method.assert_called()
+
+# 设置返回值
+mock_obj = Mock()
+mock_obj.get_name.return_value = &quot;Alice&quot;
+assert mock_obj.get_name() == &quot;Alice&quot;
+
+# 设置副作用（异常）
+mock_obj = Mock()
+mock_obj risky_method.side_effect = Exception(&quot;Error&quot;)
+
+# MagicMock支持魔术方法
+mock_list = MagicMock()
+mock_list.__len__.return_value = 5
+assert len(mock_list) == 5
+
+# patch装饰器
+@patch(&#039;module.ClassName.method&#039;)
+def test_with_patch(mock_method):
+    mock_method.return_value = 42
+    # 测试代码
+    pass
+
+# patch上下文管理器
+def test_with_context():
+    with patch(&#039;requests.get&#039;) as mock_get:
+        mock_get.return_value.json.return_value = {&quot;data&quot;: &quot;test&quot;}
+        # 测试代码
+        pass
+
+# 实际示例：模拟数据库
+class UserService:
+    def __init__(self, db):
+        self.db = db
+    
+    def get_user(self, user_id):
+        return self.db.query(f&quot;SELECT * FROM users WHERE id={user_id}&quot;)
+
+def test_get_user():
+    mock_db = Mock()
+    mock_db.query.return_value = {&quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot;}
+    
+    service = UserService(mock_db)
+    result = service.get_user(1)
+    
+    assert result[&quot;name&quot;] == &quot;Alice&quot;
+    mock_db.query.assert_called_once_with(&quot;SELECT * FROM users WHERE id=1&quot;)
+
+# 模拟API响应
+@patch(&#039;requests.get&#039;)
+def test_api_call(mock_get):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = {&quot;message&quot;: &quot;success&quot;}
+    
+    response = requests.get(&quot;https://api.example.com/data&quot;)
+    assert response.status_code == 200
+    assert response.json()[&quot;message&quot;] == &quot;success&quot;</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

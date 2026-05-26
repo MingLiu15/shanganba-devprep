@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 背景 -->
+  <rect width="32" height="32" rx="6" fill="#0a0e17"/>
+  
+  <!-- 向上的箭头（上岸） -->
+  <path d="M16 24 L16 8 L10 14 M16 8 L22 14" stroke="#00ff88" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- 底部横线（陆地） -->
+  <line x1="6" y1="26" x2="26" y2="26" stroke="#00d4ff" stroke-width="2" stroke-linecap="round"/>
+</svg>

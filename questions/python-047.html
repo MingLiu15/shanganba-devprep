@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FastAPI异步框架 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**FastAPI特点：** 1. 高性能：基于Starlette和Pydantic，性能接近Node.js 2. 异步支持：原生支持async/await 3. 自动文档：自动生成OpenAPI/Swagger文档 4. 类型检查：利用Python类型注解进行数据验证 5. 依赖注入：内置DI系统  **Pydant...">
+<meta name="keywords" content="FastAPI异步框架,Python面试题,FastAPI, 异步, 类型注解, Pydantic, 依赖注入,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-047.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FastAPI异步框架 - Python面试题">
+<meta property="og:description" content="**FastAPI特点：** 1. 高性能：基于Starlette和Pydantic，性能接近Node.js 2. 异步支持：原生支持async/await 3. 自动文档：自动生成OpenAPI/Swagger文档 4. 类型检查：利用Python类型注解进行数据验证 5. 依赖注入：内置DI系统  **Pydant...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-047.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "FastAPI异步框架",
+    "text": "FastAPI框架的特点是什么？如何使用Pydantic进行数据验证？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**FastAPI特点：** 1. 高性能：基于Starlette和Pydantic，性能接近Node.js 2. 异步支持：原生支持async/await 3. 自动文档：自动生成OpenAPI/Swagger文档 4. 类型检查：利用Python类型注解进行数据验证 5. 依赖注入：内置DI系统  **Pydantic模型：** - BaseModel：数据验证和序列化 - Field：字段约束 - validator：自定义验证器  **核心功能：** - 路径参数、查询参数自动验证 - 请求体自动解析 - 响应模型自动转换"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>FastAPI异步框架</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：FastAPI, 异步, 类型注解, Pydantic, 依赖注入</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>FastAPI框架的特点是什么？如何使用Pydantic进行数据验证？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**FastAPI特点：**</div><div class="answer-line"><strong>1. 高性能：基于Starlette和Pydantic，性能接近Node.js</strong></div><div class="answer-line"><strong>2. 异步支持：原生支持async/await</strong></div><div class="answer-line"><strong>3. 自动文档：自动生成OpenAPI/Swagger文档</strong></div><div class="answer-line"><strong>4. 类型检查：利用Python类型注解进行数据验证</strong></div><div class="answer-line"><strong>5. 依赖注入：内置DI系统</strong></div><br><div class="answer-line">**Pydantic模型：**</div><div class="answer-line">- BaseModel：数据验证和序列化</div><div class="answer-line">- Field：字段约束</div><div class="answer-line">- validator：自定义验证器</div><br><div class="answer-line">**核心功能：**</div><div class="answer-line">- 路径参数、查询参数自动验证</div><div class="answer-line">- 请求体自动解析</div><div class="answer-line">- 响应模型自动转换</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from fastapi import FastAPI, Depends, HTTPException, status
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List
+
+app = FastAPI(title=&quot;My API&quot;, version=&quot;1.0.0&quot;)
+
+# Pydantic模型
+class UserCreate(BaseModel):
+    name: str = Field(..., min_length=2, max_length=50)
+    email: str
+    age: Optional[int] = Field(None, ge=0, le=150)
+    
+    @validator(&#039;email&#039;)
+    def validate_email(cls, v):
+        if &#039;@&#039; not in v:
+            raise ValueError(&#039;无效邮箱格式&#039;)
+        return v
+
+class User(UserCreate):
+    id: int
+
+class Config:
+    orm_mode = True
+
+# 依赖注入
+async def get_current_user():
+    # 模拟获取当前用户
+    return {&quot;id&quot;: 1, &quot;name&quot;: &quot;test&quot;}
+
+# 路由
+@app.get(&quot;/&quot;, tags=[&quot;Root&quot;])
+async def root():
+    return {&quot;message&quot;: &quot;Hello FastAPI&quot;}
+
+@app.get(&quot;/users/{user_id}&quot;, response_model=User)
+async def get_user(user_id: int, q: Optional[str] = None):
+    &quot;&quot;&quot;获取用户信息&quot;&quot;&quot;
+    return {&quot;id&quot;: user_id, &quot;name&quot;: &quot;Alice&quot;, &quot;email&quot;: &quot;alice@example.com&quot;, &quot;age&quot;: 25}
+
+@app.post(&quot;/users&quot;, response_model=User, status_code=status.HTTP_201_CREATED)
+async def create_user(user: UserCreate):
+    &quot;&quot;&quot;创建用户&quot;&quot;&quot;
+    # 保存到数据库
+    return {&quot;id&quot;: 1, **user.dict()}
+
+@app.get(&quot;/protected&quot;)
+async def protected_route(user = Depends(get_current_user)):
+    return {&quot;user&quot;: user}
+
+# 运行: uvicorn main:app --reload</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnionFS（联合文件系统） - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="UnionFS（联合文件系统）是一种分层、轻量级的文件系统，可以将多个目录（层）合并挂载到一个统一的视图。  核心概念： 1. 分层结构：    - 底层（Lower Layer）：只读层，通常是基础镜像    - 顶层（Upper Layer）：可写层，容器运行时修改    - 工作目录（Workdir）：Overl...">
+<meta name="keywords" content="UnionFS（联合文件系统）,操作系统面试题,UnionFS, OverlayFS, 容器, 文件系统, Docker,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-029.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UnionFS（联合文件系统） - 操作系统面试题">
+<meta property="og:description" content="UnionFS（联合文件系统）是一种分层、轻量级的文件系统，可以将多个目录（层）合并挂载到一个统一的视图。  核心概念： 1. 分层结构：    - 底层（Lower Layer）：只读层，通常是基础镜像    - 顶层（Upper Layer）：可写层，容器运行时修改    - 工作目录（Workdir）：Overl...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-029.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "UnionFS（联合文件系统）",
+    "text": "什么是UnionFS？它在容器技术中有什么作用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "UnionFS（联合文件系统）是一种分层、轻量级的文件系统，可以将多个目录（层）合并挂载到一个统一的视图。  核心概念： 1. 分层结构：    - 底层（Lower Layer）：只读层，通常是基础镜像    - 顶层（Upper Layer）：可写层，容器运行时修改    - 工作目录（Workdir）：OverlayFS内部使用    - 合并视图（Merged）：统一呈现所有层的内容  2. 写时复制（Copy-on-Write）：    - 读取：从上到下查找文件    - 修改：将文件从只读层复制到可写层再修改    - 删除：在可写层创建whiteout标记  常见实现： - AUFS：早期Docker使用 - OverlayFS：现代Linux默认，性能更好 - OverlayFS2：OverlayFS的改进版  容器中的应用： - 镜像层共享：多个容器共享基础镜像层 - 容器隔离：每个容器有独立的可写层 - 快速启动：无需复制整个镜像"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>UnionFS（联合文件系统）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：UnionFS, OverlayFS, 容器, 文件系统, Docker</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是UnionFS？它在容器技术中有什么作用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">UnionFS（联合文件系统）是一种分层、轻量级的文件系统，可以将多个目录（层）合并挂载到一个统一的视图。</div><br><div class="answer-line">核心概念：</div><div class="answer-line"><strong>1. 分层结构：</strong></div><div class="answer-line">   - 底层（Lower Layer）：只读层，通常是基础镜像</div><div class="answer-line">   - 顶层（Upper Layer）：可写层，容器运行时修改</div><div class="answer-line">   - 工作目录（Workdir）：OverlayFS内部使用</div><div class="answer-line">   - 合并视图（Merged）：统一呈现所有层的内容</div><br><div class="answer-line"><strong>2. 写时复制（Copy-on-Write）：</strong></div><div class="answer-line">   - 读取：从上到下查找文件</div><div class="answer-line">   - 修改：将文件从只读层复制到可写层再修改</div><div class="answer-line">   - 删除：在可写层创建whiteout标记</div><br><div class="answer-line">常见实现：</div><div class="answer-line">- AUFS：早期Docker使用</div><div class="answer-line">- OverlayFS：现代Linux默认，性能更好</div><div class="answer-line">- OverlayFS2：OverlayFS的改进版</div><br><div class="answer-line">容器中的应用：</div><div class="answer-line">- 镜像层共享：多个容器共享基础镜像层</div><div class="answer-line">- 容器隔离：每个容器有独立的可写层</div><div class="answer-line">- 快速启动：无需复制整个镜像</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// OverlayFS挂载示例
+// $ sudo mount -t overlay overlay \
+//     -o lowerdir=/lower,upperdir=/upper,workdir=/work \
+//     /merged
+
+// 目录结构说明
+// /lower:    只读层（基础镜像）
+// /upper:    可写层（容器修改）
+// /work:     工作目录（OverlayFS内部使用）
+// /merged:   合并后的视图
+
+// 查看Docker容器文件系统
+// $ docker inspect &lt;container_id&gt; | grep -A 5 GraphDriver
+
+// C语言使用mount系统调用
+#include &lt;sys/mount.h&gt;
+
+mount(&quot;overlay&quot;, &quot;/merged&quot;, &quot;overlay&quot;, 0,
+      &quot;lowerdir=/lower,upperdir=/upper,workdir=/work&quot;);
+
+// 查看镜像层
+// $ ls /var/lib/docker/overlay2/</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

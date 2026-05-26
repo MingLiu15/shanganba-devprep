@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pathlib模块 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="pathlib：面向对象的文件路径操作模块（Python 3.4+），替代os.path。  优势： 1. 面向对象：Path对象而非字符串 2. 跨平台：自动处理Windows/Unix路径差异 3. 操作符重载：/ 连接路径 4. 链式调用：方法返回新Path对象 5. 更丰富的方法：读写、权限、遍历等  常用操作...">
+<meta name="keywords" content="pathlib模块,Python面试题,pathlib, 路径操作, 文件系统, 标准库, 现代Python,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-040.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pathlib模块 - Python面试题">
+<meta property="og:description" content="pathlib：面向对象的文件路径操作模块（Python 3.4+），替代os.path。  优势： 1. 面向对象：Path对象而非字符串 2. 跨平台：自动处理Windows/Unix路径差异 3. 操作符重载：/ 连接路径 4. 链式调用：方法返回新Path对象 5. 更丰富的方法：读写、权限、遍历等  常用操作...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-040.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "pathlib模块",
+    "text": "pathlib模块与os.path相比有什么优势？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "pathlib：面向对象的文件路径操作模块（Python 3.4+），替代os.path。  优势： 1. 面向对象：Path对象而非字符串 2. 跨平台：自动处理Windows/Unix路径差异 3. 操作符重载：/ 连接路径 4. 链式调用：方法返回新Path对象 5. 更丰富的方法：读写、权限、遍历等  常用操作： - Path(&#039;dir&#039;) / &#039;file.txt&#039;：连接路径 - exists()：是否存在 - is_file() / is_dir()：类型判断 - mkdir() / rmdir()：创建/删除目录 - read_text() / write_text()：读写文本 - glob()：模式匹配 - iterdir()：遍历目录"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>pathlib模块</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：pathlib, 路径操作, 文件系统, 标准库, 现代Python</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>pathlib模块与os.path相比有什么优势？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">pathlib：面向对象的文件路径操作模块（Python 3.4+），替代os.path。</div><br><div class="answer-line">优势：</div><div class="answer-line"><strong>1. 面向对象：Path对象而非字符串</strong></div><div class="answer-line"><strong>2. 跨平台：自动处理Windows/Unix路径差异</strong></div><div class="answer-line"><strong>3. 操作符重载：/ 连接路径</strong></div><div class="answer-line"><strong>4. 链式调用：方法返回新Path对象</strong></div><div class="answer-line"><strong>5. 更丰富的方法：读写、权限、遍历等</strong></div><br><div class="answer-line">常用操作：</div><div class="answer-line">- Path(&#039;dir&#039;) / &#039;file.txt&#039;：连接路径</div><div class="answer-line">- exists()：是否存在</div><div class="answer-line">- is_file() / is_dir()：类型判断</div><div class="answer-line">- mkdir() / rmdir()：创建/删除目录</div><div class="answer-line">- read_text() / write_text()：读写文本</div><div class="answer-line">- glob()：模式匹配</div><div class="answer-line">- iterdir()：遍历目录</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from pathlib import Path
+
+# 创建路径
+p = Path(&#039;/home/user&#039;) / &#039;documents&#039; / &#039;file.txt&#039;
+# 等价于 os.path.join(&#039;/home/user&#039;, &#039;documents&#039;, &#039;file.txt&#039;)
+
+# 路径属性
+print(p.name)       # file.txt
+print(p.stem)       # file
+print(p.suffix)     # .txt
+print(p.parent)     # /home/user/documents
+print(p.parts)      # (&#039;/&#039;, &#039;home&#039;, &#039;user&#039;, &#039;documents&#039;, &#039;file.txt&#039;)
+
+# 文件操作
+p.exists()
+p.is_file()
+p.is_dir()
+
+# 读写（Python 3.5+）
+Path(&#039;config.txt&#039;).write_text(&#039;setting=value&#039;)
+content = Path(&#039;config.txt&#039;).read_text()
+
+# 遍历目录
+for f in Path(&#039;.&#039;).iterdir():
+    if f.is_file():
+        print(f)
+
+# glob模式匹配
+list(Path(&#039;.&#039;).glob(&#039;*.py&#039;))  # 当前目录所有py文件
+list(Path(&#039;.&#039;).rglob(&#039;*.py&#039;))  # 递归所有py文件
+
+# 创建目录
+Path(&#039;new/dir&#039;).mkdir(parents=True, exist_ok=True)
+
+# 相对/绝对路径
+Path(&#039;file.txt&#039;).resolve()  # 转为绝对路径
+Path(&#039;/a/b&#039;).relative_to(&#039;/a&#039;)  # 计算相对路径</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

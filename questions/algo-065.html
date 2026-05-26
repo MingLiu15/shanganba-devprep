@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>最小生成树：Kruskal与Prim算法 - 算法题面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**最小生成树（MST）：** 给定带权无向连通图，找到一棵包含所有顶点的树，使得边权之和最小。  **Kruskal算法：** 1. 将所有边按权重排序 2. 依次选取最小边，若不形成环则加入 3. 使用并查集判断是否形成环 4. 时间复杂度：O(E log E)  **Prim算法：** 1. 从任意顶点开始 2....">
+<meta name="keywords" content="最小生成树：Kruskal与Prim算法,算法题面试题,最小生成树, Kruskal, Prim, 并查集, 贪心, 图论,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/algo-065.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最小生成树：Kruskal与Prim算法 - 算法题面试题">
+<meta property="og:description" content="**最小生成树（MST）：** 给定带权无向连通图，找到一棵包含所有顶点的树，使得边权之和最小。  **Kruskal算法：** 1. 将所有边按权重排序 2. 依次选取最小边，若不形成环则加入 3. 使用并查集判断是否形成环 4. 时间复杂度：O(E log E)  **Prim算法：** 1. 从任意顶点开始 2....">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/algo-065.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "最小生成树：Kruskal与Prim算法",
+    "text": "什么是最小生成树？Kruskal和Prim算法的区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**最小生成树（MST）：** 给定带权无向连通图，找到一棵包含所有顶点的树，使得边权之和最小。  **Kruskal算法：** 1. 将所有边按权重排序 2. 依次选取最小边，若不形成环则加入 3. 使用并查集判断是否形成环 4. 时间复杂度：O(E log E)  **Prim算法：** 1. 从任意顶点开始 2. 每次选择连接已选集和未选集的最小边 3. 使用优先队列（最小堆）优化 4. 时间复杂度：O(E log V)（堆优化版）  **选择建议：** - 稀疏图（E &lt;&lt; V^2）：用Kruskal - 稠密图（E ~ V^2）：用Prim（邻接矩阵版O(V^2)）  **应用场景：** - 网络布线、道路规划 - 聚类分析 - 近似算法（如TSP的MST近似）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>最小生成树：Kruskal与Prim算法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">算法题</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：最小生成树, Kruskal, Prim, 并查集, 贪心, 图论</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是最小生成树？Kruskal和Prim算法的区别？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**最小生成树（MST）：**</div><div class="answer-line">给定带权无向连通图，找到一棵包含所有顶点的树，使得边权之和最小。</div><br><div class="answer-line">**Kruskal算法：**</div><div class="answer-line"><strong>1. 将所有边按权重排序</strong></div><div class="answer-line"><strong>2. 依次选取最小边，若不形成环则加入</strong></div><div class="answer-line"><strong>3. 使用并查集判断是否形成环</strong></div><div class="answer-line"><strong>4. 时间复杂度：O(E log E)</strong></div><br><div class="answer-line">**Prim算法：**</div><div class="answer-line"><strong>1. 从任意顶点开始</strong></div><div class="answer-line"><strong>2. 每次选择连接已选集和未选集的最小边</strong></div><div class="answer-line"><strong>3. 使用优先队列（最小堆）优化</strong></div><div class="answer-line"><strong>4. 时间复杂度：O(E log V)（堆优化版）</strong></div><br><div class="answer-line">**选择建议：**</div><div class="answer-line">- 稀疏图（E &lt;&lt; V^2）：用Kruskal</div><div class="answer-line">- 稠密图（E ~ V^2）：用Prim（邻接矩阵版O(V^2)）</div><br><div class="answer-line">**应用场景：**</div><div class="answer-line">- 网络布线、道路规划</div><div class="answer-line">- 聚类分析</div><div class="answer-line">- 近似算法（如TSP的MST近似）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from typing import List, Tuple
+import heapq
+
+# ===== Kruskal算法（并查集）=====
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])  # 路径压缩
+        return self.parent[x]
+    
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] &lt; self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        return True
+
+def kruskal(n: int, edges: List[Tuple[int, int, int]]) -&gt; int:
+    &quot;&quot;&quot;Kruskal最小生成树
+    Args:
+        n: 节点数
+        edges: [(weight, u, v), ...]
+    Returns:
+        最小生成树权重和
+    &quot;&quot;&quot;
+ edges.sort()  # 按权重排序
+    uf = UnionFind(n)
+    total_weight = 0
+    edge_count = 0
+    
+    for w, u, v in edges:
+        if uf.union(u, v):
+            total_weight += w
+            edge_count += 1
+            if edge_count == n - 1:
+                break
+    return total_weight
+
+# ===== Prim算法（堆优化）=====
+def prim(n: int, graph: List[List[Tuple[int, int]]]) -&gt; int:
+    &quot;&quot;&quot;Prim最小生成树（堆优化）
+    Args:
+        n: 节点数
+        graph: 邻接表 graph[u] = [(v, weight), ...]
+    Returns:
+        最小生成树权重和
+    &quot;&quot;&quot;
+    visited = [False] * n
+    min_heap = [(0, 0)]  # (weight, node)
+    total_weight = 0
+    edge_count = 0
+    
+    while min_heap and edge_count &lt; n:
+        w, u = heapq.heappop(min_heap)
+        if visited[u]:
+            continue
+        visited[u] = True
+        total_weight += w
+        edge_count += 1
+        
+        for v, weight in graph[u]:
+            if not visited[v]:
+                heapq.heappush(min_heap, (weight, v))
+    return total_weight
+
+# ===== 测试 =====
+# 5个节点的图
+# edges: (weight, u, v)
+edges = [
+    (1, 0, 1), (3, 0, 2), (4, 0, 3),
+    (2, 1, 2), (5, 1, 3),
+    (6, 2, 3), (7, 2, 4),
+    (8, 3, 4)
+]
+
+print(f&quot;Kruskal MST: {kruskal(5, edges)}&quot;)  # 1+2+6+8=17
+
+# 构建邻接表
+graph = [[] for _ in range(5)]
+for w, u, v in edges:
+    graph[u].append((v, w))
+    graph[v].append((u, w))
+
+print(f&quot;Prim MST: {prim(5, graph)}&quot;)  # 17</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

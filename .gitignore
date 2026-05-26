@@ -1,0 +1,14 @@
+# 备份文件
+*.bak
+*.backup
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 上传临时文件
+.uploads/

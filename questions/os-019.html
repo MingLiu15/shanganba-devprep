@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>同步与互斥 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="互斥（Mutual Exclusion）： - 多个进程不能同时进入临界区 - 保证同一时刻只有一个进程访问共享资源 - 关系：竞争关系  同步（Synchronization）： - 进程按一定顺序执行 - 保证事件的先后顺序 - 关系：协作关系  实现机制： 1. 互斥锁（Mutex）：保护临界区，同一时刻只有一个...">
+<meta name="keywords" content="同步与互斥,操作系统面试题,同步, 互斥, 信号量, 互斥锁, 临界区,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-019.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="同步与互斥 - 操作系统面试题">
+<meta property="og:description" content="互斥（Mutual Exclusion）： - 多个进程不能同时进入临界区 - 保证同一时刻只有一个进程访问共享资源 - 关系：竞争关系  同步（Synchronization）： - 进程按一定顺序执行 - 保证事件的先后顺序 - 关系：协作关系  实现机制： 1. 互斥锁（Mutex）：保护临界区，同一时刻只有一个...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-019.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "同步与互斥",
+    "text": "同步和互斥有什么区别？如何实现？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "互斥（Mutual Exclusion）： - 多个进程不能同时进入临界区 - 保证同一时刻只有一个进程访问共享资源 - 关系：竞争关系  同步（Synchronization）： - 进程按一定顺序执行 - 保证事件的先后顺序 - 关系：协作关系  实现机制： 1. 互斥锁（Mutex）：保护临界区，同一时刻只有一个持有者 2. 信号量（Semaphore）：    - 二值信号量：实现互斥    - 计数信号量：实现同步（如生产者-消费者） 3. 条件变量（Condition Variable）：等待某个条件成立  经典问题： - 生产者-消费者：用信号量同步 - 读者-写者：读写锁 - 哲学家就餐：避免死锁"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>同步与互斥</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：同步, 互斥, 信号量, 互斥锁, 临界区</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>同步和互斥有什么区别？如何实现？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">互斥（Mutual Exclusion）：</div><div class="answer-line">- 多个进程不能同时进入临界区</div><div class="answer-line">- 保证同一时刻只有一个进程访问共享资源</div><div class="answer-line">- 关系：竞争关系</div><br><div class="answer-line">同步（Synchronization）：</div><div class="answer-line">- 进程按一定顺序执行</div><div class="answer-line">- 保证事件的先后顺序</div><div class="answer-line">- 关系：协作关系</div><br><div class="answer-line">实现机制：</div><div class="answer-line"><strong>1. 互斥锁（Mutex）：保护临界区，同一时刻只有一个持有者</strong></div><div class="answer-line"><strong>2. 信号量（Semaphore）：</strong></div><div class="answer-line">   - 二值信号量：实现互斥</div><div class="answer-line">   - 计数信号量：实现同步（如生产者-消费者）</div><div class="answer-line"><strong>3. 条件变量（Condition Variable）：等待某个条件成立</strong></div><br><div class="answer-line">经典问题：</div><div class="answer-line">- 生产者-消费者：用信号量同步</div><div class="answer-line">- 读者-写者：读写锁</div><div class="answer-line">- 哲学家就餐：避免死锁</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 信号量实现生产者-消费者
+sem_t empty, full, mutex;
+sem_init(&amp;empty, 0, N);  // 空槽位
+sem_init(&amp;full, 0, 0);   // 已有产品
+sem_init(&amp;mutex, 0, 1);  // 互斥
+
+void producer() {
+    sem_wait(&amp;empty);   // 等待空槽
+    sem_wait(&amp;mutex);   // 加锁
+    buffer[in++] = item;
+    sem_post(&amp;mutex);   // 解锁
+    sem_post(&amp;full);    // 通知消费者
+}
+
+void consumer() {
+    sem_wait(&amp;full);    // 等待产品
+    sem_wait(&amp;mutex);
+    item = buffer[out++];
+    sem_post(&amp;mutex);
+    sem_post(&amp;empty);   // 通知生产者
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

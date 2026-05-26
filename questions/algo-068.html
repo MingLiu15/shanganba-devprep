@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KMP字符串匹配算法 - 算法题面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**KMP算法原理：** 利用已匹配的信息避免从头比较，时间复杂度O(m+n)。  **核心思想：** - 当出现不匹配时，利用已匹配部分的信息，将模式串向右滑动尽可能远的距离 - 不需要回溯文本串指针  **next数组（前缀函数）：** - next[i]表示模式串p[0:i]的最长相等真前缀和真后缀的长度 - 真...">
+<meta name="keywords" content="KMP字符串匹配算法,算法题面试题,KMP, 字符串匹配, 前缀函数, next数组,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/algo-068.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP字符串匹配算法 - 算法题面试题">
+<meta property="og:description" content="**KMP算法原理：** 利用已匹配的信息避免从头比较，时间复杂度O(m+n)。  **核心思想：** - 当出现不匹配时，利用已匹配部分的信息，将模式串向右滑动尽可能远的距离 - 不需要回溯文本串指针  **next数组（前缀函数）：** - next[i]表示模式串p[0:i]的最长相等真前缀和真后缀的长度 - 真...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/algo-068.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "KMP字符串匹配算法",
+    "text": "KMP算法的原理是什么？如何构建next数组？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**KMP算法原理：** 利用已匹配的信息避免从头比较，时间复杂度O(m+n)。  **核心思想：** - 当出现不匹配时，利用已匹配部分的信息，将模式串向右滑动尽可能远的距离 - 不需要回溯文本串指针  **next数组（前缀函数）：** - next[i]表示模式串p[0:i]的最长相等真前缀和真后缀的长度 - 真前缀：不包含自身的所有前缀 - 真后缀：不包含自身的所有后缀  **构建next数组：** - 双指针法，i遍历字符串，j记录当前匹配长度 - 时间复杂度O(m)"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>KMP字符串匹配算法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">算法题</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：KMP, 字符串匹配, 前缀函数, next数组</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>KMP算法的原理是什么？如何构建next数组？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**KMP算法原理：**</div><div class="answer-line">利用已匹配的信息避免从头比较，时间复杂度O(m+n)。</div><br><div class="answer-line">**核心思想：**</div><div class="answer-line">- 当出现不匹配时，利用已匹配部分的信息，将模式串向右滑动尽可能远的距离</div><div class="answer-line">- 不需要回溯文本串指针</div><br><div class="answer-line">**next数组（前缀函数）：**</div><div class="answer-line">- next[i]表示模式串p[0:i]的最长相等真前缀和真后缀的长度</div><div class="answer-line">- 真前缀：不包含自身的所有前缀</div><div class="answer-line">- 真后缀：不包含自身的所有后缀</div><br><div class="answer-line">**构建next数组：**</div><div class="answer-line">- 双指针法，i遍历字符串，j记录当前匹配长度</div><div class="answer-line">- 时间复杂度O(m)</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">def build_next(pattern):
+    m = len(pattern)
+    next_arr = [0] * m
+    j = 0
+    for i in range(1, m):
+        while j &gt; 0 and pattern[i] != pattern[j]:
+            j = next_arr[j - 1]
+        if pattern[i] == pattern[j]:
+            j += 1
+            next_arr[i] = j
+    return next_arr
+
+def kmp_search(text, pattern):
+    if not pattern:
+        return 0
+    n, m = len(text), len(pattern)
+    next_arr = build_next(pattern)
+    j = 0
+    positions = []
+    for i in range(n):
+        while j &gt; 0 and text[i] != pattern[j]:
+            j = next_arr[j - 1]
+        if text[i] == pattern[j]:
+            j += 1
+        if j == m:
+            positions.append(i - m + 1)
+            j = next_arr[j - 1]
+    return positions
+
+text = &quot;ABABDABACDABABCABAB&quot;
+pattern = &quot;ABABCABAB&quot;
+print(f&quot;匹配位置: {kmp_search(text, pattern)}&quot;)  # [10]</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

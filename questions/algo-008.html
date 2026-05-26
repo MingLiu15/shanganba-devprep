@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>环形链表 - 算法题面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="">
+<meta name="keywords" content="环形链表,算法题面试题,链表, 双指针,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/algo-008.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="环形链表 - 算法题面试题">
+<meta property="og:description" content="">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/algo-008.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "环形链表",
+    "text": "给你一个链表的头节点 head，判断链表中是否有环。如果链表中存在环，则返回 true，否则返回 false。
+
+如果链表中有某个节点可以通过连续跟踪 next 指针再次到达，则链表中存在环。
+
+示例 1：
+输入：head = [3,2,0,-4], pos = 1（表示尾节点连接到第1个节点）
+输出：true
+
+示例 2：
+输入：head = [1], pos = -1
+输出：false",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": ""
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>环形链表</h1>
+  <div class="seo-meta">
+    <span class="seo-category">算法题</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：链表, 双指针</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>给你一个链表的头节点 head，判断链表中是否有环。如果链表中存在环，则返回 true，否则返回 false。<br><br>如果链表中有某个节点可以通过连续跟踪 next 指针再次到达，则链表中存在环。<br><br>示例 1：<br>输入：head = [3,2,0,-4], pos = 1（表示尾节点连接到第1个节点）<br>输出：true<br><br>示例 2：<br>输入：head = [1], pos = -1<br>输出：false</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"></div>
+  </div>
+  
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

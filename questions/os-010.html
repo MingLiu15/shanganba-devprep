@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>硬链接与软链接的区别 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="硬链接（Hard Link）： - 指向同一个inode的不同文件名 - 删除原文件不影响硬链接（inode引用计数减1，为0时才真正删除） - 不能跨文件系统 - 不能链接目录 - 创建：ln source target  软链接/符号链接（Symbolic Link）： - 是一个独立的文件，存储目标文件的路径 -...">
+<meta name="keywords" content="硬链接与软链接的区别,操作系统面试题,硬链接, 软链接, 符号链接, inode, Linux,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-010.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬链接与软链接的区别 - 操作系统面试题">
+<meta property="og:description" content="硬链接（Hard Link）： - 指向同一个inode的不同文件名 - 删除原文件不影响硬链接（inode引用计数减1，为0时才真正删除） - 不能跨文件系统 - 不能链接目录 - 创建：ln source target  软链接/符号链接（Symbolic Link）： - 是一个独立的文件，存储目标文件的路径 -...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-010.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "硬链接与软链接的区别",
+    "text": "硬链接和软链接（符号链接）有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "硬链接（Hard Link）： - 指向同一个inode的不同文件名 - 删除原文件不影响硬链接（inode引用计数减1，为0时才真正删除） - 不能跨文件系统 - 不能链接目录 - 创建：ln source target  软链接/符号链接（Symbolic Link）： - 是一个独立的文件，存储目标文件的路径 - 类似于Windows的快捷方式 - 删除原文件后软链接失效（悬空链接） - 可以跨文件系统 - 可以链接目录 - 创建：ln -s source target  区别总结： 1. inode：硬链接共享inode，软链接有独立inode 2. 删除原文件：硬链接不受影响，软链接失效 3. 跨文件系统：硬链接不行，软链接可以 4. 链接目录：硬链接不行，软链接可以"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>硬链接与软链接的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：硬链接, 软链接, 符号链接, inode, Linux</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>硬链接和软链接（符号链接）有什么区别？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">硬链接（Hard Link）：</div><div class="answer-line">- 指向同一个inode的不同文件名</div><div class="answer-line">- 删除原文件不影响硬链接（inode引用计数减1，为0时才真正删除）</div><div class="answer-line">- 不能跨文件系统</div><div class="answer-line">- 不能链接目录</div><div class="answer-line">- 创建：ln source target</div><br><div class="answer-line">软链接/符号链接（Symbolic Link）：</div><div class="answer-line">- 是一个独立的文件，存储目标文件的路径</div><div class="answer-line">- 类似于Windows的快捷方式</div><div class="answer-line">- 删除原文件后软链接失效（悬空链接）</div><div class="answer-line">- 可以跨文件系统</div><div class="answer-line">- 可以链接目录</div><div class="answer-line">- 创建：ln -s source target</div><br><div class="answer-line">区别总结：</div><div class="answer-line"><strong>1. inode：硬链接共享inode，软链接有独立inode</strong></div><div class="answer-line"><strong>2. 删除原文件：硬链接不受影响，软链接失效</strong></div><div class="answer-line"><strong>3. 跨文件系统：硬链接不行，软链接可以</strong></div><div class="answer-line"><strong>4. 链接目录：硬链接不行，软链接可以</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 创建链接
+// 硬链接
+// $ ln file.txt hardlink.txt
+
+// 软链接
+// $ ln -s file.txt softlink.txt
+
+// 查看inode
+// $ ls -li
+// 1234567 -rw-r--r-- 2 user file.txt
+// 1234567 -rw-r--r-- 2 user hardlink.txt  // 同一inode
+// 7654321 lrwxrwxrwx 1 user softlink.txt -&gt; file.txt
+
+// 查看链接数
+// $ stat file.txt
+// Link: 2  (硬链接数)
+
+// C语言创建链接
+#include &lt;unistd.h&gt;
+link(&quot;file.txt&quot;, &quot;hardlink.txt&quot;);     // 硬链接
+symlink(&quot;file.txt&quot;, &quot;softlink.txt&quot;);  // 软链接</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

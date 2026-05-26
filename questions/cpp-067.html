@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二分查找及变体 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="二分查找（Binary Search）： - 在有序数组中查找目标值 - 每次将搜索范围减半 - 时间复杂度O(log n)  常见变体： 1. 查找第一个等于target的位置（lower_bound） 2. 查找最后一个等于target的位置（upper_bound） 3. 查找旋转排序数组的最小值 4. 查找旋转...">
+<meta name="keywords" content="二分查找及变体,C/C++面试题,二分查找, 算法, 查找, 边界,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-067.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分查找及变体 - C/C++面试题">
+<meta property="og:description" content="二分查找（Binary Search）： - 在有序数组中查找目标值 - 每次将搜索范围减半 - 时间复杂度O(log n)  常见变体： 1. 查找第一个等于target的位置（lower_bound） 2. 查找最后一个等于target的位置（upper_bound） 3. 查找旋转排序数组的最小值 4. 查找旋转...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-067.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "二分查找及变体",
+    "text": "实现二分查找及其变体（查找第一个、最后一个、旋转数组）。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "二分查找（Binary Search）： - 在有序数组中查找目标值 - 每次将搜索范围减半 - 时间复杂度O(log n)  常见变体： 1. 查找第一个等于target的位置（lower_bound） 2. 查找最后一个等于target的位置（upper_bound） 3. 查找旋转排序数组的最小值 4. 查找旋转排序数组中的目标值  关键点： - 循环条件：left &lt;= right 还是 left &lt; right - 边界更新：mid +/- 1 - 防止溢出：mid = left + (right - left) / 2"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>二分查找及变体</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：二分查找, 算法, 查找, 边界</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>实现二分查找及其变体（查找第一个、最后一个、旋转数组）。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">二分查找（Binary Search）：</div><div class="answer-line">- 在有序数组中查找目标值</div><div class="answer-line">- 每次将搜索范围减半</div><div class="answer-line">- 时间复杂度O(log n)</div><br><div class="answer-line">常见变体：</div><div class="answer-line"><strong>1. 查找第一个等于target的位置（lower_bound）</strong></div><div class="answer-line"><strong>2. 查找最后一个等于target的位置（upper_bound）</strong></div><div class="answer-line"><strong>3. 查找旋转排序数组的最小值</strong></div><div class="answer-line"><strong>4. 查找旋转排序数组中的目标值</strong></div><br><div class="answer-line">关键点：</div><div class="answer-line">- 循环条件：left &lt;= right 还是 left &lt; right</div><div class="answer-line">- 边界更新：mid +/- 1</div><div class="answer-line">- 防止溢出：mid = left + (right - left) / 2</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 标准二分查找
+int binarySearch(vector&lt;int&gt;&amp; arr, int target) {
+    int left = 0, right = arr.size() - 1;
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return mid;
+        if (arr[mid] &lt; target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+
+// 查找第一个&gt;=target的位置（lower_bound）
+int lowerBound(vector&lt;int&gt;&amp; arr, int target) {
+    int left = 0, right = arr.size();
+    while (left &lt; right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] &lt; target) left = mid + 1;
+        else right = mid;
+    }
+    return left;
+}
+
+// 查找旋转数组最小值
+int findMin(vector&lt;int&gt;&amp; nums) {
+    int left = 0, right = nums.size() - 1;
+    while (left &lt; right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] &gt; nums[right]) left = mid + 1;
+        else if (nums[mid] &lt; nums[right]) right = mid;
+        else right--;  // 处理重复
+    }
+    return nums[left];
+}
+
+// 查找旋转数组中的目标值
+int searchRotated(vector&lt;int&gt;&amp; nums, int target) {
+    int left = 0, right = nums.size() - 1;
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        
+        if (nums[left] &lt;= nums[mid]) {  // 左半有序
+            if (target &gt;= nums[left] &amp;&amp; target &lt; nums[mid])
+                right = mid - 1;
+            else
+                left = mid + 1;
+        } else {  // 右半有序
+            if (target &gt; nums[mid] &amp;&amp; target &lt;= nums[right])
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+    }
+    return -1;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

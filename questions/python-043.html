@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>正则表达式re模块 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="re模块：正则表达式支持，用于字符串模式匹配。  常用函数： - match：从字符串开头匹配 - search：搜索第一个匹配 - findall：查找所有匹配 - finditer：返回匹配迭代器 - sub：替换匹配 - split：按模式分割 - compile：编译模式（重复使用）  常用模式： - .：任意...">
+<meta name="keywords" content="正则表达式re模块,Python面试题,正则表达式, regex, re, 字符串匹配, 模式匹配,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-043.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式re模块 - Python面试题">
+<meta property="og:description" content="re模块：正则表达式支持，用于字符串模式匹配。  常用函数： - match：从字符串开头匹配 - search：搜索第一个匹配 - findall：查找所有匹配 - finditer：返回匹配迭代器 - sub：替换匹配 - split：按模式分割 - compile：编译模式（重复使用）  常用模式： - .：任意...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-043.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "正则表达式re模块",
+    "text": "介绍Python的re模块常用功能。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "re模块：正则表达式支持，用于字符串模式匹配。  常用函数： - match：从字符串开头匹配 - search：搜索第一个匹配 - findall：查找所有匹配 - finditer：返回匹配迭代器 - sub：替换匹配 - split：按模式分割 - compile：编译模式（重复使用）  常用模式： - .：任意字符 - *：0次或多次 - +：1次或多次 - ?：0次或1次 - {n,m}：n到m次 - []：字符集 - ()：分组 - ^ $：开始/结束"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>正则表达式re模块</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：正则表达式, regex, re, 字符串匹配, 模式匹配</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍Python的re模块常用功能。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">re模块：正则表达式支持，用于字符串模式匹配。</div><br><div class="answer-line">常用函数：</div><div class="answer-line">- match：从字符串开头匹配</div><div class="answer-line">- search：搜索第一个匹配</div><div class="answer-line">- findall：查找所有匹配</div><div class="answer-line">- finditer：返回匹配迭代器</div><div class="answer-line">- sub：替换匹配</div><div class="answer-line">- split：按模式分割</div><div class="answer-line">- compile：编译模式（重复使用）</div><br><div class="answer-line">常用模式：</div><div class="answer-line">- .：任意字符</div><div class="answer-line">- *：0次或多次</div><div class="answer-line">- +：1次或多次</div><div class="answer-line">- ?：0次或1次</div><div class="answer-line">- {n,m}：n到m次</div><div class="answer-line">- []：字符集</div><div class="answer-line">- ()：分组</div><div class="answer-line">- ^ $：开始/结束</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import re
+
+text = &#039;Email: alice@example.com, Phone: 138-1234-5678&#039;
+
+# 搜索
+match = re.search(r&#039;\w+@\w+\.\w+&#039;, text)
+if match:
+    print(match.group())  # alice@example.com
+
+# 查找所有
+emails = re.findall(r&#039;\w+@\w+\.\w+&#039;, text)
+
+# 分组
+match = re.search(r&#039;(\w+)@((\w+)\.(\w+))&#039;, text)
+if match:
+    print(match.group(0))  # 完整匹配
+    print(match.group(1))  # 用户名
+    print(match.group(2))  # 域名
+
+# 替换
+masked = re.sub(r&#039;\d{3}-\d{4}-\d{4}&#039;, &#039;***-****-****&#039;, text)
+
+# 分割
+parts = re.split(r&#039;[,;\s]+&#039;, &#039;a,b; c  d&#039;)
+
+# 编译（重复使用）
+pattern = re.compile(r&#039;\d+&#039;)
+pattern.findall(&#039;abc123def456&#039;)  # [&#039;123&#039;, &#039;456&#039;]
+
+# 命名分组
+match = re.search(r&#039;(?P&lt;user&gt;\w+)@(?P&lt;domain&gt;\w+\.\w+)&#039;, text)
+print(match.group(&#039;user&#039;))
+
+# 贪婪vs非贪婪
+re.findall(r&#039;&lt;.*&gt;&#039;, &#039;&lt;a&gt;&lt;b&gt;&#039;)    # [&#039;&lt;a&gt;&lt;b&gt;&#039;] 贪婪
+re.findall(r&#039;&lt;.*?&gt;&#039;, &#039;&lt;a&gt;&lt;b&gt;&#039;)   # [&#039;&lt;a&gt;&#039;, &#039;&lt;b&gt;&#039;] 非贪婪</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

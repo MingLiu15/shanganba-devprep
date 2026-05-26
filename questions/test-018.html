@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allure测试报告 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Allure特点：** 1. 美观的Web报告界面 2. 支持历史趋势分析 3. 支持用例分类和过滤 4. 支持附件（截图、日志） 5. 支持步骤和严重级别  **安装：** ```bash pip install allure-pytest ```  **常用装饰器：** - `@allure.feature`：...">
+<meta name="keywords" content="Allure测试报告,自动化测试面试题,Allure, 测试报告, 可视化, pytest,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-018.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Allure测试报告 - 自动化测试面试题">
+<meta property="og:description" content="**Allure特点：** 1. 美观的Web报告界面 2. 支持历史趋势分析 3. 支持用例分类和过滤 4. 支持附件（截图、日志） 5. 支持步骤和严重级别  **安装：** ```bash pip install allure-pytest ```  **常用装饰器：** - `@allure.feature`：...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-018.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Allure测试报告",
+    "text": "如何使用Allure生成测试报告？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Allure特点：** 1. 美观的Web报告界面 2. 支持历史趋势分析 3. 支持用例分类和过滤 4. 支持附件（截图、日志） 5. 支持步骤和严重级别  **安装：** ```bash pip install allure-pytest ```  **常用装饰器：** - `@allure.feature`：功能模块 - `@allure.story`：用户故事 - `@allure.severity`：严重级别 - `@allure.step`：测试步骤 - `@allure.attach`：添加附件"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Allure测试报告</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：Allure, 测试报告, 可视化, pytest</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何使用Allure生成测试报告？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Allure特点：**</div><div class="answer-line"><strong>1. 美观的Web报告界面</strong></div><div class="answer-line"><strong>2. 支持历史趋势分析</strong></div><div class="answer-line"><strong>3. 支持用例分类和过滤</strong></div><div class="answer-line"><strong>4. 支持附件（截图、日志）</strong></div><div class="answer-line"><strong>5. 支持步骤和严重级别</strong></div><br><div class="answer-line">**安装：**</div><div class="answer-line">```bash</div><div class="answer-line">pip install allure-pytest</div><div class="answer-line">```</div><br><div class="answer-line">**常用装饰器：**</div><div class="answer-line">- `@allure.feature`：功能模块</div><div class="answer-line">- `@allure.story`：用户故事</div><div class="answer-line">- `@allure.severity`：严重级别</div><div class="answer-line">- `@allure.step`：测试步骤</div><div class="answer-line">- `@allure.attach`：添加附件</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import allure
+import pytest
+
+@allure.feature(&quot;用户管理&quot;)
+class TestUser:
+    
+    @allure.story(&quot;用户登录&quot;)
+    @allure.severity(allure.severity_level.CRITICAL)
+    def test_login_success(self):
+        &quot;&quot;&quot;测试正常登录&quot;&quot;&quot;
+        with allure.step(&quot;输入用户名&quot;):
+            username = &quot;admin&quot;
+        
+        with allure.step(&quot;输入密码&quot;):
+            password = &quot;password123&quot;
+        
+        with allure.step(&quot;点击登录&quot;):
+            result = login(username, password)
+        
+        with allure.step(&quot;验证登录结果&quot;):
+            assert result[&quot;status&quot;] == &quot;success&quot;
+            allure.attach(str(result), &quot;登录响应&quot;, allure.attachment_type.JSON)
+    
+    
+    @allure.story(&quot;用户注册&quot;)
+    @allure.severity(allure.severity_level.NORMAL)
+    def test_register(self):
+        &quot;&quot;&quot;测试用户注册&quot;&quot;&quot;
+        user_data = {&quot;username&quot;: &quot;newuser&quot;, &quot;email&quot;: &quot;new@example.com&quot;}
+        
+        allure.attach.dict(user_data, &quot;注册数据&quot;)
+        
+        result = register(user_data)
+        assert result[&quot;success&quot;]
+
+# ===== 运行和生成报告 =====
+# 运行测试并收集数据
+# pytest --alluredir=./allure-results
+
+# 生成报告
+# allure generate ./allure-results -o ./allure-report
+
+# 打开报告
+# allure open ./allure-report
+
+# 清除历史数据
+# allure serve ./allure-results</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

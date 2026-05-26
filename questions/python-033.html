@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python的MRO算法（C3线性化） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="C3线性化是Python 3中计算多继承方法解析顺序（MRO）的算法，由一系列线性化约束产生。  C3算法规则： 1. 子类优先于父类。 2. 父类按声明顺序从左到右排列。 3. 如果一个类出现在多个父类的继承链中，只保留第一次出现的位置（单调性）。  算法步骤： - MRO的计算可以看作合并多个线性化列表的过程。 -...">
+<meta name="keywords" content="Python的MRO算法（C3线性化）,Python面试题,高级特性, MRO, C3线性化, 多继承,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-033.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python的MRO算法（C3线性化） - Python面试题">
+<meta property="og:description" content="C3线性化是Python 3中计算多继承方法解析顺序（MRO）的算法，由一系列线性化约束产生。  C3算法规则： 1. 子类优先于父类。 2. 父类按声明顺序从左到右排列。 3. 如果一个类出现在多个父类的继承链中，只保留第一次出现的位置（单调性）。  算法步骤： - MRO的计算可以看作合并多个线性化列表的过程。 -...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-033.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python的MRO算法（C3线性化）",
+    "text": "详细解释Python的C3线性化算法及其在MRO计算中的应用。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "C3线性化是Python 3中计算多继承方法解析顺序（MRO）的算法，由一系列线性化约束产生。  C3算法规则： 1. 子类优先于父类。 2. 父类按声明顺序从左到右排列。 3. 如果一个类出现在多个父类的继承链中，只保留第一次出现的位置（单调性）。  算法步骤： - MRO的计算可以看作合并多个线性化列表的过程。 - 每一步选择一个合法的类（不在任何列表的尾部）加入结果。 - 如果没有合法的类可选，说明继承结构不合法，抛出TypeError。  具体计算过程（以类D(B, C)为例）： 1. L[D] = D + merge(L[B], L[C], [B, C]) 2. L[B] = B + merge(L[A], [A]) = [B, A, object] 3. L[C] = C + merge(L[A], [A]) = [C, A, object] 4. merge([B, A, object], [C, A, object], [B, C]) 5. 选B（不在任何尾部），然后选C，然后选A，最后选object 6. L[D] = [D, B, C, A, object]  无效继承示例： - class X(A, B): pass 和 class Y(B, A): pass，如果Z(X, Y)会导致TypeError，因为A和B的相对顺序矛盾。  super()与MRO的关系： - super()不是简单的调用父类方法，而是按照MRO顺序调用下一个类的方法。 - super(ClassName, self)从MRO中ClassName之后开始查找。 - 这是协作式多重继承的基础。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python的MRO算法（C3线性化）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：高级特性, MRO, C3线性化, 多继承</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>详细解释Python的C3线性化算法及其在MRO计算中的应用。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">C3线性化是Python 3中计算多继承方法解析顺序（MRO）的算法，由一系列线性化约束产生。</div><br><div class="answer-line">C3算法规则：</div><div class="answer-line"><strong>1. 子类优先于父类。</strong></div><div class="answer-line"><strong>2. 父类按声明顺序从左到右排列。</strong></div><div class="answer-line"><strong>3. 如果一个类出现在多个父类的继承链中，只保留第一次出现的位置（单调性）。</strong></div><br><div class="answer-line">算法步骤：</div><div class="answer-line">- MRO的计算可以看作合并多个线性化列表的过程。</div><div class="answer-line">- 每一步选择一个合法的类（不在任何列表的尾部）加入结果。</div><div class="answer-line">- 如果没有合法的类可选，说明继承结构不合法，抛出TypeError。</div><br><div class="answer-line">具体计算过程（以类D(B, C)为例）：</div><div class="answer-line"><strong>1. L[D] = D + merge(L[B], L[C], [B, C])</strong></div><div class="answer-line"><strong>2. L[B] = B + merge(L[A], [A]) = [B, A, object]</strong></div><div class="answer-line"><strong>3. L[C] = C + merge(L[A], [A]) = [C, A, object]</strong></div><div class="answer-line"><strong>4. merge([B, A, object], [C, A, object], [B, C])</strong></div><div class="answer-line"><strong>5. 选B（不在任何尾部），然后选C，然后选A，最后选object</strong></div><div class="answer-line"><strong>6. L[D] = [D, B, C, A, object]</strong></div><br><div class="answer-line">无效继承示例：</div><div class="answer-line">- class X(A, B): pass 和 class Y(B, A): pass，如果Z(X, Y)会导致TypeError，因为A和B的相对顺序矛盾。</div><br><div class="answer-line">super()与MRO的关系：</div><div class="answer-line">- super()不是简单的调用父类方法，而是按照MRO顺序调用下一个类的方法。</div><div class="answer-line">- super(ClassName, self)从MRO中ClassName之后开始查找。</div><div class="answer-line">- 这是协作式多重继承的基础。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># C3线性化计算示例
+class O: pass
+class A(O): pass
+class B(O): pass
+class C(O): pass
+class D(B, C): pass
+class E(C, A): pass
+class F(D, E): pass
+
+print(F.__mro__)
+# (F, D, B, E, C, A, O, &lt;class &#039;object&#039;&gt;)
+
+# 手动计算 L[F]:
+# L[O] = [O]
+# L[A] = [A, O]
+# L[B] = [B, O]
+# L[C] = [C, O]
+# L[D] = [D] + merge(L[B], L[C], [B, C])
+#        = [D, B, C, O]
+# L[E] = [E] + merge(L[C], L[A], [C, A])
+#        = [E, C, A, O]
+# L[F] = [F] + merge(L[D], L[E], [D, E])
+#        = [F, D, B, E, C, A, O]
+
+# 无效继承
+# class X(A, B): pass
+# class Y(B, A): pass
+# class Z(X, Y): pass  # TypeError: Cannot create a consistent MRO</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

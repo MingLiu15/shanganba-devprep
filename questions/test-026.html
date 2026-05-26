@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试驱动开发（TDD） - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**TDD（测试驱动开发）：** 先写测试，再写代码，通过测试来驱动设计。  **红绿重构循环：** 1. **红**：写一个失败的测试 2. **绿**：写最少代码让测试通过 3. **重构**：优化代码，保持测试通过  **TDD优势：** - 高测试覆盖率 - 更好的设计（松耦合） - 活文档（测试即文档） - ...">
+<meta name="keywords" content="测试驱动开发（TDD）,自动化测试面试题,TDD, 测试驱动开发, 红绿重构, 单元测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-026.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试驱动开发（TDD） - 自动化测试面试题">
+<meta property="og:description" content="**TDD（测试驱动开发）：** 先写测试，再写代码，通过测试来驱动设计。  **红绿重构循环：** 1. **红**：写一个失败的测试 2. **绿**：写最少代码让测试通过 3. **重构**：优化代码，保持测试通过  **TDD优势：** - 高测试覆盖率 - 更好的设计（松耦合） - 活文档（测试即文档） - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-026.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "测试驱动开发（TDD）",
+    "text": "什么是TDD？TDD的工作流程是什么？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**TDD（测试驱动开发）：** 先写测试，再写代码，通过测试来驱动设计。  **红绿重构循环：** 1. **红**：写一个失败的测试 2. **绿**：写最少代码让测试通过 3. **重构**：优化代码，保持测试通过  **TDD优势：** - 高测试覆盖率 - 更好的设计（松耦合） - 活文档（测试即文档） - 更安全地重构  **TDD挑战：** - 学习曲线陡峭 - 初期开发速度较慢 - 不适合探索性开发 - UI/UX开发较难TDD"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>测试驱动开发（TDD）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：TDD, 测试驱动开发, 红绿重构, 单元测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是TDD？TDD的工作流程是什么？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**TDD（测试驱动开发）：**</div><div class="answer-line">先写测试，再写代码，通过测试来驱动设计。</div><br><div class="answer-line">**红绿重构循环：**</div><div class="answer-line"><strong>1. **红**：写一个失败的测试</strong></div><div class="answer-line"><strong>2. **绿**：写最少代码让测试通过</strong></div><div class="answer-line"><strong>3. **重构**：优化代码，保持测试通过</strong></div><br><div class="answer-line">**TDD优势：**</div><div class="answer-line">- 高测试覆盖率</div><div class="answer-line">- 更好的设计（松耦合）</div><div class="answer-line">- 活文档（测试即文档）</div><div class="answer-line">- 更安全地重构</div><br><div class="answer-line">**TDD挑战：**</div><div class="answer-line">- 学习曲线陡峭</div><div class="answer-line">- 初期开发速度较慢</div><div class="answer-line">- 不适合探索性开发</div><div class="answer-line">- UI/UX开发较难TDD</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># TDD示例：实现一个计算器
+
+# 步骤1：写测试（红）
+# test_calculator.py
+def test_add():
+    calc = Calculator()
+    assert calc.add(2, 3) == 5
+
+def test_subtract():
+    calc = Calculator()
+    assert calc.subtract(5, 3) == 2
+
+# 步骤2：实现代码（绿）
+# calculator.py
+class Calculator:
+    def add(self, a, b):
+        return a + b
+    
+    def subtract(self, a, b):
+        return a - b
+
+# 步骤3：重构
+# 优化代码结构，保持测试通过
+class Calculator:
+    def add(self, a, b):
+        &quot;&quot;&quot;Add two numbers.&quot;&quot;&quot;
+        return a + b
+    
+    def subtract(self, a, b):
+        &quot;&quot;&quot;Subtract b from a.&quot;&quot;&quot;
+        return a - b
+    
+    def multiply(self, a, b):
+        &quot;&quot;&quot;Multiply two numbers.&quot;&quot;&quot;
+        return a * b
+    
+    def divide(self, a, b):
+        &quot;&quot;&quot;Divide a by b.&quot;&quot;&quot;
+        if b == 0:
+            raise ValueError(&quot;Cannot divide by zero&quot;)
+        return a / b</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

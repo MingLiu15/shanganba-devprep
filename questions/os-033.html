@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生产者-消费者问题 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="问题描述： - 生产者向缓冲区放入产品 - 消费者从缓冲区取出产品 - 缓冲区满时生产者等待，缓冲区空时消费者等待  需要三个信号量： 1. mutex：互斥访问缓冲区（初始值1） 2. empty：空槽位数量（初始值N） 3. full：已有产品数量（初始值0）  生产者流程： 1. P(empty)：等待空槽位 2...">
+<meta name="keywords" content="生产者-消费者问题,操作系统面试题,生产者消费者, 同步, 信号量, 经典问题, 并发,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-033.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生产者-消费者问题 - 操作系统面试题">
+<meta property="og:description" content="问题描述： - 生产者向缓冲区放入产品 - 消费者从缓冲区取出产品 - 缓冲区满时生产者等待，缓冲区空时消费者等待  需要三个信号量： 1. mutex：互斥访问缓冲区（初始值1） 2. empty：空槽位数量（初始值N） 3. full：已有产品数量（初始值0）  生产者流程： 1. P(empty)：等待空槽位 2...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-033.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "生产者-消费者问题",
+    "text": "什么是生产者-消费者问题？如何用信号量实现？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "问题描述： - 生产者向缓冲区放入产品 - 消费者从缓冲区取出产品 - 缓冲区满时生产者等待，缓冲区空时消费者等待  需要三个信号量： 1. mutex：互斥访问缓冲区（初始值1） 2. empty：空槽位数量（初始值N） 3. full：已有产品数量（初始值0）  生产者流程： 1. P(empty)：等待空槽位 2. P(mutex)：获取互斥锁 3. 放入产品 4. V(mutex)：释放互斥锁 5. V(full)：通知消费者  消费者流程： 1. P(full)：等待产品 2. P(mutex)：获取互斥锁 3. 取出产品 4. V(mutex)：释放互斥锁 5. V(empty)：通知生产者  注意：P(empty)和P(mutex)的顺序不能颠倒，否则可能死锁。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>生产者-消费者问题</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：生产者消费者, 同步, 信号量, 经典问题, 并发</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是生产者-消费者问题？如何用信号量实现？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">问题描述：</div><div class="answer-line">- 生产者向缓冲区放入产品</div><div class="answer-line">- 消费者从缓冲区取出产品</div><div class="answer-line">- 缓冲区满时生产者等待，缓冲区空时消费者等待</div><br><div class="answer-line">需要三个信号量：</div><div class="answer-line"><strong>1. mutex：互斥访问缓冲区（初始值1）</strong></div><div class="answer-line"><strong>2. empty：空槽位数量（初始值N）</strong></div><div class="answer-line"><strong>3. full：已有产品数量（初始值0）</strong></div><br><div class="answer-line">生产者流程：</div><div class="answer-line"><strong>1. P(empty)：等待空槽位</strong></div><div class="answer-line"><strong>2. P(mutex)：获取互斥锁</strong></div><div class="answer-line"><strong>3. 放入产品</strong></div><div class="answer-line"><strong>4. V(mutex)：释放互斥锁</strong></div><div class="answer-line"><strong>5. V(full)：通知消费者</strong></div><br><div class="answer-line">消费者流程：</div><div class="answer-line"><strong>1. P(full)：等待产品</strong></div><div class="answer-line"><strong>2. P(mutex)：获取互斥锁</strong></div><div class="answer-line"><strong>3. 取出产品</strong></div><div class="answer-line"><strong>4. V(mutex)：释放互斥锁</strong></div><div class="answer-line"><strong>5. V(empty)：通知生产者</strong></div><br><div class="answer-line">注意：P(empty)和P(mutex)的顺序不能颠倒，否则可能死锁。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;semaphore.h&gt;
+#include &lt;pthread.h&gt;
+
+#define N 10
+int buffer[N];
+int in = 0, out = 0;
+
+sem_t empty, full, mutex;
+// 初始化
+sem_init(&amp;empty, 0, N);  // N个空槽
+sem_init(&amp;full, 0, 0);   // 0个产品
+sem_init(&amp;mutex, 0, 1);  // 互斥
+
+void* producer(void* arg) {
+    int item;
+    while (true) {
+        item = produce();        // 生产
+        sem_wait(&amp;empty);        // 等待空槽
+        sem_wait(&amp;mutex);        // 加锁
+        buffer[in] = item;
+        in = (in + 1) % N;
+        sem_post(&amp;mutex);        // 解锁
+        sem_post(&amp;full);         // 通知消费者
+    }
+}
+
+void* consumer(void* arg) {
+    int item;
+    while (true) {
+        sem_wait(&amp;full);         // 等待产品
+        sem_wait(&amp;mutex);        // 加锁
+        item = buffer[out];
+        out = (out + 1) % N;
+        sem_post(&amp;mutex);        // 解锁
+        sem_post(&amp;empty);        // 通知生产者
+        consume(item);           // 消费
+    }
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

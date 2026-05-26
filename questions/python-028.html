@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python包管理与虚拟环境 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="pip是Python的包管理工具，用于安装、卸载和管理第三方包。  常用pip命令： - pip install package：安装包。 - pip install -r requirements.txt：从文件批量安装。 - pip uninstall package：卸载包。 - pip list：列出已安装的包...">
+<meta name="keywords" content="Python包管理与虚拟环境,Python面试题,工具, 包管理, pip, 虚拟环境, venv,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-028.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python包管理与虚拟环境 - Python面试题">
+<meta property="og:description" content="pip是Python的包管理工具，用于安装、卸载和管理第三方包。  常用pip命令： - pip install package：安装包。 - pip install -r requirements.txt：从文件批量安装。 - pip uninstall package：卸载包。 - pip list：列出已安装的包...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-028.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python包管理与虚拟环境",
+    "text": "介绍Python包管理工具pip和虚拟环境的使用方法。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "pip是Python的包管理工具，用于安装、卸载和管理第三方包。  常用pip命令： - pip install package：安装包。 - pip install -r requirements.txt：从文件批量安装。 - pip uninstall package：卸载包。 - pip list：列出已安装的包。 - pip freeze &gt; requirements.txt：导出依赖。 - pip show package：查看包详情。  虚拟环境： - 为每个项目创建独立的Python环境，避免依赖冲突。 - venv（Python内置）：python -m venv myenv。 - virtualenv（第三方）：功能更丰富。 - conda：Anaconda/Miniconda提供，适合数据科学。  虚拟环境使用： 1. 创建：python -m venv myenv。 2. 激活：source myenv/bin/activate（Linux/Mac）或 myenv\Scripts\activate（Windows）。 3. 安装包：pip install package。 4. 导出依赖：pip freeze &gt; requirements.txt。 5. 退出：deactivate。  依赖管理工具： - poetry：现代Python项目管理工具，集成了依赖管理和打包。 - pipenv：pip和virtualenv的结合。 - pdm：基于PEP 582的包管理器。  pyproject.toml是现代Python项目的标准配置文件（PEP 518/621）。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python包管理与虚拟环境</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：工具, 包管理, pip, 虚拟环境, venv</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍Python包管理工具pip和虚拟环境的使用方法。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">pip是Python的包管理工具，用于安装、卸载和管理第三方包。</div><br><div class="answer-line">常用pip命令：</div><div class="answer-line">- pip install package：安装包。</div><div class="answer-line">- pip install -r requirements.txt：从文件批量安装。</div><div class="answer-line">- pip uninstall package：卸载包。</div><div class="answer-line">- pip list：列出已安装的包。</div><div class="answer-line">- pip freeze &gt; requirements.txt：导出依赖。</div><div class="answer-line">- pip show package：查看包详情。</div><br><div class="answer-line">虚拟环境：</div><div class="answer-line">- 为每个项目创建独立的Python环境，避免依赖冲突。</div><div class="answer-line">- venv（Python内置）：python -m venv myenv。</div><div class="answer-line">- virtualenv（第三方）：功能更丰富。</div><div class="answer-line">- conda：Anaconda/Miniconda提供，适合数据科学。</div><br><div class="answer-line">虚拟环境使用：</div><div class="answer-line"><strong>1. 创建：python -m venv myenv。</strong></div><div class="answer-line"><strong>2. 激活：source myenv/bin/activate（Linux/Mac）或 myenv\Scripts\activate（Windows）。</strong></div><div class="answer-line"><strong>3. 安装包：pip install package。</strong></div><div class="answer-line"><strong>4. 导出依赖：pip freeze &gt; requirements.txt。</strong></div><div class="answer-line"><strong>5. 退出：deactivate。</strong></div><br><div class="answer-line">依赖管理工具：</div><div class="answer-line">- poetry：现代Python项目管理工具，集成了依赖管理和打包。</div><div class="answer-line">- pipenv：pip和virtualenv的结合。</div><div class="answer-line">- pdm：基于PEP 582的包管理器。</div><br><div class="answer-line">pyproject.toml是现代Python项目的标准配置文件（PEP 518/621）。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># requirements.txt 示例
+# flask==2.3.0
+# requests&gt;=2.28.0
+# numpy&gt;=1.24.0,&lt;2.0.0
+
+# pyproject.toml 示例（现代项目配置）
+&#039;&#039;&#039;
+[project]
+name = &quot;myproject&quot;
+version = &quot;1.0.0&quot;
+description = &quot;My Python project&quot;
+requires-python = &quot;&gt;=3.10&quot;
+dependencies = [
+    &quot;flask&gt;=2.3.0&quot;,
+    &quot;requests&gt;=2.28.0&quot;,
+]
+
+[project.optional-dependencies]
+dev = [&quot;pytest&gt;=7.0&quot;, &quot;black&gt;=23.0&quot;]
+
+[build-system]
+requires = [&quot;setuptools&gt;=65.0&quot;]
+build-backend = &quot;setuptools.backends._legacy:_Backend&quot;
+&#039;&#039;&#039;
+
+# 常用命令
+# python -m venv .venv
+# .venv\Scripts\activate  (Windows)
+# pip install -r requirements.txt
+# pip freeze &gt; requirements.txt</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

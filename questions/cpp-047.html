@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拷贝省略RVO与NRVO - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="RVO（Return Value Optimization，返回值优化）： - 函数返回临时对象时，编译器直接在调用者的内存中构造对象 - 省略了拷贝/移动构造函数的调用 - C++17中RVO是强制性的（保证省略）  NRVO（Named Return Value Optimization，命名返回值优化）： - 函...">
+<meta name="keywords" content="拷贝省略RVO与NRVO,C/C++面试题,RVO, NRVO, 拷贝省略, 编译器优化, 返回值优化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-047.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拷贝省略RVO与NRVO - C/C++面试题">
+<meta property="og:description" content="RVO（Return Value Optimization，返回值优化）： - 函数返回临时对象时，编译器直接在调用者的内存中构造对象 - 省略了拷贝/移动构造函数的调用 - C++17中RVO是强制性的（保证省略）  NRVO（Named Return Value Optimization，命名返回值优化）： - 函...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-047.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "拷贝省略RVO与NRVO",
+    "text": "什么是RVO和NRVO？它们如何优化性能？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "RVO（Return Value Optimization，返回值优化）： - 函数返回临时对象时，编译器直接在调用者的内存中构造对象 - 省略了拷贝/移动构造函数的调用 - C++17中RVO是强制性的（保证省略）  NRVO（Named Return Value Optimization，命名返回值优化）： - 函数返回命名局部变量时，编译器优化掉拷贝 - C++17中NRVO不强制，但大多数编译器支持  触发条件： - 返回与函数返回类型相同的对象 - 不能有多个返回路径返回不同对象 - 不能返回不同作用域的局部变量  影响： - 即使有拷贝/移动构造函数，也可能被省略 - C++17起，即使省略了拷贝/移动，拷贝/移动构造函数也必须可访问 - 语义上仍调用构造函数（析构函数也会调用）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>拷贝省略RVO与NRVO</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：RVO, NRVO, 拷贝省略, 编译器优化, 返回值优化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是RVO和NRVO？它们如何优化性能？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">RVO（Return Value Optimization，返回值优化）：</div><div class="answer-line">- 函数返回临时对象时，编译器直接在调用者的内存中构造对象</div><div class="answer-line">- 省略了拷贝/移动构造函数的调用</div><div class="answer-line">- C++17中RVO是强制性的（保证省略）</div><br><div class="answer-line">NRVO（Named Return Value Optimization，命名返回值优化）：</div><div class="answer-line">- 函数返回命名局部变量时，编译器优化掉拷贝</div><div class="answer-line">- C++17中NRVO不强制，但大多数编译器支持</div><br><div class="answer-line">触发条件：</div><div class="answer-line">- 返回与函数返回类型相同的对象</div><div class="answer-line">- 不能有多个返回路径返回不同对象</div><div class="answer-line">- 不能返回不同作用域的局部变量</div><br><div class="answer-line">影响：</div><div class="answer-line">- 即使有拷贝/移动构造函数，也可能被省略</div><div class="answer-line">- C++17起，即使省略了拷贝/移动，拷贝/移动构造函数也必须可访问</div><div class="answer-line">- 语义上仍调用构造函数（析构函数也会调用）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// RVO示例
+std::vector&lt;int&gt; createVector() {
+    return std::vector&lt;int&gt;{1, 2, 3};
+    // RVO：直接在调用者处构造，无拷贝
+}
+auto v = createVector();  // 无拷贝/移动
+
+// NRVO示例
+std::string buildString() {
+    std::string result;
+    result += &quot;hello&quot;;
+    result += &quot; world&quot;;
+    return result;  // NRVO：省略拷贝
+}
+
+// RVO失效的情况
+std::string broken(int flag) {
+    std::string a = &quot;a&quot;;
+    std::string b = &quot;b&quot;;
+    if (flag) return a;  // 两个不同对象
+    return b;            // NRVO可能失效
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

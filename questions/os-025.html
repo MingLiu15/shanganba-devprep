@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DMA（直接内存访问） - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="DMA（Direct Memory Access）： - 允许外设直接与内存交换数据，不经过CPU - 由DMA控制器（DMAC）完成数据传输  工作流程： 1. CPU向DMA控制器发送传输请求 2. DMA控制器向总线仲裁器申请总线控制权 3. 获得总线控制权后，DMA直接读写内存 4. 传输完成后，DMA向CPU...">
+<meta name="keywords" content="DMA（直接内存访问）,操作系统面试题,DMA, IO, 中断, 性能优化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-025.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DMA（直接内存访问） - 操作系统面试题">
+<meta property="og:description" content="DMA（Direct Memory Access）： - 允许外设直接与内存交换数据，不经过CPU - 由DMA控制器（DMAC）完成数据传输  工作流程： 1. CPU向DMA控制器发送传输请求 2. DMA控制器向总线仲裁器申请总线控制权 3. 获得总线控制权后，DMA直接读写内存 4. 传输完成后，DMA向CPU...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-025.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "DMA（直接内存访问）",
+    "text": "什么是DMA？它有什么作用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "DMA（Direct Memory Access）： - 允许外设直接与内存交换数据，不经过CPU - 由DMA控制器（DMAC）完成数据传输  工作流程： 1. CPU向DMA控制器发送传输请求 2. DMA控制器向总线仲裁器申请总线控制权 3. 获得总线控制权后，DMA直接读写内存 4. 传输完成后，DMA向CPU发送中断通知  优点： 1. 解放CPU：CPU在DMA传输期间可以执行其他任务 2. 速度快：DMA是硬件传输，比CPU逐字节传输快 3. 减少中断次数：整块数据传输完才中断一次  应用场景： - 磁盘读写 - 网络数据收发 - 显存数据传输 - 音频数据播放  与中断驱动IO对比： - 中断驱动：每个字节/字都中断CPU，开销大 - DMA：整块数据传输完才中断，开销小"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>DMA（直接内存访问）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：DMA, IO, 中断, 性能优化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是DMA？它有什么作用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">DMA（Direct Memory Access）：</div><div class="answer-line">- 允许外设直接与内存交换数据，不经过CPU</div><div class="answer-line">- 由DMA控制器（DMAC）完成数据传输</div><br><div class="answer-line">工作流程：</div><div class="answer-line"><strong>1. CPU向DMA控制器发送传输请求</strong></div><div class="answer-line"><strong>2. DMA控制器向总线仲裁器申请总线控制权</strong></div><div class="answer-line"><strong>3. 获得总线控制权后，DMA直接读写内存</strong></div><div class="answer-line"><strong>4. 传输完成后，DMA向CPU发送中断通知</strong></div><br><div class="answer-line">优点：</div><div class="answer-line"><strong>1. 解放CPU：CPU在DMA传输期间可以执行其他任务</strong></div><div class="answer-line"><strong>2. 速度快：DMA是硬件传输，比CPU逐字节传输快</strong></div><div class="answer-line"><strong>3. 减少中断次数：整块数据传输完才中断一次</strong></div><br><div class="answer-line">应用场景：</div><div class="answer-line">- 磁盘读写</div><div class="answer-line">- 网络数据收发</div><div class="answer-line">- 显存数据传输</div><div class="answer-line">- 音频数据播放</div><br><div class="answer-line">与中断驱动IO对比：</div><div class="answer-line">- 中断驱动：每个字节/字都中断CPU，开销大</div><div class="answer-line">- DMA：整块数据传输完才中断，开销小</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// DMA传输流程
+// 1. CPU配置DMA控制器
+//    - 源地址（外设寄存器）
+//    - 目标地址（内存）
+//    - 传输字节数
+//    - 传输方向（读/写）
+
+// 2. DMA控制器接管总线
+//    - CPU释放总线控制权
+//    - DMA直接在设备和内存间传输数据
+
+// 3. 传输完成
+//    - DMA释放总线
+//    - 向CPU发送中断
+
+// Linux查看DMA
+// $ dmesg | grep -i dma
+// $ cat /proc/dma</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

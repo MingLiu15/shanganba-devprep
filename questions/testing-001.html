@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>软件测试的分类 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="软件测试可以从多个维度分类：  按测试方法： 1. 黑盒测试：不关心内部实现，只验证输入输出 2. 白盒测试：了解内部结构，测试代码路径 3. 灰盒测试：结合两者  按测试阶段： 1. 单元测试：测试最小代码单元（函数/类） 2. 集成测试：测试模块间接口 3. 系统测试：测试完整系统 4. 验收测试：用户确认需求满足...">
+<meta name="keywords" content="软件测试的分类,自动化测试面试题,测试分类, 黑盒测试, 白盒测试, 单元测试, 集成测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/testing-001.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件测试的分类 - 自动化测试面试题">
+<meta property="og:description" content="软件测试可以从多个维度分类：  按测试方法： 1. 黑盒测试：不关心内部实现，只验证输入输出 2. 白盒测试：了解内部结构，测试代码路径 3. 灰盒测试：结合两者  按测试阶段： 1. 单元测试：测试最小代码单元（函数/类） 2. 集成测试：测试模块间接口 3. 系统测试：测试完整系统 4. 验收测试：用户确认需求满足...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/testing-001.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "软件测试的分类",
+    "text": "软件测试有哪些分类方式？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "软件测试可以从多个维度分类：  按测试方法： 1. 黑盒测试：不关心内部实现，只验证输入输出 2. 白盒测试：了解内部结构，测试代码路径 3. 灰盒测试：结合两者  按测试阶段： 1. 单元测试：测试最小代码单元（函数/类） 2. 集成测试：测试模块间接口 3. 系统测试：测试完整系统 4. 验收测试：用户确认需求满足  按测试类型： 1. 功能测试：验证功能正确性 2. 性能测试：负载、压力、稳定性 3. 安全测试：漏洞扫描、渗透测试 4. 兼容性测试：不同环境/浏览器 5. 易用性测试：用户体验  按执行方式： 1. 手动测试：人工执行 2. 自动化测试：脚本/工具执行  按测试时机： 1. 冒烟测试：验证基本功能 2. 回归测试：修改后验证原有功能 3. 探索性测试：自由探索发现缺陷"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>软件测试的分类</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：测试分类, 黑盒测试, 白盒测试, 单元测试, 集成测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>软件测试有哪些分类方式？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">软件测试可以从多个维度分类：</div><br><div class="answer-line">按测试方法：</div><div class="answer-line"><strong>1. 黑盒测试：不关心内部实现，只验证输入输出</strong></div><div class="answer-line"><strong>2. 白盒测试：了解内部结构，测试代码路径</strong></div><div class="answer-line"><strong>3. 灰盒测试：结合两者</strong></div><br><div class="answer-line">按测试阶段：</div><div class="answer-line"><strong>1. 单元测试：测试最小代码单元（函数/类）</strong></div><div class="answer-line"><strong>2. 集成测试：测试模块间接口</strong></div><div class="answer-line"><strong>3. 系统测试：测试完整系统</strong></div><div class="answer-line"><strong>4. 验收测试：用户确认需求满足</strong></div><br><div class="answer-line">按测试类型：</div><div class="answer-line"><strong>1. 功能测试：验证功能正确性</strong></div><div class="answer-line"><strong>2. 性能测试：负载、压力、稳定性</strong></div><div class="answer-line"><strong>3. 安全测试：漏洞扫描、渗透测试</strong></div><div class="answer-line"><strong>4. 兼容性测试：不同环境/浏览器</strong></div><div class="answer-line"><strong>5. 易用性测试：用户体验</strong></div><br><div class="answer-line">按执行方式：</div><div class="answer-line"><strong>1. 手动测试：人工执行</strong></div><div class="answer-line"><strong>2. 自动化测试：脚本/工具执行</strong></div><br><div class="answer-line">按测试时机：</div><div class="answer-line"><strong>1. 冒烟测试：验证基本功能</strong></div><div class="answer-line"><strong>2. 回归测试：修改后验证原有功能</strong></div><div class="answer-line"><strong>3. 探索性测试：自由探索发现缺陷</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 不同测试阶段的代码示例
+
+# 1. 单元测试 - 测试单个函数
+def add(a, b):
+    return a + b
+
+def test_add():
+    assert add(1, 2) == 3
+    assert add(-1, 1) == 0
+
+# 2. 集成测试 - 测试模块交互
+class Database:
+    def connect(self): pass
+    def query(self, sql): pass
+
+class UserService:
+    def __init__(self, db):
+        self.db = db
+    def get_user(self, id):
+        return self.db.query(f&#039;SELECT * FROM users WHERE id={id}&#039;)
+
+def test_user_service_integration():
+    db = Database()
+    service = UserService(db)
+    user = service.get_user(1)
+
+# 3. 端到端测试
+def test_user_registration_flow():
+    browser.goto(&#039;/register&#039;)
+    browser.fill(&#039;username&#039;, &#039;testuser&#039;)
+    browser.fill(&#039;password&#039;, &#039;password123&#039;)
+    browser.click(&#039;submit&#039;)
+    assert browser.url == &#039;/welcome&#039;</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

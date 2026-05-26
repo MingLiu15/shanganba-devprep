@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python3新特性 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python 3引入了许多重要特性：  1. 类型注解（Type Hints，PEP 484）： - 函数参数和返回值可以添加类型提示。 - 使用typing模块：List、Dict、Optional、Union、Tuple等。 - Python 3.10+使用 | 语法代替Union：int | None。 - 不影...">
+<meta name="keywords" content="Python3新特性,Python面试题,新特性, 类型注解, dataclass, walrus运算符,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-030.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python3新特性 - Python面试题">
+<meta property="og:description" content="Python 3引入了许多重要特性：  1. 类型注解（Type Hints，PEP 484）： - 函数参数和返回值可以添加类型提示。 - 使用typing模块：List、Dict、Optional、Union、Tuple等。 - Python 3.10+使用 | 语法代替Union：int | None。 - 不影...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-030.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python3新特性",
+    "text": "介绍Python 3中重要的新特性，包括类型注解、dataclass、海象运算符等。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python 3引入了许多重要特性：  1. 类型注解（Type Hints，PEP 484）： - 函数参数和返回值可以添加类型提示。 - 使用typing模块：List、Dict、Optional、Union、Tuple等。 - Python 3.10+使用 | 语法代替Union：int | None。 - 不影响运行时行为，主要用于静态检查（mypy）和IDE提示。  2. dataclass（PEP 557，Python 3.7+）： - 自动生成__init__、__repr__、__eq__等方法。 - 减少样板代码。 - 支持默认值、不可变(frozen)、字段排序等。  3. 海象运算符（:=，PEP 572，Python 3.8+）： - 赋值表达式，在表达式中同时赋值和使用。 - 减少重复计算，使代码更简洁。  4. f-string（Python 3.6+）： - 格式化字符串字面量，比format()和%更简洁高效。 - Python 3.12+支持嵌套f-string和更灵活的表达式。  5. 其他重要特性： - match-case模式匹配（Python 3.10+）。 - 异步生成器和异步推导式（Python 3.6+）。 - 字典合并运算符 |（Python 3.9+）。 - 结构化模式匹配（Python 3.10+）。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python3新特性</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：新特性, 类型注解, dataclass, walrus运算符</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍Python 3中重要的新特性，包括类型注解、dataclass、海象运算符等。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python 3引入了许多重要特性：</div><br><div class="answer-line"><strong>1. 类型注解（Type Hints，PEP 484）：</strong></div><div class="answer-line">- 函数参数和返回值可以添加类型提示。</div><div class="answer-line">- 使用typing模块：List、Dict、Optional、Union、Tuple等。</div><div class="answer-line">- Python 3.10+使用 | 语法代替Union：int | None。</div><div class="answer-line">- 不影响运行时行为，主要用于静态检查（mypy）和IDE提示。</div><br><div class="answer-line"><strong>2. dataclass（PEP 557，Python 3.7+）：</strong></div><div class="answer-line">- 自动生成__init__、__repr__、__eq__等方法。</div><div class="answer-line">- 减少样板代码。</div><div class="answer-line">- 支持默认值、不可变(frozen)、字段排序等。</div><br><div class="answer-line"><strong>3. 海象运算符（:=，PEP 572，Python 3.8+）：</strong></div><div class="answer-line">- 赋值表达式，在表达式中同时赋值和使用。</div><div class="answer-line">- 减少重复计算，使代码更简洁。</div><br><div class="answer-line"><strong>4. f-string（Python 3.6+）：</strong></div><div class="answer-line">- 格式化字符串字面量，比format()和%更简洁高效。</div><div class="answer-line">- Python 3.12+支持嵌套f-string和更灵活的表达式。</div><br><div class="answer-line"><strong>5. 其他重要特性：</strong></div><div class="answer-line">- match-case模式匹配（Python 3.10+）。</div><div class="answer-line">- 异步生成器和异步推导式（Python 3.6+）。</div><div class="answer-line">- 字典合并运算符 |（Python 3.9+）。</div><div class="answer-line">- 结构化模式匹配（Python 3.10+）。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 类型注解
+from typing import Optional, List
+
+def greet(name: str, age: int = 0) -&gt; str:
+    return f&#039;Hello, {name}, age {age}&#039;
+
+# dataclass
+from dataclasses import dataclass, field
+
+@dataclass
+class User:
+    name: str
+    age: int = 0
+    tags: List[str] = field(default_factory=list)
+
+user = User(&#039;Tom&#039;, 25)
+print(user)  # User(name=&#039;Tom&#039;, age=25, tags=[])
+
+# 海象运算符
+# 传统写法
+# data = [1, 2, 3, 4, 5]
+# n = len(data)
+# if n &gt; 3:
+#     print(f&#039;列表有{n}个元素&#039;)
+
+# 海象运算符写法
+if (n := len([1,2,3,4,5])) &gt; 3:
+    print(f&#039;列表有{n}个元素&#039;)
+
+# 字典合并 (Python 3.9+)
+d1 = {&#039;a&#039;: 1}
+d2 = {&#039;b&#039;: 2}
+merged = d1 | d2  # {&#039;a&#039;: 1, &#039;b&#039;: 2}
+
+# match-case (Python 3.10+)
+# match command:
+#     case &#039;quit&#039;: print(&#039;bye&#039;)
+#     case [&#039;load&#039;, filename]: print(f&#039;加载 {filename}&#039;)
+#     case _: print(&#039;未知命令&#039;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,1118 @@
+{
+  "questions": [
+    {
+      "id": "python-001",
+      "title": "可变类型与不可变类型的区别",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "数据类型",
+        "可变性"
+      ],
+      "content": "请详细说明Python中可变类型与不可变类型的区别，并列举常见的数据类型。",
+      "answer": "Python中数据类型分为可变（mutable）和不可变（immutable）两类。\n\n1. 不可变类型：int、float、str、tuple、frozenset、bytes。一旦创建，值不可修改，修改时会创建新对象。\n2. 可变类型：list、dict、set、bytearray。创建后可以原地修改内容，对象地址不变。\n\n关键区别：\n- 不可变类型作为字典的key、集合的元素；可变类型不能。\n- 函数传参时，不可变类型类似值传递，可变类型类似引用传递，函数内修改可变对象会影响外部。\n- 不可变类型更安全，适合多线程环境共享数据；可变类型需注意线程安全。\n- tuple虽然不可变，但如果包含可变元素（如list），该元素的值仍可被修改。",
+      "code": {
+        "python": "# 不可变类型示例\na = (1, 2, [3, 4])\n# a[0] = 10       # TypeError: 'tuple' object does not support item assignment\na[2][0] = 10     # 但内部可变元素可以修改\nprint(a)          # (1, 2, [10, 4])\n\n# 可变类型示例\nb = [1, 2, 3]\nprint(id(b))      # 140xxx\nb.append(4)\nprint(id(b))      # 140xxx，地址不变\n\n# 函数传参的影响\ndef modify(lst):\n    lst.append(99)\nmy_list = [1, 2]\nmodify(my_list)\nprint(my_list)    # [1, 2, 99]"
+      }
+    },
+    {
+      "id": "python-002",
+      "title": "深拷贝与浅拷贝的区别",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "拷贝",
+        "copy模块"
+      ],
+      "content": "解释Python中浅拷贝（shallow copy）和深拷贝（deep copy）的区别，并说明各自的实现方式。",
+      "answer": "浅拷贝：创建新对象，但只复制顶层引用。如果原对象包含嵌套的可变对象，浅拷贝和原对象共享这些嵌套对象。实现方式：copy.copy()、list()、dict()、切片[:]、list.copy()。\n\n深拷贝：递归复制所有层级的对象，完全独立于原对象。修改深拷贝不会影响原对象。实现方式：copy.deepcopy()。\n\n区别总结：\n- 浅拷贝只复制第一层，嵌套对象仍共享引用。\n- 深拷贝递归复制所有层级，完全独立。\n- 深拷贝性能开销更大，尤其是对象层级很深或包含大量数据时。\n- 对于只包含不可变类型的对象，浅拷贝和深拷贝效果相同。\n- 对象的__copy__和__deepcopy__方法可以自定义拷贝行为。",
+      "code": {
+        "python": "import copy\n\n# 浅拷贝\na = [1, [2, 3], 4]\nb = a[:]               # 浅拷贝\nb[1][0] = 99\nprint(a)               # [1, [99, 3], 4] 被影响\n\n# 深拷贝\nc = [1, [2, 3], 4]\nd = copy.deepcopy(c)   # 深拷贝\nd[1][0] = 99\nprint(c)               # [1, [2, 3], 4] 不受影响\n\n# copy模块\nimport copy\nlst = [[1, 2], [3, 4]]\nshallow = copy.copy(lst)\ndeep = copy.deepcopy(lst)\nshallow[0][0] = 99\nprint(lst)  # [[99, 2], [3, 4]] 浅拷贝影响原对象"
+      }
+    },
+    {
+      "id": "python-003",
+      "title": "*args和**kwargs的作用",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "函数参数",
+        "可变参数"
+      ],
+      "content": "解释Python中*args和**kwargs的作用、使用场景及注意事项。",
+      "answer": "*args和**kwargs是Python函数的可变参数语法，用于处理不确定数量的参数。\n\n*args：接收任意数量的位置参数，以元组(tuple)形式传递。args只是约定名称，可以用其他名称。\n**kwargs：接收任意数量的关键字参数，以字典(dict)形式传递。kwargs也只是约定名称。\n\n使用场景：\n- 装饰器中包装函数时保持原函数签名。\n- 函数需要灵活接受不同数量参数时。\n- 子类调用父类方法时传递参数。\n\n注意事项：\n- *args必须在**kwargs之前。\n- 函数参数顺序：普通参数、*args、默认参数、**kwargs。\n- 单独使用*可以强制后续参数必须以关键字形式传入。\n- 可以用*解包列表/元组，用**解包字典传参。",
+      "code": {
+        "python": "def func(a, b, *args, key='default', **kwargs):\n    print(f'a={a}, b={b}')\n    print(f'args={args}')\n    print(f'key={key}')\n    print(f'kwargs={kwargs}')\n\nfunc(1, 2, 3, 4, 5, key='hello', x=10, y=20)\n# a=1, b=2\n# args=(3, 4, 5)\n# key=hello\n# kwargs={'x': 10, 'y': 20}\n\n# 解包传参\nargs = [1, 2, 3]\nkwargs = {'a': 10, 'b': 20}\ndef show(x, y, z, a, b): print(x, y, z, a, b)\nshow(*args, **kwargs)  # 1 2 3 10 20"
+      }
+    },
+    {
+      "id": "python-004",
+      "title": "装饰器的原理和应用",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "装饰器",
+        "高阶函数",
+        "闭包"
+      ],
+      "content": "解释Python装饰器的原理、实现方式及常见应用场景。",
+      "answer": "装饰器本质上是一个高阶函数，接受一个函数作为参数，返回一个新的增强函数。通过@语法糖可以简洁地应用到目标函数上。\n\n实现原理：\n- 装饰器是一个接受函数并返回函数的函数（或实现了__call__的类）。\n- @decorator等价于func = decorator(func)。\n- 使用functools.wraps保留原函数的元信息（__name__、__doc__等）。\n\n常见应用场景：\n- 日志记录：记录函数调用信息和执行时间。\n- 权限校验：检查用户是否有权限执行操作。\n- 缓存：缓存函数返回值（如functools.lru_cache）。\n- 重试机制：自动重试失败的函数调用。\n- 单例模式：确保类只有一个实例。\n\n高级用法：\n- 带参数的装饰器：外层函数接受参数，返回装饰器函数。\n- 类装饰器：使用类实现__call__方法。\n- 多个装饰器叠加：从下往上依次执行。",
+      "code": {
+        "python": "import functools\nimport time\n\ndef timer(func):\n    @functools.wraps(func)\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        print(f'{func.__name__} took {time.time()-start:.4f}s')\n        return result\n    return wrapper\n\n# 带参数的装饰器\ndef retry(max_times=3):\n    def decorator(func):\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            for i in range(max_times):\n                try:\n                    return func(*args, **kwargs)\n                except Exception as e:\n                    print(f'第{i+1}次重试: {e}')\n            raise Exception(f'{func.__name__} 执行失败')\n        return wrapper\n    return decorator\n\n@retry(max_times=3)\ndef fetch_data(url):\n    pass  # 网络请求逻辑"
+      }
+    },
+    {
+      "id": "python-005",
+      "title": "生成器（generator）与yield",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "生成器",
+        "yield",
+        "惰性求值"
+      ],
+      "content": "解释Python生成器的工作原理、yield关键字的作用及生成器的应用场景。",
+      "answer": "生成器是一种特殊的迭代器，通过函数中包含yield关键字来定义。生成器不会一次性生成所有值，而是按需惰性生成，极大节省内存。\n\n工作原理：\n- 函数遇到yield时暂停执行，返回yield后面的值。\n- 下次调用__next__()时从暂停处继续执行。\n- 函数执行完毕或遇到return时抛出StopIteration异常。\n- yield from可以将生成器委托给另一个生成器。\n\n应用场景：\n- 处理大数据集时避免内存溢出。\n- 实现无限序列（如斐波那契数列）。\n- 流式处理文件或网络数据。\n- 管道式数据处理。\n\n生成器表达式：类似列表推导式，但使用圆括号，返回生成器对象，更节省内存。\n\nsend()方法可以向生成器发送值，throw()可以向生成器抛出异常，close()可以关闭生成器。",
+      "code": {
+        "python": "# 基本生成器\ndef fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        yield a\n        a, b = b, a + b\n\nfor num in fibonacci(10):\n    print(num, end=' ')  # 0 1 1 2 3 5 8 13 21 34\n\n# 生成器表达式\nsquares = (x**2 for x in range(1000000))  # 不占用大量内存\nprint(next(squares))  # 0\n\n# yield from 委托\ndef chain(*iterables):\n    for it in iterables:\n        yield from it\n\nlist(chain([1,2], [3,4], [5]))  # [1, 2, 3, 4, 5]"
+      }
+    },
+    {
+      "id": "python-006",
+      "title": "迭代器与可迭代对象的区别",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "迭代器",
+        "协议"
+      ],
+      "content": "解释Python中可迭代对象（Iterable）和迭代器（Iterator）的区别。",
+      "answer": "可迭代对象（Iterable）：实现了__iter__()方法的对象，可以返回一个迭代器。list、dict、str、set等都是可迭代对象。可以用for循环遍历。\n\n迭代器（Iterator）：实现了__iter__()和__next__()方法的对象。__iter__()返回自身，__next__()返回下一个元素，没有更多元素时抛出StopIteration。\n\n核心区别：\n- 可迭代对象不一定是迭代器，但迭代器一定是可迭代对象。\n- 可迭代对象可以通过iter()转换为迭代器。\n- 迭代器是一次性的，遍历完后不能重新开始；可迭代对象可以多次遍历。\n- for循环的底层机制：先调用iter()获取迭代器，然后不断调用next()获取元素。\n\n判断方法：\n- isinstance(obj, collections.abc.Iterable) 判断是否可迭代。\n- isinstance(obj, collections.abc.Iterator) 判断是否是迭代器。\n\n自定义迭代器需要实现__iter__和__next__方法，通常配合实例变量记录迭代状态。",
+      "code": {
+        "python": "from collections.abc import Iterable, Iterator\n\n# 可迭代对象 vs 迭代器\nlst = [1, 2, 3]\nprint(isinstance(lst, Iterable))  # True\nprint(isinstance(lst, Iterator))  # False\n\nit = iter(lst)\nprint(isinstance(it, Iterator))   # True\nprint(next(it))  # 1\nprint(next(it))  # 2\n\n# 自定义迭代器\nclass CountDown:\n    def __init__(self, start):\n        self.current = start\n\n    def __iter__(self):\n        return self\n\n    def __next__(self):\n        if self.current <= 0:\n            raise StopIteration\n        self.current -= 1\n        return self.current + 1\n\nfor i in CountDown(3):\n    print(i, end=' ')  # 3 2 1"
+      }
+    },
+    {
+      "id": "python-007",
+      "title": "GIL全局解释器锁",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "并发",
+        "GIL",
+        "多线程",
+        "性能"
+      ],
+      "content": "解释Python GIL（全局解释器锁）的原理、影响及应对方案。",
+      "answer": "GIL（Global Interpreter Lock）是CPython实现中的一个互斥锁，确保同一时刻只有一个线程执行Python字节码。\n\n存在原因：\n- CPython的内存管理（引用计数）不是线程安全的，GIL防止多个线程同时修改引用计数导致内存问题。\n- 简化了CPython的实现，使大量C扩展无需考虑线程安全。\n\n影响：\n- CPU密集型任务无法利用多核：多线程在CPython中无法真正并行执行。\n- I/O密集型任务影响较小：I/O操作时会释放GIL，其他线程可以执行。\n\n应对方案：\n- CPU密集型任务使用multiprocessing模块，每个进程有独立的GIL和Python解释器。\n- 使用C扩展（如NumPy）在执行计算时释放GIL。\n- 使用concurrent.futures的ProcessPoolExecutor。\n- 考虑使用不依赖GIL的实现（如PyPy的某些模式、Jython、IronPython）。\n- Python 3.13+引入了实验性的free-threaded模式（PEP 703），可以禁用GIL。\n\n注意：GIL只存在于CPython中，不意味着Python语言本身有这个限制。",
+      "code": {
+        "python": "import threading\nimport multiprocessing\nimport time\n\n# GIL对CPU密集型任务的影响\ndef cpu_bound(n):\n    count = 0\n    for i in range(n):\n        count += i\n    return count\n\n# 多线程（受GIL限制）\nstart = time.time()\nthreads = [threading.Thread(target=cpu_bound, args=(10**7,)) for _ in range(4)]\nfor t in threads: t.start()\nfor t in threads: t.join()\nprint(f'多线程: {time.time()-start:.2f}s')  # 并不比单线程快\n\n# 多进程（绕过GIL）\nstart = time.time()\npool = multiprocessing.Pool(4)\npool.map(cpu_bound, [10**7]*4)\npool.close()\nprint(f'多进程: {time.time()-start:.2f}s')  # 接近4倍加速"
+      }
+    },
+    {
+      "id": "python-008",
+      "title": "Python垃圾回收机制",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "内存管理",
+        "垃圾回收",
+        "引用计数",
+        "分代回收"
+      ],
+      "content": "详细说明Python的垃圾回收机制，包括引用计数、标记清除和分代回收。",
+      "answer": "Python使用三种机制协同进行垃圾回收：\n\n1. 引用计数（主要机制）：\n- 每个对象维护一个引用计数器，被引用时+1，引用解除时-1。\n- 计数为0时立即回收内存。\n- 优点：实时性好，回收及时。缺点：无法处理循环引用。\n\n2. 标记-清除（处理循环引用）：\n- 针对可能存在循环引用的容器对象（list、dict、class instance等）。\n- 从根集合出发，标记所有可达对象，未被标记的对象视为垃圾。\n- 会暂时将所有容器对象的引用计数复制一份，避免在标记过程中因计数变化导致误判。\n\n3. 分代回收（优化性能）：\n- 将对象分为三代（0、1、2），新对象在第0代。\n- 每代存活过一次GC后晋升到下一代。\n- GC频率随代数递减：第0代最频繁，第2代最少。\n- 基于经验：大多数对象生命周期短，存活越久的对象越可能继续存活。\n\n可以通过gc模块手动控制：gc.collect()强制回收，gc.set_threshold()设置阈值，gc.disable()禁用自动GC。",
+      "code": {
+        "python": "import gc\nimport sys\n\n# 引用计数\na = [1, 2, 3]\nprint(sys.getrefcount(a))  # 2 (a + getrefcount参数)\nb = a\nprint(sys.getrefcount(a))  # 3\ndel b\nprint(sys.getrefcount(a))  # 2\n\n# 循环引用\nx = []\ny = []\nx.append(y)\ny.append(x)\ndel x, y  # 引用计数不为0，但已无法访问\n\n# 手动触发GC\ngc.collect()  # 回收循环引用\n\n# 查看GC信息\nprint(gc.get_threshold())   # (700, 10, 10)\nprint(gc.get_count())       # 当前各代对象计数\n\n# 禁用/启用自动GC\ngc.disable()\ngc.enable()"
+      }
+    },
+    {
+      "id": "python-009",
+      "title": "is与==的区别",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "基础语法",
+        "比较运算",
+        "对象模型"
+      ],
+      "content": "解释Python中is和==运算符的区别，以及各自的适用场景。",
+      "answer": "==（相等比较）：比较两个对象的值是否相等，调用对象的__eq__()方法。判断的是值层面的等价性。\n\nis（身份比较）：比较两个对象的内存地址是否相同，即是否是同一个对象。判断的是身份层面的同一性。\n\n关键区别：\n- ==比较值，is比较地址（id()）。\n- a == b 为True不代表 a is b 为True（不同对象可以有相同的值）。\n- a is b 为True则 a == b 一定为True（同一对象值必然相同）。\n\n适用场景：\n- 比较值是否相等用==：如字符串内容、数字大小、列表元素。\n- 判断是否是同一对象用is：如与None比较（推荐用is None而非==None）、单例判断。\n\nPython小整数缓存：CPython对-5到256的整数进行了缓存，相同值的小整数is比较为True。字符串也有类似的intern机制，但不可依赖。\n\n注意：浮点数比较推荐使用math.isclose()而非==，因为浮点精度问题。",
+      "code": {
+        "python": "# == vs is\na = [1, 2, 3]\nb = [1, 2, 3]\nprint(a == b)  # True，值相等\nprint(a is b)  # False，不同对象\n\n# 小整数缓存\nc = 256\nd = 256\nprint(c is d)  # True，在缓存范围内\n\ne = 257\nf = 257\nprint(e is f)  # False，超出缓存范围\n\n# None比较\nx = None\nprint(x is None)    # True（推荐写法）\nprint(x == None)    # True（不推荐）\n\n# 字符串intern\ns1 = 'hello'\ns2 = 'hello'\nprint(s1 is s2)  # True（短字符串会被intern）"
+      }
+    },
+    {
+      "id": "python-010",
+      "title": "Python多线程与多进程",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "并发",
+        "多线程",
+        "多进程",
+        "GIL"
+      ],
+      "content": "比较Python中多线程和多进程的区别、适用场景及实现方式。",
+      "answer": "多线程（threading）：\n- 共享同一进程的内存空间，线程间通信方便。\n- 受GIL限制，CPU密集型任务无法真正并行。\n- 适合I/O密集型任务（网络请求、文件读写、数据库操作）。\n- 线程创建开销小，切换速度快。\n- 需要注意线程安全问题（使用Lock、RLock、Semaphore等同步原语）。\n\n多进程（multiprocessing）：\n- 每个进程有独立的内存空间和GIL，可真正利用多核。\n- 适合CPU密集型任务（数值计算、图像处理、机器学习）。\n- 进程创建开销大，内存占用高。\n- 进程间通信需要使用Queue、Pipe、Value、Array或Manager。\n- 不存在GIL限制，可以充分利用多核CPU。\n\n选择建议：\n- I/O密集型 -> 多线程或asyncio。\n- CPU密集型 -> 多进程。\n- 混合型 -> 多进程 + 每个进程内多线程/协程。\n- 推荐使用concurrent.futures的高级接口ThreadPoolExecutor和ProcessPoolExecutor。",
+      "code": {
+        "python": "import threading\nimport multiprocessing\nfrom concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor\nimport time\n\n# 多线程 - I/O密集型\ndef io_task(url):\n    time.sleep(1)  # 模拟I/O\n    return url\n\nwith ThreadPoolExecutor(max_workers=5) as pool:\n    results = list(pool.map(io_task, ['url1','url2','url3']))\n\n# 多进程 - CPU密集型\ndef cpu_task(n):\n    return sum(i*i for i in range(n))\n\nwith ProcessPoolExecutor(max_workers=4) as pool:\n    results = list(pool.map(cpu_task, [10**6]*4))\n\n# 线程安全 - Lock\nlock = threading.Lock()\ncounter = 0\ndef increment():\n    global counter\n    for _ in range(100000):\n        with lock:\n            counter += 1"
+      }
+    },
+    {
+      "id": "python-011",
+      "title": "类变量与实例变量的区别",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "面向对象",
+        "类变量",
+        "实例变量"
+      ],
+      "content": "解释Python中类变量和实例变量的区别，以及属性查找顺序。",
+      "answer": "类变量：定义在类体中、方法之外，属于类本身，所有实例共享。通过类名或实例名访问。修改类变量会影响所有实例（除非实例已覆盖该属性）。\n\n实例变量：在__init__等方法中通过self.xxx定义，属于具体实例，每个实例独立拥有。只能通过实例名访问。\n\n属性查找顺序（MRO简化版）：\n1. 先查找实例的__dict__。\n2. 再查找类的__dict__。\n3. 再查找基类的__dict__，沿继承链向上查找。\n\n常见陷阱：\n- 通过实例修改类变量（如obj.count = 5）不会修改类变量，而是创建同名的实例变量。\n- 可变类型的类变量（如list、dict）被实例修改时会真正改变类变量。\n- 使用类名来修改类变量才是正确做法：ClassName.var = value。\n\n最佳实践：\n- 类变量用于存储所有实例共享的常量或计数器。\n- 实例变量用于存储每个实例独有的数据。\n- 避免使用可变类型作为类变量的初始值。",
+      "code": {
+        "python": "class Dog:\n    species = 'Canine'      # 类变量\n    count = 0               # 类变量\n\n    def __init__(self, name):\n        self.name = name     # 实例变量\n        Dog.count += 1\n\na = Dog('Buddy')\nb = Dog('Max')\nprint(a.species)   # Canine\nprint(b.count)     # 2\n\n# 陷阱：通过实例赋值不会修改类变量\na.species = 'Wolf'\nprint(a.species)   # Wolf（实例变量）\nprint(b.species)   # Canine（类变量）\nprint(Dog.species) # Canine\n\n# 可变类变量的陷阱\nclass Bad:\n    items = []       # 可变类变量\n    def add(self, item):\n        self.items.append(item)  # 修改了共享的类变量！\n\nx = Bad(); y = Bad()\nx.add(1)\nprint(y.items)  # [1] 被影响了"
+      }
+    },
+    {
+      "id": "python-012",
+      "title": "__new__与__init__的区别",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "面向对象",
+        "魔术方法",
+        "对象创建"
+      ],
+      "content": "解释Python中__new__和__init__的区别、执行顺序及各自的使用场景。",
+      "answer": "__new__：类方法（第一个参数是cls），负责创建并返回实例对象。是真正的构造方法，控制对象的创建过程。必须返回一个实例。在__init__之前调用。\n\n__init__：实例方法（第一个参数是self），负责初始化已创建的实例。不返回值（返回None）。在对象创建后调用，设置实例属性。\n\n执行顺序：__new__ -> __init__。如果__new__不返回当前类的实例，__init__不会被调用。\n\n__new__的使用场景：\n- 实现单例模式：控制只创建一个实例。\n- 继承不可变类型（如str、int、tuple）：需要在创建时修改值。\n- 自定义元类中控制类的创建过程。\n- 工厂模式：根据参数返回不同类的实例。\n\n区别总结：\n- __new__负责创建对象，__init__负责初始化对象。\n- __new__是类方法，__init__是实例方法。\n- __new__必须返回实例，__init__不返回值。\n- __new__只在需要控制对象创建时才需要重写。",
+      "code": {
+        "python": "# __new__ 实现单例\nclass Singleton:\n    _instance = None\n\n    def __new__(cls, *args, **kwargs):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\n\n    def __init__(self, name):\n        self.name = name\n\na = Singleton('first')\nb = Singleton('second')\nprint(a is b)      # True\nprint(a.name)      # second（__init__被调用了两次）\n\n# 继承不可变类型\nclass UpperStr(str):\n    def __new__(cls, value):\n        return super().__new__(cls, value.upper())\n\ns = UpperStr('hello')\nprint(s)  # HELLO\nprint(type(s))  # <class '__main__.UpperStr'>"
+      }
+    },
+    {
+      "id": "python-013",
+      "title": "多继承与MRO（方法解析顺序）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "面向对象",
+        "多继承",
+        "MRO",
+        "C3线性化"
+      ],
+      "content": "解释Python多继承的MRO（方法解析顺序）及其C3线性化算法。",
+      "answer": "MRO（Method Resolution Order）是Python确定多继承中方法调用顺序的机制。当子类调用某个方法时，Python按照MRO顺序在基类链中查找。\n\nPython 3使用C3线性化算法计算MRO，保证：\n1. 子类在父类之前。\n2. 如果类继承自多个父类，按声明顺序从左到右查找。\n3. 保持一致的单调性：子类的MRO中父类的顺序与父类自身的MRO一致。\n\n查看MRO：\n- ClassName.__mro__：返回元组。\n- ClassName.mro()：返回列表。\n\n经典问题（菱形继承）：\n- Python 2使用深度优先（旧式类），可能导致非预期的父类方法被调用。\n- Python 3统一使用C3算法（新式类），解决了菱形继承问题。\n\nsuper()函数：在多继承中，super()按照MRO顺序调用下一个类的方法，不是简单的调用父类方法。这是协作式多重继承的基础。\n\n注意事项：\n- 多继承虽然强大，但会增加代码复杂度，推荐优先使用组合（composition）。\n- Mixin模式是多继承的推荐用法：将功能拆分为小的Mixin类。",
+      "code": {
+        "python": "class A:\n    def greet(self): print('A')\n\nclass B(A):\n    def greet(self): print('B')\n\nclass C(A):\n    def greet(self): print('C')\n\nclass D(B, C):\n    pass\n\nprint(D.__mro__)\n# (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)\n\nD().greet()  # B（先查找B，再C，再A）\n\n# super()在多继承中的行为\nclass Base:\n    def __init__(self):\n        print('Base.__init__')\n        super().__init__()\n\nclass Mixin1(Base):\n    def __init__(self):\n        print('Mixin1.__init__')\n        super().__init__()\n\nclass Mixin2(Base):\n    def __init__(self):\n        print('Mixin2.__init__')\n        super().__init__()\n\nclass Child(Mixin1, Mixin2):\n    pass\n\nChild()  # Mixin1 -> Mixin2 -> Base"
+      }
+    },
+    {
+      "id": "python-014",
+      "title": "常用魔术方法",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "面向对象",
+        "魔术方法",
+        "运算符重载"
+      ],
+      "content": "介绍Python中常用的魔术方法（__str__、__repr__、__call__、__getitem__等）及其作用。",
+      "answer": "魔术方法（双下划线方法/dunder methods）是Python中实现特殊行为的协议方法。\n\n常用魔术方法分类：\n\n字符串表示：\n- __str__：str()和print()调用，面向用户的友好表示。\n- __repr__：repr()调用，面向开发者的精确表示， ideally可以eval()还原对象。\n\n调用与访问：\n- __call__：使对象可以像函数一样被调用。\n- __getitem__：实现obj[key]索引访问。\n- __setitem__：实现obj[key] = value赋值。\n- __getattr__：访问不存在的属性时触发。\n- __getattribute__：访问任何属性时触发（慎用，容易死循环）。\n\n比较运算：\n- __eq__、__lt__、__gt__、__le__、__ge__、__ne__：实现==、<、>等比较。\n\n算术运算：\n- __add__、__sub__、__mul__等：实现+、-、*等运算符。\n- __radd__等：实现右操作数运算（当左操作数不支持时）。\n\n上下文管理：\n- __enter__、__exit__：支持with语句。\n\n容器协议：\n- __len__、__iter__、__contains__：实现len()、迭代、in操作。",
+      "code": {
+        "python": "class Vector:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n\n    def __repr__(self):\n        return f'Vector({self.x}, {self.y})'\n\n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n\n    def __call__(self, scalar):\n        return Vector(self.x * scalar, self.y * scalar)\n\n    def __getitem__(self, key):\n        return (self.x, self.y)[key]\n\nv = Vector(3, 4)\nprint(repr(v))       # Vector(3, 4)\nprint(v + Vector(1, 1))  # Vector(4, 5)\nprint(v(2))          # Vector(6, 8)\nprint(v[0])          # 3"
+      }
+    },
+    {
+      "id": "python-015",
+      "title": "property装饰器与描述符",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "面向对象",
+        "property",
+        "描述符",
+        "封装"
+      ],
+      "content": "解释Python中property装饰器的用法及描述符协议的原理。",
+      "answer": "property装饰器：将方法转换为属性访问，实现getter/setter/deleter，在不改变调用方式的前提下添加验证逻辑。\n\nproperty用法：\n- @property定义getter方法。\n- @attr.setter定义setter方法。\n- @attr.deleter定义deleter方法。\n- 优势：保持接口一致性，可以在访问/修改属性时添加逻辑。\n\n描述符协议：\n- 实现了__get__、__set__、__delete__中至少一个方法的类就是描述符。\n- 数据描述符：同时实现__get__和__set__，优先级高于实例属性。\n- 非数据描述符：只实现__get__，优先级低于实例属性。\n- 描述符是property、classmethod、staticmethod、__slots__的底层实现机制。\n\n描述符的查找顺序（优先级从高到低）：\n1. 数据描述符（类属性中定义的描述符）。\n2. 实例__dict__。\n3. 非数据描述符。\n\nproperty本质上就是一个数据描述符类。",
+      "code": {
+        "python": "# property装饰器\nclass Student:\n    def __init__(self, name, score):\n        self.name = name\n        self._score = score\n\n    @property\n    def score(self):\n        return self._score\n\n    @score.setter\n    def score(self, value):\n        if not 0 <= value <= 100:\n            raise ValueError('分数必须在0-100之间')\n        self._score = value\n\ns = Student('Tom', 85)\nprint(s.score)    # 85（通过getter）\ns.score = 95     # 通过setter验证\n# s.score = 200   # ValueError\n\n# 自定义描述符\nclass Validated:\n    def __init__(self, min_val, max_val):\n        self.min_val, self.max_val = min_val, max_val\n\n    def __set_name__(self, owner, name):\n        self.name = '_' + name\n\n    def __get__(self, obj, objtype=None):\n        return getattr(obj, self.name, None)\n\n    def __set__(self, obj, value):\n        if not self.min_val <= value <= self.max_val:\n            raise ValueError(f'{self.name} 超出范围')\n        setattr(obj, self.name, value)"
+      }
+    },
+    {
+      "id": "python-016",
+      "title": "闭包（closure）的概念和应用",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "进阶特性",
+        "闭包",
+        "函数式编程"
+      ],
+      "content": "解释Python闭包的概念、形成条件及应用场景。",
+      "answer": "闭包（Closure）：在一个内部函数中，引用了外部函数的变量（自由变量），并且外部函数返回了内部函数，这种结构就是闭包。闭包连同引用的自由变量一起构成了一个封闭的作用域。\n\n形成条件：\n1. 存在嵌套函数（函数内定义函数）。\n2. 内部函数引用了外部函数的变量。\n3. 外部函数返回内部函数。\n\n闭包的特点：\n- 内部函数可以访问外部函数的变量，即使外部函数已经执行完毕。\n- 自由变量被保存在内部函数的__closure__属性中。\n- 闭包可以用来实现数据封装，避免使用全局变量。\n\n应用场景：\n- 装饰器（装饰器本质就是闭包）。\n- 工厂函数：根据参数生成定制化的函数。\n- 回调函数：在事件驱动编程中保存状态。\n- 延迟计算：将计算推迟到需要时执行。\n- 实现简单的数据封装和私有变量。\n\n注意事项：\n- 闭包中修改外部变量需要使用nonlocal关键字。\n- Python 3中nonlocal用于声明非局部变量。",
+      "code": {
+        "python": "# 基本闭包\ndef make_multiplier(n):\n    def multiplier(x):\n        return x * n  # n是自由变量\n    return multiplier\n\ndouble = make_multiplier(2)\ntriple = make_multiplier(3)\nprint(double(5))   # 10\nprint(triple(5))   # 15\n\n# 闭包实现计数器\ndef make_counter(start=0):\n    count = start\n    def counter():\n        nonlocal count\n        count += 1\n        return count\n    return counter\n\nc = make_counter()\nprint(c())  # 1\nprint(c())  # 2\nprint(c())  # 3\n\n# 查看闭包变量\nprint(double.__closure__[0].cell_contents)  # 2"
+      }
+    },
+    {
+      "id": "python-017",
+      "title": "Python内存管理",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "进阶特性",
+        "内存管理",
+        "垃圾回收"
+      ],
+      "content": "介绍Python的内存管理机制，包括内存分配、对象池和缓存机制。",
+      "answer": "Python的内存管理分为多个层次：\n\n1. 内存分配器层次：\n- PyObject_Malloc：Python自己的内存分配器，针对小对象优化。\n- pymalloc：管理小于512字节的小对象内存池，减少系统malloc调用。\n- 大于512字节的对象直接调用系统malloc/free。\n\n2. 对象缓存机制：\n- 小整数缓存：-5到256的整数对象被预创建并缓存。\n- 字符串intern：短字符串和标识符会被intern，相同内容的字符串共享对象。\n- 空元组缓存：()被全局缓存复用。\n\n3. 内存优化技巧：\n- 使用__slots__减少实例的__dict__开销。\n- 使用array模块或numpy代替大列表。\n- 使用生成器代替列表处理大数据。\n- 使用__slots__、弱引用（weakref）等减少内存占用。\n\n4. 内存分析工具：\n- sys.getsizeof()：获取对象大小。\n- gc.get_objects()：获取所有被GC管理的对象。\n- tracemalloc：跟踪内存分配。\n- 第三方工具：memory_profiler、objgraph、pympler。\n\n5. 内存泄漏排查：\n- 循环引用 + __del__方法可能导致内存泄漏。\n- 全局变量持有大对象引用。\n- 使用weakref打破循环引用。",
+      "code": {
+        "python": "import sys\nimport weakref\n\n# 对象大小\nprint(sys.getsizeof(1))          # 28\nprint(sys.getsizeof('hello'))    # 54\nprint(sys.getsizeof([]))         # 56\nprint(sys.getsizeof({}))         # 64\n\n# 小整数缓存\na = 100\nb = 100\nprint(a is b)  # True\n\n# __slots__ 减少内存\nclass Normal:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\nclass Slotted:\n    __slots__ = ('x', 'y')\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\nprint(sys.getsizeof(Normal(1,2)))   # 56 + __dict__\nprint(sys.getsizeof(Slotted(1,2)))  # 48（更小）\n\n# 弱引用\nclass Big:\n    pass\nobj = Big()\nref = weakref.ref(obj)\nprint(ref() is obj)  # True\ndel obj\nprint(ref())         # None（对象已被回收）"
+      }
+    },
+    {
+      "id": "python-018",
+      "title": "上下文管理器（with语句）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "进阶特性",
+        "上下文管理器",
+        "with语句",
+        "资源管理"
+      ],
+      "content": "解释Python上下文管理器的原理、实现方式及应用场景。",
+      "answer": "上下文管理器是一种用于管理资源的协议，通过with语句使用，确保资源在使用后被正确释放，即使发生异常。\n\n实现方式：\n1. 基于类的实现：实现__enter__和__exit__方法。\n   - __enter__：进入上下文时执行，返回值赋给as后面的变量。\n   - __exit__：退出上下文时执行，负责清理资源。参数接收异常信息。\n   - __exit__返回True可以抑制异常。\n\n2. 基于生成器的实现：使用contextlib.contextmanager装饰器。\n   - yield之前的代码相当于__enter__。\n   - yield的值赋给as后面的变量。\n   - yield之后的代码相当于__exit__，即使发生异常也会执行。\n\n应用场景：\n- 文件操作：自动关闭文件。\n- 数据库连接：自动关闭连接和游标。\n- 线程锁：自动获取和释放锁。\n- 临时改变状态：如临时改变工作目录。\n- 事务管理：自动提交或回滚。\n\ncontextlib模块还提供了closing()、suppress()、redirect_stdout()等实用工具。",
+      "code": {
+        "python": "# 类方式实现\nclass Timer:\n    def __enter__(self):\n        import time\n        self.start = time.time()\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        import time\n        print(f'耗时: {time.time()-self.start:.4f}s')\n        return False  # 不抑制异常\n\nwith Timer():\n    sum(i*i for i in range(1000000))\n\n# contextmanager方式\nfrom contextlib import contextmanager\n\n@contextmanager\ndef file_manager(path, mode='r'):\n    f = open(path, mode)\n    try:\n        yield f\n    finally:\n        f.close()\n\nwith file_manager('test.txt', 'w') as f:\n    f.write('hello')\n\n# suppress 忽略异常\nfrom contextlib import suppress\nwith suppress(FileNotFoundError):\n    os.remove('nonexistent.txt')"
+      }
+    },
+    {
+      "id": "python-019",
+      "title": "元类（metaclass）的原理",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "高级特性",
+        "元类",
+        "metaclass",
+        "类创建"
+      ],
+      "content": "解释Python元类的概念、工作原理及实际应用场景。",
+      "answer": "元类（metaclass）是创建类的类。普通类是创建对象的模板，元类是创建类的模板。type就是Python的默认元类。\n\n工作原理：\n- 定义类时，Python调用元类的__new__和__init__方法来创建类对象。\n- 类的定义过程本质上就是「实例化元类」的过程。\n- class MyClass(Base, metaclass=MyMeta) 等价于 MyClass = MyMeta('MyClass', (Base,), {...})。\n\n元类的__new__方法：\n- 参数：cls（元类本身）、name（类名）、bases（基类元组）、namespace（类属性字典）。\n- 可以修改namespace来改变类的属性和方法。\n- 必须返回一个类对象。\n\n应用场景：\n- 接口检查：自动验证子类是否实现了所有抽象方法。\n- 自动注册：将创建的类自动注册到某个注册表中。\n- 属性修改：自动添加属性、方法或修改已有属性。\n- ORM框架：如Django的Model使用元类将类定义映射到数据库表。\n- 单例模式：通过元类控制类的实例化。\n\n注意：元类是深层的魔法，大多数情况下可以用装饰器或混入类替代。\"元类就是深度的魔法，99%的用户应该根本不需要关心。\" —— Tim Peters",
+      "code": {
+        "python": "# 元类自动注册\nclass RegistryMeta(type):\n    _registry = {}\n\n    def __new__(cls, name, bases, namespace):\n        new_cls = super().__new__(cls, name, bases, namespace)\n        if name != 'BasePlugin':\n            cls._registry[name] = new_cls\n        return new_cls\n\n    @classmethod\n    def get_all(cls):\n        return dict(cls._registry)\n\nclass BasePlugin(metaclass=RegistryMeta):\n    pass\n\nclass PluginA(BasePlugin):\n    def run(self): print('PluginA')\n\nclass PluginB(BasePlugin):\n    def run(self): print('PluginB')\n\nprint(RegistryMeta.get_all())\n# {'PluginA': <class 'PluginA'>, 'PluginB': <class 'PluginB'>}"
+      }
+    },
+    {
+      "id": "python-020",
+      "title": "Python单例模式的实现",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "设计模式",
+        "单例模式",
+        "创建型模式"
+      ],
+      "content": "列举Python中实现单例模式的多种方式，并比较各自的优缺点。",
+      "answer": "单例模式确保一个类只有一个实例，并提供全局访问点。\n\n常见实现方式：\n\n1. 使用__new__方法：重写__new__控制实例创建，最常用的方式。简单直观，但__init__会被多次调用。\n\n2. 使用装饰器：通过闭包保存唯一实例。灵活，可以给任意类添加单例行为，但不支持多线程。\n\n3. 使用元类：通过元类控制类的实例化。最Pythonic的方式，但复杂度较高。\n\n4. 使用模块：Python模块天然是单例的（模块只加载一次）。最简单推荐的方式。\n\n5. 使用类变量：在类中保存实例引用。简单但不够优雅。\n\n线程安全：\n- 以上基本实现都不是线程安全的。\n- 需要使用Lock或threading.RLock来保证线程安全。\n\n优缺点比较：\n- 模块方式最简单，推荐优先使用。\n- __new__方式最常用，适合大多数场景。\n- 装饰器方式灵活但可能影响isinstance检查。\n- 元类方式最强大但复杂度最高。",
+      "code": {
+        "python": "# 方式1：__new__（推荐）\nclass Singleton:\n    _instance = None\n    _lock = threading.Lock()\n\n    def __new__(cls, *args, **kwargs):\n        if cls._instance is None:\n            with cls._lock:\n                if cls._instance is None:  # 双重检查\n                    cls._instance = super().__new__(cls)\n        return cls._instance\n\n# 方式2：装饰器\ndef singleton(cls):\n    instances = {}\n    @functools.wraps(cls)\n    def wrapper(*args, **kwargs):\n        if cls not in instances:\n            instances[cls] = cls(*args, **kwargs)\n        return instances[cls]\n    return wrapper\n\n@singleton\nclass Database:\n    def __init__(self):\n        self.connection = 'connected'\n\n# 方式3：模块（最简单）\n# config.py\n# class Config: pass\n# config = Config()  # 模块级实例，天然单例"
+      }
+    },
+    {
+      "id": "python-021",
+      "title": "dict的底层实现（哈希表）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "数据结构",
+        "字典",
+        "哈希表",
+        "底层实现"
+      ],
+      "content": "解释Python字典的底层实现原理，包括哈希表结构、冲突解决和扩容机制。",
+      "answer": "Python字典基于哈希表实现，Python 3.6+保持插入顺序。\n\n底层结构：\n- 哈希表由两个数组组成：indices数组（存储索引）和entries数组（存储键值对）。\n- 每个entry包含：hash值、key指针、value指针。\n- indices数组用于快速定位，entries数组按插入顺序存储，保证有序性。\n\n哈希冲突解决：\n- 使用开放寻址法（Open Addressing），不是链地址法。\n- 发生冲突时，通过探测序列（线性探测）寻找下一个空位。\n- 探测公式：i = (5*i + 1) mod 2^n，使用二次探测减少聚集。\n\n哈希计算：\n- 调用对象的__hash__()方法获取哈希值。\n- 哈希值与表大小取模确定初始位置。\n- 发生冲突时按探测序列查找。\n\n扩容机制：\n- 维护负载因子（元素数/表大小），当负载因子超过2/3时触发扩容。\n- 扩容时创建更大的哈希表（通常为原来的2-3倍），重新哈希所有元素。\n- 扩容操作是O(n)时间复杂度，但均摊后每次操作仍为O(1)。\n\n时间复杂度：\n- 平均查找、插入、删除：O(1)。\n- 最坏情况（大量冲突）：O(n)。\n\nkey的要求：必须是可哈希的（不可变类型），实现了__hash__和__eq__。",
+      "code": {
+        "python": "# 哈希冲突演示\n# 自定义类作为dict的key\nclass Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n\n    def __hash__(self):\n        return hash((self.x, self.y))\n\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\nd = {Point(1,2): 'A', Point(3,4): 'B'}\nprint(d[Point(1,2)])  # A\n\n# 字典性能特点\nimport timeit\nprint(timeit.timeit('d[999999]', setup='d={i:i for i in range(1000000)}'))\n# 查找接近O(1)\n\n# 不可哈希类型\n# {[1,2]: 'value'}  # TypeError: unhashable type: 'list'\n\n# Python 3.7+ 字典保持插入顺序\nd = {'a': 1, 'b': 2, 'c': 3}\nprint(list(d.keys()))  # ['a', 'b', 'c']"
+      }
+    },
+    {
+      "id": "python-022",
+      "title": "list的底层实现（动态数组）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "数据结构",
+        "列表",
+        "动态数组",
+        "底层实现"
+      ],
+      "content": "解释Python列表的底层实现原理，包括动态扩容机制和操作的时间复杂度。",
+      "answer": "Python列表基于动态数组实现，底层是一个连续的内存块，存储指向Python对象的指针（不是对象本身）。\n\n底层结构：\n- 一个连续的指针数组，每个元素是一个PyObject*指针。\n- 维护已用大小（ob_size）和分配的总容量（allocated）。\n- 当已用大小等于总容量时触发扩容。\n\n动态扩容机制：\n- 当空间不足时，按增长模式分配新空间：new_allocated = (newsize >> 3) + (newsize < 9 ? 3 : 6) + newsize。\n- 大致规律：每次扩容增长约12.5%或25%（取决于当前大小）。\n- 扩容时分配新的更大数组，将旧数组元素复制到新数组，释放旧数组。\n- 均摊时间复杂度：追加操作均摊O(1)。\n\n时间复杂度：\n- 索引访问/修改：O(1)。\n- 尾部追加（append）：均摊O(1)。\n- 头部/中间插入（insert）：O(n)，需要移动后续元素。\n- 尾部删除（pop）：O(1)。\n- 头部/中间删除（pop(index)）：O(n)。\n- 查找（in操作）：O(n)。\n\n与链表的区别：\n- 列表是动态数组，随机访问O(1)，插入删除O(n)。\n- 链表随机访问O(n)，已知位置插入删除O(1)。\n- 列表缓存友好（连续内存），实际性能通常优于链表。",
+      "code": {
+        "python": "# 列表操作时间复杂度\nimport timeit\n\n# O(1) 索引访问\nprint(timeit.timeit('lst[500]', setup='lst=list(range(1000))', number=1000000))\n\n# O(1) 尾部追加（均摊）\nprint(timeit.timeit('lst.append(1)', setup='lst=[]', number=1000000))\n\n# O(n) 头部插入\nprint(timeit.timeit('lst.insert(0, 1)', setup='lst=list(range(1000))', number=10000))\n\n# O(n) 中间删除\nprint(timeit.timeit('lst.pop(500)', setup='lst=list(range(1000))', number=10000))\n\n# 预分配空间提升性能\ndef append_no_prealloc(n):\n    lst = []\n    for i in range(n):\n        lst.append(i)\n\ndef append_with_prealloc(n):\n    lst = [None] * n  # 预分配\n    for i in range(n):\n        lst[i] = i\n\n# 预分配版本更快（减少扩容次数）"
+      }
+    },
+    {
+      "id": "python-023",
+      "title": "Python排序算法（Timsort）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "数据结构",
+        "排序",
+        "Timsort",
+        "算法"
+      ],
+      "content": "解释Python内置排序算法Timsort的原理及sorted()和list.sort()的使用。",
+      "answer": "Python使用Timsort排序算法，由Tim Peters于2002年实现，是一种混合稳定的排序算法。\n\nTimsort原理：\n- 结合了归并排序和插入排序的优点。\n- 将数组划分为已排序的连续子序列（称为run）。\n- 对较短的run使用插入排序（对小数组效率高）。\n- 对已排序的run使用归并排序合并。\n- 利用数据中已有的有序性（自然有序的run直接使用）。\n\n时间复杂度：\n- 最好情况（已排序）：O(n)。\n- 平均情况：O(n log n)。\n- 最坏情况：O(n log n)。\n- 空间复杂度：O(n)。\n\nsorted() vs list.sort()：\n- sorted(iterable)：返回新列表，适用于任何可迭代对象。\n- list.sort()：原地排序，返回None，只适用于列表。\n- 两者都支持key参数（指定排序键）和reverse参数（降序）。\n\nkey参数的使用：\n- key=str.lower：不区分大小写排序。\n- key=lambda x: x[1]：按元组第二个元素排序。\n- key=operator.itemgetter(1)：同上但更快。\n- key=len：按长度排序。\n\n稳定排序：相等元素的相对顺序不变，可以实现多级排序。",
+      "code": {
+        "python": "# sorted() 返回新列表\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(sorted(nums))           # [1, 1, 2, 3, 4, 5, 6, 9]\nprint(sorted(nums, reverse=True))  # [9, 6, 5, 4, 3, 2, 1, 1]\nprint(nums)                   # 原列表不变\n\n# list.sort() 原地排序\nnums.sort()\nprint(nums)                   # 已排序\n\n# key参数\nstudents = [('Tom', 85), ('Jane', 92), ('Bob', 85)]\nprint(sorted(students, key=lambda x: x[1]))  # 按分数\nprint(sorted(students, key=lambda x: x[0]))  # 按姓名\n\n# 多级排序（利用稳定性）\nstudents.sort(key=lambda x: x[0])   # 先按姓名\nstudents.sort(key=lambda x: x[1])   # 再按分数\n# 同分数的保持姓名排序\n\n# 自定义对象排序\nclass Person:\n    def __init__(self, name, age): self.name, self.age = name, age\n    def __repr__(self): return f'{self.name}:{self.age}'\n\npeople = [Person('Tom',25), Person('Jane',23)]\nprint(sorted(people, key=lambda p: p.age))"
+      }
+    },
+    {
+      "id": "python-024",
+      "title": "asyncio异步编程",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "并发",
+        "asyncio",
+        "协程",
+        "异步编程"
+      ],
+      "content": "解释Python asyncio异步编程的核心概念、使用方式及适用场景。",
+      "answer": "asyncio是Python的异步I/O框架，基于事件循环和协程实现，适合处理大量I/O密集型任务。\n\n核心概念：\n- 协程（coroutine）：使用async def定义的函数，调用后返回协程对象。\n- 事件循环（event loop）：异步程序的核心调度器，负责执行协程和处理I/O事件。\n- await：暂停协程执行，等待异步操作完成，期间事件循环可以执行其他协程。\n- Task：对协程的封装，提供并发执行的能力。\n- Future：代表未来某个时刻的结果。\n\n关键API：\n- asyncio.run()：运行最高层级的入口点。\n- asyncio.create_task()：将协程包装为Task并发执行。\n- asyncio.gather()：并发运行多个协程，等待全部完成。\n- asyncio.wait()：更灵活的并发控制（FIRST_COMPLETED等）。\n- async with / async for：异步上下文管理和异步迭代。\n\n适用场景：\n- 高并发网络请求（HTTP客户端、WebSocket）。\n- 数据库异步操作。\n- 高性能Web服务器（FastAPI、Sanic）。\n- 实时通信和流式处理。\n\n注意事项：\n- asyncio是单线程的，CPU密集型任务会阻塞事件循环。\n- 不能在同步函数中直接调用异步函数，需要使用asyncio.run()或loop.run_until_complete()。\n- 避免在协程中调用阻塞的同步I/O。",
+      "code": {
+        "python": "import asyncio\n\nasync def fetch_data(url, delay):\n    print(f'开始获取 {url}')\n    await asyncio.sleep(delay)  # 模拟异步I/O\n    print(f'完成获取 {url}')\n    return f'{url} 的数据'\n\nasync def main():\n    # 并发执行多个协程\n    results = await asyncio.gather(\n        fetch_data('url1', 2),\n        fetch_data('url2', 1),\n        fetch_data('url3', 3),\n    )\n    print(results)\n\n    # 使用Task\n    task1 = asyncio.create_task(fetch_data('url4', 1))\n    task2 = asyncio.create_task(fetch_data('url5', 2))\n    r1 = await task1\n    r2 = await task2\n\nasyncio.run(main())\n# 总耗时约3秒（最慢的任务时间），而非6秒"
+      }
+    },
+    {
+      "id": "python-025",
+      "title": "线程池与进程池（concurrent.futures）",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "并发",
+        "线程池",
+        "进程池",
+        "concurrent.futures"
+      ],
+      "content": "介绍Python concurrent.futures模块中线程池和进程池的使用方法。",
+      "answer": "concurrent.futures提供了高级的异步执行接口，封装了threading和multiprocessing模块的复杂性。\n\nThreadPoolExecutor：\n- 适用于I/O密集型任务。\n- 线程复用，避免频繁创建销毁线程的开销。\n- 通过max_workers参数控制最大线程数。\n\nProcessPoolExecutor：\n- 适用于CPU密集型任务。\n- 每个任务在独立进程中执行，绕过GIL限制。\n- max_workers默认为CPU核心数。\n\n核心方法：\n- submit(fn, *args)：提交任务，返回Future对象。\n- map(func, iterables)：类似内置map，但并发执行。\n- shutdown(wait=True)：等待所有任务完成后关闭池（with语句自动调用）。\n\nFuture对象：\n- result(timeout)：获取结果，可设置超时。\n- done()：判断是否完成。\n- add_done_callback(fn)：添加完成回调。\n- cancel()：尝试取消任务。\n\n异常处理：\n- Future.result()会重新抛出任务中的异常。\n- 可以使用concurrent.futures.as_completed()获取已完成的Future。\n\n推荐使用with语句管理线程池/进程池，确保资源正确释放。",
+      "code": {
+        "python": "from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed\nimport time\n\n# ThreadPoolExecutor - I/O密集型\ndef download(url):\n    time.sleep(1)  # 模拟网络请求\n    return f'{url} done'\n\nurls = [f'url_{i}' for i in range(5)]\n\nwith ThreadPoolExecutor(max_workers=3) as executor:\n    # 方式1：submit\n    futures = {executor.submit(download, url): url for url in urls}\n    for future in as_completed(futures):\n        print(future.result())\n\n    # 方式2：map\n    results = list(executor.map(download, urls))\n    print(results)\n\n# ProcessPoolExecutor - CPU密集型\ndef compute(n):\n    return sum(i * i for i in range(n))\n\nwith ProcessPoolExecutor() as executor:\n    future = executor.submit(compute, 10**7)\n    print(future.result())\n\n    results = list(executor.map(compute, [10**6, 10**6, 10**6]))"
+      }
+    },
+    {
+      "id": "python-026",
+      "title": "多线程共享数据与线程安全",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "并发",
+        "线程安全",
+        "锁",
+        "同步"
+      ],
+      "content": "解释Python多线程中共享数据的问题及线程安全的解决方案。",
+      "answer": "多线程共享数据面临的问题：\n- 竞态条件（Race Condition）：多个线程同时读写共享数据，导致结果不确定。\n- 由于GIL的存在，Python的线程切换可能发生在任何字节码指令之间。\n- 即使简单的count += 1操作也不是原子性的（包含读取、计算、写回三步）。\n\n同步原语：\n1. Lock（互斥锁）：最基本的锁，一次只允许一个线程访问。acquire()获取锁，release()释放锁。推荐使用with语句。\n\n2. RLock（可重入锁）：同一线程可以多次获取锁而不会死锁。适用于递归调用。\n\n3. Semaphore（信号量）：控制同时访问资源的线程数量。\n\n4. Condition（条件变量）：线程间通信，wait()等待条件，notify()/notify_all()通知。\n\n5. Event：简单的线程间信号通知，set()设置信号，wait()等待信号。\n\n6. Barrier：让一组线程等待所有线程到达某个点后再一起继续。\n\n线程安全的数据结构：\n- queue.Queue：线程安全的FIFO队列。\n- queue.LifoQueue：线程安全的LIFO队列。\n- queue.PriorityQueue：线程安全的优先队列。\n- collections.deque：append和popleft是原子操作，但其他操作不是。\n\n最佳实践：尽量减少共享数据的范围，使用队列进行线程间通信而非共享状态。",
+      "code": {
+        "python": "import threading\nimport queue\n\n# Lock 使用\nlock = threading.Lock()\ncounter = 0\n\ndef increment():\n    global counter\n    for _ in range(100000):\n        with lock:  # 自动获取和释放\n            counter += 1\n\nthreads = [threading.Thread(target=increment) for _ in range(5)]\nfor t in threads: t.start()\nfor t in threads: t.join()\nprint(counter)  # 500000（线程安全）\n\n# 线程安全队列\nq = queue.Queue()\n\ndef producer():\n    for i in range(10):\n        q.put(i)\n        print(f'生产: {i}')\n\ndef consumer():\n    while True:\n        item = q.get()\n        print(f'消费: {item}')\n        q.task_done()\n\nthreading.Thread(target=producer).start()\nthreading.Thread(target=consumer, daemon=True).start()\nq.join()  # 等待所有任务完成"
+      }
+    },
+    {
+      "id": "python-027",
+      "title": "Python异常处理机制",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "基础语法",
+        "异常处理",
+        "错误处理"
+      ],
+      "content": "解释Python异常处理机制，包括try/except/else/finally的用法及自定义异常。",
+      "answer": "Python异常处理机制允许程序在运行时检测和处理错误，避免程序崩溃。\n\n基本语法：\n- try：包含可能抛出异常的代码。\n- except：捕获并处理特定类型的异常。\n- else：没有异常时执行的代码（可选）。\n- finally：无论是否发生异常都会执行的代码（可选），通常用于资源清理。\n\n异常层次结构：\n- BaseException -> Exception -> ValueError, TypeError, KeyError, IndexError等。\n- 通常只捕获Exception及其子类，不要捕获BaseException（包括KeyboardInterrupt和SystemExit）。\n\n常见异常类型：\n- ValueError：值不合法。\n- TypeError：类型不匹配。\n- KeyError：字典键不存在。\n- IndexError：索引越界。\n- AttributeError：属性不存在。\n- FileNotFoundError：文件不存在。\n\n自定义异常：\n- 继承Exception类。\n- 可以添加自定义属性和方法。\n- 通常以Error结尾命名。\n\n最佳实践：\n- 尽量捕获具体的异常类型，避免裸except。\n- 使用raise ... from ...保留异常链。\n- 不要用异常来控制正常流程。\n- 在finally中释放资源，或使用上下文管理器。",
+      "code": {
+        "python": "# 基本异常处理\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError as e:\n    print(f'除零错误: {e}')\nexcept (TypeError, ValueError) as e:\n    print(f'类型或值错误: {e}')\nelse:\n    print('没有异常')\nfinally:\n    print('总是执行')\n\n# 自定义异常\nclass ValidationError(Exception):\n    def __init__(self, field, message):\n        self.field = field\n        self.message = message\n        super().__init__(f'{field}: {message}')\n\ndef validate_age(age):\n    if not isinstance(age, int):\n        raise TypeError('年龄必须是整数')\n    if age < 0 or age > 150:\n        raise ValidationError('age', f'年龄{age}无效')\n\ntry:\n    validate_age(200)\nexcept ValidationError as e:\n    print(e.field, e.message)  # age 年龄200无效\n\n# 异常链\ntry:\n    int('abc')\nexcept ValueError as e:\n    raise RuntimeError('解析失败') from e"
+      }
+    },
+    {
+      "id": "python-028",
+      "title": "Python包管理与虚拟环境",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "工具",
+        "包管理",
+        "pip",
+        "虚拟环境",
+        "venv"
+      ],
+      "content": "介绍Python包管理工具pip和虚拟环境的使用方法。",
+      "answer": "pip是Python的包管理工具，用于安装、卸载和管理第三方包。\n\n常用pip命令：\n- pip install package：安装包。\n- pip install -r requirements.txt：从文件批量安装。\n- pip uninstall package：卸载包。\n- pip list：列出已安装的包。\n- pip freeze > requirements.txt：导出依赖。\n- pip show package：查看包详情。\n\n虚拟环境：\n- 为每个项目创建独立的Python环境，避免依赖冲突。\n- venv（Python内置）：python -m venv myenv。\n- virtualenv（第三方）：功能更丰富。\n- conda：Anaconda/Miniconda提供，适合数据科学。\n\n虚拟环境使用：\n1. 创建：python -m venv myenv。\n2. 激活：source myenv/bin/activate（Linux/Mac）或 myenv\\Scripts\\activate（Windows）。\n3. 安装包：pip install package。\n4. 导出依赖：pip freeze > requirements.txt。\n5. 退出：deactivate。\n\n依赖管理工具：\n- poetry：现代Python项目管理工具，集成了依赖管理和打包。\n- pipenv：pip和virtualenv的结合。\n- pdm：基于PEP 582的包管理器。\n\npyproject.toml是现代Python项目的标准配置文件（PEP 518/621）。",
+      "code": {
+        "python": "# requirements.txt 示例\n# flask==2.3.0\n# requests>=2.28.0\n# numpy>=1.24.0,<2.0.0\n\n# pyproject.toml 示例（现代项目配置）\n'''\n[project]\nname = \"myproject\"\nversion = \"1.0.0\"\ndescription = \"My Python project\"\nrequires-python = \">=3.10\"\ndependencies = [\n    \"flask>=2.3.0\",\n    \"requests>=2.28.0\",\n]\n\n[project.optional-dependencies]\ndev = [\"pytest>=7.0\", \"black>=23.0\"]\n\n[build-system]\nrequires = [\"setuptools>=65.0\"]\nbuild-backend = \"setuptools.backends._legacy:_Backend\"\n'''\n\n# 常用命令\n# python -m venv .venv\n# .venv\\Scripts\\activate  (Windows)\n# pip install -r requirements.txt\n# pip freeze > requirements.txt"
+      }
+    },
+    {
+      "id": "python-029",
+      "title": "functools常用工具",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "标准库",
+        "functools",
+        "lru_cache",
+        "装饰器"
+      ],
+      "content": "介绍Python functools模块中常用的工具函数，包括lru_cache、partial、wraps等。",
+      "answer": "functools是Python标准库中提供高阶函数操作的模块。\n\n常用工具：\n\n1. lru_cache（最近最少使用缓存）：\n- 缓存函数调用结果，相同参数直接返回缓存值。\n- @lru_cache(maxsize=128)：设置缓存大小。\n- @lru_cache(maxsize=None)：无限制缓存。\n- 适合纯函数（相同输入总是返回相同输出）。\n- cache_info()查看缓存统计，cache_clear()清除缓存。\n\n2. partial（偏函数）：\n- 固定函数的部分参数，返回新的可调用对象。\n- functools.partial(func, *args, **kwargs)。\n- 简化重复调用相同参数的场景。\n\n3. wraps（装饰器工具）：\n- 保留被装饰函数的元信息（__name__、__doc__、__module__等）。\n- 装饰器中必须使用，否则被装饰函数的元信息会丢失。\n\n4. reduce（归约）：\n- functools.reduce(func, iterable[, initializer])。\n- 将可迭代对象归约为单个值。\n\n5. singledispatch（单分派泛型函数）：\n- 根据第一个参数的类型选择不同的实现。\n\n6. total_ordering：\n- 只需定义__eq__和一个比较方法，自动生成其余比较方法。",
+      "code": {
+        "python": "from functools import lru_cache, partial, wraps, reduce\n\n# lru_cache\n@lru_cache(maxsize=128)\ndef fibonacci(n):\n    if n < 2: return n\n    return fibonacci(n-1) + fibonacci(n-2)\n\nprint(fibonacci(100))  # 瞬间完成\nprint(fibonacci.cache_info())\n# CacheInfo(hits=98, misses=101, maxsize=128, currsize=101)\n\n# partial\npower = partial(pow, exp=2)\nprint(power(5))     # 25\nprint(power(10))    # 100\n\n# wraps\ndef my_decorator(func):\n    @wraps(func)\n    def wrapper(*args, **kwargs):\n        print(f'调用 {func.__name__}')\n        return func(*args, **kwargs)\n    return wrapper\n\n@my_decorator\ndef hello(name):\n    \"\"\"打招呼\"\"\"\n    return f'Hello, {name}'\n\nprint(hello.__name__)  # hello（保留了原名）\nprint(hello.__doc__)   # 打招呼\n\n# reduce\nprint(reduce(lambda x, y: x + y, [1, 2, 3, 4, 5]))  # 15"
+      }
+    },
+    {
+      "id": "python-030",
+      "title": "Python3新特性",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "新特性",
+        "类型注解",
+        "dataclass",
+        "walrus运算符"
+      ],
+      "content": "介绍Python 3中重要的新特性，包括类型注解、dataclass、海象运算符等。",
+      "answer": "Python 3引入了许多重要特性：\n\n1. 类型注解（Type Hints，PEP 484）：\n- 函数参数和返回值可以添加类型提示。\n- 使用typing模块：List、Dict、Optional、Union、Tuple等。\n- Python 3.10+使用 | 语法代替Union：int | None。\n- 不影响运行时行为，主要用于静态检查（mypy）和IDE提示。\n\n2. dataclass（PEP 557，Python 3.7+）：\n- 自动生成__init__、__repr__、__eq__等方法。\n- 减少样板代码。\n- 支持默认值、不可变(frozen)、字段排序等。\n\n3. 海象运算符（:=，PEP 572，Python 3.8+）：\n- 赋值表达式，在表达式中同时赋值和使用。\n- 减少重复计算，使代码更简洁。\n\n4. f-string（Python 3.6+）：\n- 格式化字符串字面量，比format()和%更简洁高效。\n- Python 3.12+支持嵌套f-string和更灵活的表达式。\n\n5. 其他重要特性：\n- match-case模式匹配（Python 3.10+）。\n- 异步生成器和异步推导式（Python 3.6+）。\n- 字典合并运算符 |（Python 3.9+）。\n- 结构化模式匹配（Python 3.10+）。",
+      "code": {
+        "python": "# 类型注解\nfrom typing import Optional, List\n\ndef greet(name: str, age: int = 0) -> str:\n    return f'Hello, {name}, age {age}'\n\n# dataclass\nfrom dataclasses import dataclass, field\n\n@dataclass\nclass User:\n    name: str\n    age: int = 0\n    tags: List[str] = field(default_factory=list)\n\nuser = User('Tom', 25)\nprint(user)  # User(name='Tom', age=25, tags=[])\n\n# 海象运算符\n# 传统写法\n# data = [1, 2, 3, 4, 5]\n# n = len(data)\n# if n > 3:\n#     print(f'列表有{n}个元素')\n\n# 海象运算符写法\nif (n := len([1,2,3,4,5])) > 3:\n    print(f'列表有{n}个元素')\n\n# 字典合并 (Python 3.9+)\nd1 = {'a': 1}\nd2 = {'b': 2}\nmerged = d1 | d2  # {'a': 1, 'b': 2}\n\n# match-case (Python 3.10+)\n# match command:\n#     case 'quit': print('bye')\n#     case ['load', filename]: print(f'加载 {filename}')\n#     case _: print('未知命令')"
+      }
+    },
+    {
+      "id": "python-031",
+      "title": "Python中__slots__的作用",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "low",
+      "importance": "medium",
+      "tags": [
+        "高级特性",
+        "__slots__",
+        "内存优化",
+        "属性限制"
+      ],
+      "content": "解释Python中__slots__的作用、优缺点及适用场景。",
+      "answer": "__slots__是一个类属性，用于显式声明实例可以拥有的属性名称列表，替代默认的__dict__。\n\n作用：\n1. 节省内存：不使用__dict__，每个实例节省约40-50%的内存。\n2. 加快属性访问速度：通过描述符直接访问，比字典查找更快。\n3. 限制属性：只能赋值__slots__中声明的属性，防止动态添加属性。\n\n工作原理：\n- 定义__slots__后，Python为每个slot创建描述符（descriptor），存储在类级别。\n- 实例不再有__dict__（除非__slots__中包含'__dict__'）。\n- 属性值直接存储在实例的底层结构中，而非字典中。\n\n注意事项：\n- 子类不会继承父类的__slots__，除非子类也定义了__slots__。\n- 如果父类没有定义__slots__，子类定义__slots__不会节省内存（因为__dict__仍存在）。\n- 不能在实例上添加__slots__中未声明的属性。\n- __slots__中可以包含'__dict__'和'__weakref__'来保留这些功能。\n- 与某些序列化库（如pickle）可能有兼容性问题。\n\n适用场景：\n- 创建大量实例时（如ORM模型、游戏对象、数据容器）。\n- 属性固定的类。\n- 内存敏感的应用。",
+      "code": {
+        "python": "class Normal:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\nclass Slotted:\n    __slots__ = ('x', 'y')\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\nimport sys\nn = Normal(1, 2)\ns = Slotted(1, 2)\nprint(f'Normal: {sys.getsizeof(n)} bytes')   # 56\nprint(f'Slotted: {sys.getsizeof(s)} bytes')   # 48\n\n# 属性限制\ns.x = 10   # OK\n# s.z = 30  # AttributeError: 'Slotted' object has no attribute 'z'\n\n# 批量创建时内存差异明显\nimport tracemalloc\ntracemalloc.start()\nnormal_objs = [Normal(i, i) for i in range(100000)]\nn1, n2 = tracemalloc.get_traced_memory()\ntracemalloc.stop()\n\ntracemalloc.start()\nslotted_objs = [Slotted(i, i) for i in range(100000)]\ns1, s2 = tracemalloc.get_traced_memory()\ntracemalloc.stop()\nprint(f'Normal: {n1/1024:.1f}KB, Slotted: {s1/1024:.1f}KB')"
+      }
+    },
+    {
+      "id": "python-032",
+      "title": "Python描述符协议",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "low",
+      "importance": "medium",
+      "tags": [
+        "高级特性",
+        "描述符",
+        "descriptor",
+        "元编程"
+      ],
+      "content": "解释Python描述符协议的原理、分类及实现方式。",
+      "answer": "描述符（Descriptor）是Python中实现属性访问控制的底层机制，是property、classmethod、staticmethod的底层实现。\n\n描述符协议：一个类如果实现了以下方法中的一个或多个，就是描述符。\n- __get__(self, obj, objtype=None)：访问属性时调用。\n- __set__(self, obj, value)：设置属性时调用。\n- __delete__(self, obj)：删除属性时调用。\n- __set_name__(self, owner, name)：在创建拥有类时自动调用（Python 3.6+）。\n\n分类：\n1. 数据描述符（Data Descriptor）：同时实现__get__和__set__（或__delete__）。优先级高于实例__dict__。\n2. 非数据描述符（Non-Data Descriptor）：只实现__get__。优先级低于实例__dict__。\n\n属性查找顺序（重要）：\n1. 数据描述符（类属性中的描述符）。\n2. 实例__dict__。\n3. 非数据描述符。\n4. __getattr__（兜底方法）。\n\nproperty的本质：property就是一个数据描述符类，内部实现了__get__、__set__、__delete__。\n\n应用场景：\n- 类型验证：确保属性值符合类型要求。\n- 延迟计算：属性在首次访问时才计算。\n- 属性通知：属性变化时触发回调。\n- ORM字段映射：类似Django的Field。\n\n函数和方法也是描述符：普通函数是非数据描述符，实现__get__返回绑定方法。",
+      "code": {
+        "python": "# 类型验证描述符\nclass TypedField:\n    def __init__(self, field_type, field_name=None):\n        self.field_type = field_type\n        self.field_name = field_name\n\n    def __set_name__(self, owner, name):\n        self.field_name = name\n\n    def __get__(self, obj, objtype=None):\n        if obj is None:\n            return self\n        return obj.__dict__.get(self.field_name)\n\n    def __set__(self, obj, value):\n        if not isinstance(value, self.field_type):\n            raise TypeError(f'{self.field_name} 必须是 {self.field_type}')\n        obj.__dict__[self.field_name] = value\n\nclass Person:\n    name = TypedField(str)\n    age = TypedField(int)\n\np = Person()\np.name = 'Tom'   # OK\np.age = 25        # OK\n# p.age = '25'   # TypeError: age 必须是 <class 'int'>\n\n# 延迟计算描述符\nclass LazyProperty:\n    def __init__(self, func):\n        self.func = func\n\n    def __get__(self, obj, objtype=None):\n        if obj is None: return self\n        value = self.func(obj)\n        setattr(obj, self.func.__name__, value)  # 缓存到实例\n        return value"
+      }
+    },
+    {
+      "id": "python-033",
+      "title": "Python的MRO算法（C3线性化）",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "low",
+      "importance": "medium",
+      "tags": [
+        "高级特性",
+        "MRO",
+        "C3线性化",
+        "多继承"
+      ],
+      "content": "详细解释Python的C3线性化算法及其在MRO计算中的应用。",
+      "answer": "C3线性化是Python 3中计算多继承方法解析顺序（MRO）的算法，由一系列线性化约束产生。\n\nC3算法规则：\n1. 子类优先于父类。\n2. 父类按声明顺序从左到右排列。\n3. 如果一个类出现在多个父类的继承链中，只保留第一次出现的位置（单调性）。\n\n算法步骤：\n- MRO的计算可以看作合并多个线性化列表的过程。\n- 每一步选择一个合法的类（不在任何列表的尾部）加入结果。\n- 如果没有合法的类可选，说明继承结构不合法，抛出TypeError。\n\n具体计算过程（以类D(B, C)为例）：\n1. L[D] = D + merge(L[B], L[C], [B, C])\n2. L[B] = B + merge(L[A], [A]) = [B, A, object]\n3. L[C] = C + merge(L[A], [A]) = [C, A, object]\n4. merge([B, A, object], [C, A, object], [B, C])\n5. 选B（不在任何尾部），然后选C，然后选A，最后选object\n6. L[D] = [D, B, C, A, object]\n\n无效继承示例：\n- class X(A, B): pass 和 class Y(B, A): pass，如果Z(X, Y)会导致TypeError，因为A和B的相对顺序矛盾。\n\nsuper()与MRO的关系：\n- super()不是简单的调用父类方法，而是按照MRO顺序调用下一个类的方法。\n- super(ClassName, self)从MRO中ClassName之后开始查找。\n- 这是协作式多重继承的基础。",
+      "code": {
+        "python": "# C3线性化计算示例\nclass O: pass\nclass A(O): pass\nclass B(O): pass\nclass C(O): pass\nclass D(B, C): pass\nclass E(C, A): pass\nclass F(D, E): pass\n\nprint(F.__mro__)\n# (F, D, B, E, C, A, O, <class 'object'>)\n\n# 手动计算 L[F]:\n# L[O] = [O]\n# L[A] = [A, O]\n# L[B] = [B, O]\n# L[C] = [C, O]\n# L[D] = [D] + merge(L[B], L[C], [B, C])\n#        = [D, B, C, O]\n# L[E] = [E] + merge(L[C], L[A], [C, A])\n#        = [E, C, A, O]\n# L[F] = [F] + merge(L[D], L[E], [D, E])\n#        = [F, D, B, E, C, A, O]\n\n# 无效继承\n# class X(A, B): pass\n# class Y(B, A): pass\n# class Z(X, Y): pass  # TypeError: Cannot create a consistent MRO"
+      }
+    },
+    {
+      "id": "python-034",
+      "title": "collections模块常用类",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "collections",
+        "Counter",
+        "defaultdict",
+        "deque",
+        "OrderedDict"
+      ],
+      "content": "介绍collections模块中的常用类及其使用场景。",
+      "answer": "collections模块提供了Python内置容器的替代方案，功能更强大。\n\n常用类：\n\n1. Counter：计数器\n   - 用于统计元素出现次数\n   - 支持数学运算（+、-、&、|）\n\n2. defaultdict：带默认值的字典\n   - 访问不存在的键时返回默认值\n   - 避免KeyError\n\n3. deque：双端队列\n   - 两端插入删除都是O(1)\n   - 适合实现队列、栈、滑动窗口\n\n4. OrderedDict：有序字典（Python 3.7+后dict本身有序，但仍有用）\n   - 支持move_to_end()\n   - 支持popitem(last=False)\n\n5. namedtuple：命名元组\n   - 为元组元素命名，提高可读性\n   - 轻量级，不可变",
+      "code": {
+        "python": "from collections import Counter, defaultdict, deque, OrderedDict, namedtuple\n\n# Counter - 计数器\ntext = \"hello world\"\ncounter = Counter(text)\nprint(counter)  # Counter({'l': 3, 'o': 2, 'h': 1, 'e': 1, ' ': 1, 'w': 1, 'r': 1, 'd': 1})\nprint(counter.most_common(2))  # [('l', 3), ('o', 2)]\n\n# defaultdict - 带默认值的字典\ndd = defaultdict(list)\nfor key, value in [('a', 1), ('b', 2), ('a', 3)]:\n    dd[key].append(value)\nprint(dd)  # defaultdict(<class 'list'>, {'a': [1, 3], 'b': [2]})\n\n# deque - 双端队列\nd = deque(maxlen=3)\nd.append(1)\nd.append(2)\nd.appendleft(0)  # 左侧添加\nprint(d)  # deque([0, 1, 2], maxlen=3)\nd.append(3)  # 超出maxlen，左侧自动弹出\nprint(d)  # deque([1, 2, 3], maxlen=3)\n\n# namedtuple - 命名元组\nPoint = namedtuple('Point', ['x', 'y'])\np = Point(1, 2)\nprint(p.x, p.y)  # 1 2\nprint(p[0], p[1])  # 也可以用索引"
+      }
+    },
+    {
+      "id": "python-035",
+      "title": "Python中的鸭子类型",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "鸭子类型",
+        "动态类型",
+        "多态",
+        "Pythonic"
+      ],
+      "content": "什么是鸭子类型？Python中如何体现？",
+      "answer": "鸭子类型（Duck Typing）：\n- 一种动态类型风格\n- \"如果它走起来像鸭子，叫起来像鸭子，那它就是鸭子\"\n- 不关注对象类型，只关注对象是否有需要的方法/属性\n\n与静态语言对比：\n- Java/C++：编译期检查类型，必须继承同一接口\n- Python：运行期检查，只要有相同方法即可\n\nPython体现：\n1. 无需显式实现接口\n2. 依赖注入简单\n3. 迭代协议（__iter__/__next__）\n4. 上下文管理协议（__enter__/__exit__）\n\n优点：\n- 代码更灵活、简洁\n- 易于扩展\n\n缺点：\n- 运行时才发现错误\n- 需要良好的文档和测试",
+      "code": {
+        "python": "# 鸭子类型示例\nclass Duck:\n    def quack(self):\n        return \"Quack!\"\n    def fly(self):\n        return \"Flapping wings\"\n\nclass Person:\n    def quack(self):\n        return \"I'm quacking like a duck!\"\n    def fly(self):\n        return \"I'm flapping my arms!\"\n\ndef make_it_quack_and_fly(thing):\n    # 不检查类型，只检查是否有方法\n    print(thing.quack())\n    print(thing.fly())\n\n# 两者都可以传入\nduck = Duck()\nperson = Person()\n\nmake_it_quack_and_fly(duck)    # 正常工作\nmake_it_quack_and_fly(person)  # 同样正常工作！\n\n# 迭代协议（鸭子类型经典例子）\nclass MyRange:\n    def __init__(self, n):\n        self.n = n\n        self.i = 0\n    \n    def __iter__(self):\n        return self\n    \n    def __next__(self):\n        if self.i >= self.n:\n            raise StopIteration\n        val = self.i\n        self.i += 1\n        return val\n\n# 不需要继承任何接口，只要有__iter__和__next__就能迭代\nfor i in MyRange(5):\n    print(i)  # 0 1 2 3 4"
+      }
+    },
+    {
+      "id": "python-036",
+      "title": "Python的import机制",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "import",
+        "模块导入",
+        "sys.path",
+        "循环导入",
+        "导入机制"
+      ],
+      "content": "解释Python的模块导入机制及循环导入问题。",
+      "answer": "Python导入机制：\n\n1. 查找模块：\n   - 按sys.path顺序查找\n   - 当前目录 -> PYTHONPATH -> 标准库 -> 第三方包\n\n2. 加载模块：\n   - 找到模块文件（.py/.pyc/.so/包目录）\n   - 编译为字节码（如有必要）\n   - 执行模块顶层代码\n   - 将模块对象存入sys.modules缓存\n\n3. 创建命名空间：\n   - 在import语句所在命名空间创建引用\n\n循环导入问题：\n- A导入B，B又导入A\n- 导致部分模块未完全初始化\n\n解决方案：\n1. 重构代码，消除循环依赖\n2. 延迟导入（在函数内部导入）\n3. 使用importlib动态导入",
+      "code": {
+        "python": "# 查看模块搜索路径\nimport sys\nprint(sys.path)\n\n# 查看已缓存的模块\nprint('os' in sys.modules)  # True\n\n# 循环导入示例及解决方案\n\n# 问题代码（a.py和b.py互相导入）：\n# a.py:\n#   import b\n#   def func_a(): return b.func_b()\n# b.py:\n#   import a\n#   def func_b(): return a.func_a()\n\n# 解决方案1：延迟导入\n# a.py:\ndef func_a():\n    import b  # 延迟导入\n    return b.func_b()\n\n# 解决方案2：合并模块或重构\n# 将公共部分提取到c.py\n\n# 解决方案3：使用importlib动态导入\nimport importlib\n\ndef dynamic_import(module_name):\n    return importlib.import_module(module_name)\n\n# 重新加载模块（开发时有用）\nimport importlib\nimport mymodule\nimportlib.reload(mymodule)\n\n# 条件导入\ntry:\n    import json\nexcept ImportError:\n    import simplejson as json\n\n# 相对导入（包内使用）\n# from . import module_a      # 同级目录\n# from .. import module_b     # 上级目录\n# from .subpackage import c   # 子包"
+      }
+    },
+    {
+      "id": "python-037",
+      "title": "WSGI与ASGI",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "WSGI",
+        "ASGI",
+        "Web服务器",
+        "同步",
+        "异步"
+      ],
+      "content": "解释WSGI和ASGI的区别及应用场景。",
+      "answer": "WSGI（Web Server Gateway Interface）：\n- Python Web服务器网关接口标准\n- 同步接口，一次处理一个请求\n- 被Django、Flask等框架广泛使用\n\nASGI（Asynchronous Server Gateway Interface）：\n- WSGI的异步继任者\n- 支持异步、非阻塞IO\n- 支持HTTP/1.1、HTTP/2、WebSocket\n- 被FastAPI、Django Channels等使用\n\n对比：\n\n| 特性 | WSGI | ASGI |\n|------|------|------|\n| 同步/异步 | 同步 | 异步 |\n| 协议支持 | HTTP/1.1 | HTTP/1.1, HTTP/2, WebSocket |\n| 并发处理 | 多进程/线程 | 单线程异步事件循环 |\n| 适用场景 | 传统Web应用 | 实时应用、高并发 |\n\n选择建议：\n- 传统CRUD应用→WSGI（Django/Flask）\n- 实时通信、高并发→ASGI（FastAPI/Django Channels）",
+      "code": {
+        "python": "# WSGI应用示例（同步）\ndef wsgi_application(environ, start_response):\n    # environ: 包含请求信息的字典\n    # start_response: 设置响应状态的回调\n    \n    status = '200 OK'\n    headers = [('Content-Type', 'text/html')]\n    start_response(status, headers)\n    \n    return [b'Hello, WSGI!']\n\n# ASGI应用示例（异步）\nasync def asgi_application(scope, receive, send):\n    # scope: 连接信息\n    # receive: 接收消息的异步函数\n    # send: 发送消息的异步函数\n    \n    await send({\n        'type': 'http.response.start',\n        'status': 200,\n        'headers': [[b'content-type', b'text/html']],\n    })\n    await send({\n        'type': 'http.response.body',\n        'body': b'Hello, ASGI!',\n    })\n\n# 使用gunicorn运行WSGI\n# $ gunicorn myapp:wsgi_application\n\n# 使用uvicorn运行ASGI\n# $ uvicorn myapp:asgi_application\n\n# FastAPI（基于ASGI）\nfrom fastapi import FastAPI\napp = FastAPI()\n\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"Hello ASGI\"}\n\n# Django支持ASGI（asgi.py）\nimport os\nfrom django.core.asgi import get_asgi_application\nos.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')\napplication = get_asgi_application()"
+      }
+    },
+    {
+      "id": "python-038",
+      "title": "LEGB变量查找规则",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "LEGB",
+        "变量作用域",
+        "命名空间",
+        "闭包",
+        "global"
+      ],
+      "content": "解释Python的LEGB变量查找规则。",
+      "answer": "LEGB：Python变量查找的顺序规则。\n\nL - Local（局部）：函数内部\nE - Enclosing（嵌套）：嵌套函数的上一层函数\nG - Global（全局）：模块级别\nB - Built-in（内置）：Python内置名称\n\n查找顺序：Local → Enclosing → Global → Built-in\n\n注意事项：\n1. 赋值操作默认创建局部变量\n2. global声明使用全局变量\n3. nonlocal声明使用嵌套变量\n4. 只读访问会按LEGB查找，但赋值需要显式声明",
+      "code": {
+        "python": "x = 'global'  # G\n\ndef outer():\n    x = 'enclosing'  # E\n    \n    def inner():\n        x = 'local'  # L\n        print(x)  # 输出 'local'\n    \n    inner()\n    print(x)  # 输出 'enclosing'\n\nouter()\nprint(x)  # 输出 'global'\n\n# global和nonlocal\ncount = 0\n\ndef increment():\n    global count  # 声明使用全局变量\n    count += 1\n\ndef outer2():\n    x = 10\n    def inner2():\n        nonlocal x  # 声明使用嵌套变量\n        x += 1\n    inner2()\n    print(x)  # 11\n\n# 常见错误\ndef wrong():\n    print(x)  # 可以，按LEGB找到global\n    x = 5     # 错误！赋值视为局部变量，但上面已经使用了\n\n# 正确做法\ndef correct():\n    global x\n    print(x)\n    x = 5"
+      }
+    },
+    {
+      "id": "python-039",
+      "title": "itertools模块",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "itertools",
+        "迭代器",
+        "标准库",
+        "函数式编程"
+      ],
+      "content": "介绍itertools模块的常用函数。",
+      "answer": "itertools：高效迭代器工具模块，用于创建和操作迭代器。\n\n常用函数：\n1. 无限迭代器：\n   - count(start, step)：无限计数\n   - cycle(iterable)：无限循环\n   - repeat(elem, n)：重复n次\n\n2. 组合迭代器：\n   - product：笛卡尔积\n   - permutations：排列\n   - combinations：组合\n   - combinations_with_replacement：可重复组合\n\n3. 筛选/分组：\n   - chain：连接多个迭代器\n   - groupby：分组（需先排序）\n   - filterfalse：反向过滤\n   - takewhile/dropwhile：条件取/跳\n\n4. 其他：\n   - accumulate：累积计算\n   - zip_longest：zip的变体，填充缺失值",
+      "code": {
+        "python": "import itertools\n\n# 无限迭代器（需配合break使用）\nfor i in itertools.count(10, 2):  # 从10开始，步长2\n    if i > 20: break\n    print(i)  # 10, 12, 14, 16, 18, 20\n\n# 组合\nlist(itertools.permutations([1,2,3], 2))\n# [(1,2), (1,3), (2,1), (2,3), (3,1), (3,2)]\n\nlist(itertools.combinations([1,2,3,4], 2))\n# [(1,2), (1,3), (1,4), (2,3), (2,4), (3,4)]\n\n# 笛卡尔积\nlist(itertools.product('AB', '12'))\n# [('A','1'), ('A','2'), ('B','1'), ('B','2')]\n\n# 累积\nlist(itertools.accumulate([1,2,3,4,5]))  # [1, 3, 6, 10, 15]\n\n# 分组\ndata = [('A', 1), ('A', 2), ('B', 3), ('B', 4)]\nfor key, group in itertools.groupby(data, key=lambda x: x[0]):\n    print(key, list(group))\n# A [(A,1), (A,2)]\n# B [(B,3), (B,4)]\n\n# 连接迭代器\nlist(itertools.chain([1,2], [3,4], [5,6]))  # [1,2,3,4,5,6]"
+      }
+    },
+    {
+      "id": "python-040",
+      "title": "pathlib模块",
+      "category": "python",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "pathlib",
+        "路径操作",
+        "文件系统",
+        "标准库",
+        "现代Python"
+      ],
+      "content": "pathlib模块与os.path相比有什么优势？",
+      "answer": "pathlib：面向对象的文件路径操作模块（Python 3.4+），替代os.path。\n\n优势：\n1. 面向对象：Path对象而非字符串\n2. 跨平台：自动处理Windows/Unix路径差异\n3. 操作符重载：/ 连接路径\n4. 链式调用：方法返回新Path对象\n5. 更丰富的方法：读写、权限、遍历等\n\n常用操作：\n- Path('dir') / 'file.txt'：连接路径\n- exists()：是否存在\n- is_file() / is_dir()：类型判断\n- mkdir() / rmdir()：创建/删除目录\n- read_text() / write_text()：读写文本\n- glob()：模式匹配\n- iterdir()：遍历目录",
+      "code": {
+        "python": "from pathlib import Path\n\n# 创建路径\np = Path('/home/user') / 'documents' / 'file.txt'\n# 等价于 os.path.join('/home/user', 'documents', 'file.txt')\n\n# 路径属性\nprint(p.name)       # file.txt\nprint(p.stem)       # file\nprint(p.suffix)     # .txt\nprint(p.parent)     # /home/user/documents\nprint(p.parts)      # ('/', 'home', 'user', 'documents', 'file.txt')\n\n# 文件操作\np.exists()\np.is_file()\np.is_dir()\n\n# 读写（Python 3.5+）\nPath('config.txt').write_text('setting=value')\ncontent = Path('config.txt').read_text()\n\n# 遍历目录\nfor f in Path('.').iterdir():\n    if f.is_file():\n        print(f)\n\n# glob模式匹配\nlist(Path('.').glob('*.py'))  # 当前目录所有py文件\nlist(Path('.').rglob('*.py'))  # 递归所有py文件\n\n# 创建目录\nPath('new/dir').mkdir(parents=True, exist_ok=True)\n\n# 相对/绝对路径\nPath('file.txt').resolve()  # 转为绝对路径\nPath('/a/b').relative_to('/a')  # 计算相对路径"
+      }
+    },
+    {
+      "id": "python-041",
+      "title": "typing模块高级用法",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "typing",
+        "类型注解",
+        "TypeVar",
+        "Generic",
+        "Protocol",
+        "类型提示"
+      ],
+      "content": "介绍typing模块的高级用法。",
+      "answer": "typing：Python类型注解支持模块，用于静态类型检查。\n\n高级特性：\n1. TypeVar：泛型类型变量\n2. Generic：自定义泛型类\n3. Protocol：结构子类型（鸭子类型形式化）\n4. Union/Optional：联合类型\n5. Callable：函数类型\n6. Type：类本身类型\n\n类型检查工具：\n- mypy：静态类型检查器\n- pyright：微软的类型检查器\n- IDE支持：PyCharm、VSCode等",
+      "code": {
+        "python": "from typing import TypeVar, Generic, Protocol, Union, Optional, Callable, List, Dict\n\n# TypeVar - 泛型变量\nT = TypeVar('T')\nK = TypeVar('K')\nV = TypeVar('V')\n\ndef first(items: List[T]) -> Optional[T]:\n    return items[0] if items else None\n\n# Generic - 自定义泛型\nclass Stack(Generic[T]):\n    def __init__(self) -> None:\n        self._items: List[T] = []\n    \n    def push(self, item: T) -> None:\n        self._items.append(item)\n    \n    def pop(self) -> Optional[T]:\n        return self._items.pop() if self._items else None\n\n# Protocol - 结构子类型\nclass Drawable(Protocol):\n    def draw(self) -> None: ...\n\ndef render(item: Drawable) -> None:\n    item.draw()\n\n# 任何有draw方法的类都符合Drawable\nclass Circle:\n    def draw(self) -> None: ...\n\nrender(Circle())  # OK\n\n# Union - 联合类型\ndef parse(value: Union[str, int]) -> int:\n    if isinstance(value, str):\n        return int(value)\n    return value\n\n# Callable - 函数类型\ndef apply(f: Callable[[int, int], int], x: int, y: int) -> int:\n    return f(x, y)\n\n# Optional = Union[X, None]\ndef find(items: List[T], target: T) -> Optional[int]: ..."
+      }
+    },
+    {
+      "id": "python-042",
+      "title": "序列化pickle与json",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "pickle",
+        "json",
+        "序列化",
+        "反序列化",
+        "marshal",
+        "msgpack"
+      ],
+      "content": "比较pickle和json的区别及使用场景。",
+      "answer": "序列化：将对象转换为可存储/传输的字节流。\n\npickle：\n- Python专用，支持几乎所有Python对象\n- 二进制格式，效率高\n- 不安全：不要加载不可信来源的数据\n- 协议版本向前兼容\n\njson：\n- 通用文本格式，跨语言\n- 只支持基本类型（dict, list, str, int, float, bool, None）\n- 安全，人类可读\n- 需要自定义编码器处理复杂对象\n\n其他选项：\n- marshal：Python内部使用，不保证兼容\n- msgpack：二进制JSON，高效紧凑\n- protobuf：Google协议缓冲区，强类型",
+      "code": {
+        "python": "import pickle\nimport json\n\ndata = {'name': 'Alice', 'age': 30, 'scores': [85, 90, 95]}\n\n# pickle序列化\npickled = pickle.dumps(data)\nrestored = pickle.loads(pickled)\n\n# pickle到文件\nwith open('data.pkl', 'wb') as f:\n    pickle.dump(data, f)\n\n# json序列化\njson_str = json.dumps(data, indent=2)\nrestored = json.loads(json_str)\n\n# json到文件\nwith open('data.json', 'w') as f:\n    json.dump(data, f, indent=2)\n\n# 自定义JSON编码\nclass Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\nclass PersonEncoder(json.JSONEncoder):\n    def default(self, obj):\n        if isinstance(obj, Person):\n            return {'name': obj.name, 'age': obj.age}\n        return super().default(obj)\n\np = Person('Bob', 25)\njson_str = json.dumps(p, cls=PersonEncoder)\n\n# dataclass自动支持\nfrom dataclasses import dataclass, asdict\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\njson.dumps(asdict(Point(1, 2)))\n\n# pickle安全警告\n# 不要pickle.load()不可信来源的数据！\n# 可能被利用执行任意代码"
+      }
+    },
+    {
+      "id": "python-043",
+      "title": "正则表达式re模块",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "正则表达式",
+        "regex",
+        "re",
+        "字符串匹配",
+        "模式匹配"
+      ],
+      "content": "介绍Python的re模块常用功能。",
+      "answer": "re模块：正则表达式支持，用于字符串模式匹配。\n\n常用函数：\n- match：从字符串开头匹配\n- search：搜索第一个匹配\n- findall：查找所有匹配\n- finditer：返回匹配迭代器\n- sub：替换匹配\n- split：按模式分割\n- compile：编译模式（重复使用）\n\n常用模式：\n- .：任意字符\n- *：0次或多次\n- +：1次或多次\n- ?：0次或1次\n- {n,m}：n到m次\n- []：字符集\n- ()：分组\n- ^ $：开始/结束",
+      "code": {
+        "python": "import re\n\ntext = 'Email: alice@example.com, Phone: 138-1234-5678'\n\n# 搜索\nmatch = re.search(r'\\w+@\\w+\\.\\w+', text)\nif match:\n    print(match.group())  # alice@example.com\n\n# 查找所有\nemails = re.findall(r'\\w+@\\w+\\.\\w+', text)\n\n# 分组\nmatch = re.search(r'(\\w+)@((\\w+)\\.(\\w+))', text)\nif match:\n    print(match.group(0))  # 完整匹配\n    print(match.group(1))  # 用户名\n    print(match.group(2))  # 域名\n\n# 替换\nmasked = re.sub(r'\\d{3}-\\d{4}-\\d{4}', '***-****-****', text)\n\n# 分割\nparts = re.split(r'[,;\\s]+', 'a,b; c  d')\n\n# 编译（重复使用）\npattern = re.compile(r'\\d+')\npattern.findall('abc123def456')  # ['123', '456']\n\n# 命名分组\nmatch = re.search(r'(?P<user>\\w+)@(?P<domain>\\w+\\.\\w+)', text)\nprint(match.group('user'))\n\n# 贪婪vs非贪婪\nre.findall(r'<.*>', '<a><b>')    # ['<a><b>'] 贪婪\nre.findall(r'<.*?>', '<a><b>')   # ['<a>', '<b>'] 非贪婪"
+      }
+    },
+    {
+      "id": "python-044",
+      "title": "单元测试unittest与pytest",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "unittest",
+        "pytest",
+        "单元测试",
+        "TDD",
+        "测试框架"
+      ],
+      "content": "比较unittest和pytest的特点。",
+      "answer": "单元测试：验证代码单元（函数/类）的正确性。\n\nunittest：\n- 标准库内置\n- xUnit风格（Java JUnit类似）\n- 类继承TestCase\n- 断言方法：assertEqual, assertTrue等\n\npytest：\n- 第三方，更现代\n- 函数式，无需类\n- 丰富的插件生态\n- 更简洁的断言语法\n- 自动发现测试\n- fixture机制\n\n选择建议：\n- 新项目推荐pytest\n- 标准库依赖用unittest\n- 两者可以混用",
+      "code": {
+        "python": "# unittest示例\nimport unittest\n\nclass TestMath(unittest.TestCase):\n    def setUp(self):\n        self.x = 10\n    \n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\n        self.assertTrue(self.x > 0)\n    \n    def test_divide(self):\n        with self.assertRaises(ZeroDivisionError):\n            1 / 0\n\nif __name__ == '__main__':\n    unittest.main()\n\n# pytest示例\nimport pytest\n\ndef add(x, y):\n    return x + y\n\ndef test_add():\n    assert add(1, 2) == 3\n    assert add(-1, 1) == 0\n\n# pytest fixture\n@pytest.fixture\ndef database():\n    db = create_db()\n    yield db\n    db.cleanup()\n\ndef test_query(database):\n    result = database.query('SELECT * FROM users')\n    assert len(result) > 0\n\n# 参数化测试\n@pytest.mark.parametrize('x,y,expected', [\n    (1, 2, 3),\n    (0, 0, 0),\n    (-1, 1, 0),\n])\ndef test_add_param(x, y, expected):\n    assert add(x, y) == expected\n\n# 运行测试\n# $ pytest test_file.py -v\n# $ pytest -k 'test_add'  # 按名称过滤\n# $ pytest --cov=myapp  # 覆盖率"
+      }
+    },
+    {
+      "id": "python-045",
+      "title": "Flask框架核心概念",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Flask",
+        "Web框架",
+        "路由",
+        "蓝图",
+        "中间件"
+      ],
+      "content": "Flask框架的核心概念有哪些？路由、蓝图、中间件如何使用？",
+      "answer": "**Flask核心概念：**\n\n1. **应用对象**：Flask(__name__) 创建应用实例\n2. **路由**：@app.route() 装饰器绑定URL和视图函数\n3. **请求对象**：request 包含请求数据\n4. **响应对象**：Response 或直接返回字符串/元组\n5. **蓝图**：Blueprint 模块化组织应用\n6. **上下文**：应用上下文(app context)和请求上下文(request context)\n\n**蓝图使用：**\n```python\nfrom flask import Blueprint\nuser_bp = Blueprint('user', __name__)\n\n@user_bp.route('/profile')\ndef profile():\n    return 'User Profile'\n\n# 注册蓝图\napp.register_blueprint(user_bp, url_prefix='/user')\n```\n\n**中间件模式：**\n- before_request：请求前处理\n- after_request：请求后处理\n- teardown_request：请求结束清理",
+      "code": {
+        "python": "from flask import Flask, request, Blueprint, jsonify\n\napp = Flask(__name__)\n\n# 基本路由\n@app.route('/')\ndef index():\n    return 'Hello Flask'\n\n# 动态路由\n@app.route('/user/<int:user_id>')\ndef get_user(user_id):\n    return f'User {user_id}'\n\n# HTTP方法\n@app.route('/api/data', methods=['GET', 'POST'])\ndef api_data():\n    if request.method == 'POST':\n        data = request.get_json()\n        return jsonify({'received': data})\n    return jsonify({'method': 'GET'})\n\n# 蓝图\napi_bp = Blueprint('api', __name__)\n\n@api_bp.route('/users')\ndef list_users():\n    return jsonify(['user1', 'user2'])\n\napp.register_blueprint(api_bp, url_prefix='/api/v1')\n\n# 中间件\n@app.before_request\ndef before_request():\n    print(f'请求: {request.path}')\n\n@app.after_request\ndef after_request(response):\n    response.headers['X-Custom'] = 'value'\n    return response\n\nif __name__ == '__main__':\n    app.run(debug=True)"
+      }
+    },
+    {
+      "id": "python-046",
+      "title": "Django框架核心概念",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Django",
+        "MTV",
+        "ORM",
+        "中间件",
+        "信号"
+      ],
+      "content": "Django框架的MTV架构是什么？ORM和中间件如何工作？",
+      "answer": "**Django MTV架构：**\n- Model：数据模型，负责数据存取\n- Template：模板，负责展示逻辑\n- View：视图，负责业务逻辑\n\n**ORM核心：**\n1. 模型定义：继承models.Model\n2. 查询API：objects.filter(), get(), create()\n3. 关系字段：ForeignKey, ManyToManyField, OneToOneField\n4. 数据迁移：makemigrations, migrate\n\n**中间件：**\n- 请求阶段：process_request\n- 视图阶段：process_view\n- 响应阶段：process_response\n- 异常阶段：process_exception\n\n**信号机制：**\n- 内置信号：pre_save, post_save, pre_delete\n- 自定义信号：Signal()",
+      "code": {
+        "python": "# models.py\nfrom django.db import models\n\nclass Author(models.Model):\n    name = models.CharField(max_length=100)\n    email = models.EmailField()\n\nclass Book(models.Model):\n    title = models.CharField(max_length=200)\n    author = models.ForeignKey(Author, on_delete=models.CASCADE)\n    published = models.DateField()\n\n# views.py\nfrom django.shortcuts import render, get_object_or_404\nfrom .models import Book\n\ndef book_list(request):\n    books = Book.objects.select_related('author').all()\n    return render(request, 'books/list.html', {'books': books})\n\ndef book_detail(request, pk):\n    book = get_object_or_404(Book, pk=pk)\n    return render(request, 'books/detail.html', {'book': book})\n\n# ORM查询示例\n# 创建\nauthor = Author.objects.create(name='Alice', email='alice@example.com')\n# 查询\nbooks = Book.objects.filter(author=author, published__year=2024)\n# 更新\nBook.objects.filter(author=author).update(title='New Title')\n# 删除\nauthor.delete()\n\n# 中间件示例\nclass CustomMiddleware:\n    def __init__(self, get_response):\n        self.get_response = get_response\n    \n    def __call__(self, request):\n        # 请求前\n        print(f'请求路径: {request.path}')\n        response = self.get_response(request)\n        # 响应后\n        response['X-Custom'] = 'value'\n        return response"
+      }
+    },
+    {
+      "id": "python-047",
+      "title": "FastAPI异步框架",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "FastAPI",
+        "异步",
+        "类型注解",
+        "Pydantic",
+        "依赖注入"
+      ],
+      "content": "FastAPI框架的特点是什么？如何使用Pydantic进行数据验证？",
+      "answer": "**FastAPI特点：**\n1. 高性能：基于Starlette和Pydantic，性能接近Node.js\n2. 异步支持：原生支持async/await\n3. 自动文档：自动生成OpenAPI/Swagger文档\n4. 类型检查：利用Python类型注解进行数据验证\n5. 依赖注入：内置DI系统\n\n**Pydantic模型：**\n- BaseModel：数据验证和序列化\n- Field：字段约束\n- validator：自定义验证器\n\n**核心功能：**\n- 路径参数、查询参数自动验证\n- 请求体自动解析\n- 响应模型自动转换",
+      "code": {
+        "python": "from fastapi import FastAPI, Depends, HTTPException, status\nfrom pydantic import BaseModel, Field, validator\nfrom typing import Optional, List\n\napp = FastAPI(title=\"My API\", version=\"1.0.0\")\n\n# Pydantic模型\nclass UserCreate(BaseModel):\n    name: str = Field(..., min_length=2, max_length=50)\n    email: str\n    age: Optional[int] = Field(None, ge=0, le=150)\n    \n    @validator('email')\n    def validate_email(cls, v):\n        if '@' not in v:\n            raise ValueError('无效邮箱格式')\n        return v\n\nclass User(UserCreate):\n    id: int\n\nclass Config:\n    orm_mode = True\n\n# 依赖注入\nasync def get_current_user():\n    # 模拟获取当前用户\n    return {\"id\": 1, \"name\": \"test\"}\n\n# 路由\n@app.get(\"/\", tags=[\"Root\"])\nasync def root():\n    return {\"message\": \"Hello FastAPI\"}\n\n@app.get(\"/users/{user_id}\", response_model=User)\nasync def get_user(user_id: int, q: Optional[str] = None):\n    \"\"\"获取用户信息\"\"\"\n    return {\"id\": user_id, \"name\": \"Alice\", \"email\": \"alice@example.com\", \"age\": 25}\n\n@app.post(\"/users\", response_model=User, status_code=status.HTTP_201_CREATED)\nasync def create_user(user: UserCreate):\n    \"\"\"创建用户\"\"\"\n    # 保存到数据库\n    return {\"id\": 1, **user.dict()}\n\n@app.get(\"/protected\")\nasync def protected_route(user = Depends(get_current_user)):\n    return {\"user\": user}\n\n# 运行: uvicorn main:app --reload"
+      }
+    },
+    {
+      "id": "python-048",
+      "title": "SQLAlchemy ORM详解",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "SQLAlchemy",
+        "ORM",
+        "数据库",
+        "会话",
+        "关系映射"
+      ],
+      "content": "SQLAlchemy ORM的核心概念有哪些？如何定义模型和关系？",
+      "answer": "**核心组件：**\n1. Engine：数据库引擎，管理连接池\n2. Session：会话，管理对象状态\n3. Base：声明基类，模型继承\n4. Column：字段定义\n5. relationship：关系定义\n\n**关系类型：**\n- 一对多：ForeignKey + relationship\n- 多对多：association_proxy 或中间表\n- 一对一：uselist=False\n\n**会话操作：**\n- add()：添加对象\n- commit()：提交事务\n- rollback()：回滚\n- query()：查询\n\n**查询方法：**\n- filter()：过滤条件\n- join()：连接查询\n- order_by()：排序\n- limit()/offset()：分页",
+      "code": {
+        "python": "from sqlalchemy import create_engine, Column, Integer, String, ForeignKey\nfrom sqlalchemy.ext.declarative import declarative_base\nfrom sqlalchemy.orm import sessionmaker, relationship\n\nBase = declarative_base()\n\n# 定义模型\nclass Department(Base):\n    __tablename__ = 'departments'\n    \n    id = Column(Integer, primary_key=True)\n    name = Column(String(100))\n    employees = relationship('Employee', back_populates='department')\n\nclass Employee(Base):\n    __tablename__ = 'employees'\n    \n    id = Column(Integer, primary_key=True)\n    name = Column(String(100))\n    dept_id = Column(Integer, ForeignKey('departments.id'))\n    department = relationship('Department', back_populates='employees')\n\n# 创建引擎和会话\nengine = create_engine('sqlite:///company.db')\nSession = sessionmaker(bind=engine)\n\n# 创建表\nBase.metadata.create_all(engine)\n\n# 使用会话\nsession = Session()\n\n# 创建\ndept = Department(name='Engineering')\nsession.add(dept)\nsession.commit()\n\nemp = Employee(name='Alice', dept_id=dept.id)\nsession.add(emp)\nsession.commit()\n\n# 查询\nemployees = session.query(Employee).filter(Employee.name.like('A%')).all()\n\n# 连接查询\nresults = session.query(Employee, Department).join(Department).all()\n\n# 关系访问\nfor emp in dept.employees:\n    print(emp.name)\n\nsession.close()"
+      }
+    },
+    {
+      "id": "python-049",
+      "title": "Celery分布式任务队列",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "Celery",
+        "分布式",
+        "任务队列",
+        "异步任务",
+        "定时任务"
+      ],
+      "content": "Celery是什么？如何配置和使用Celery处理异步任务？",
+      "answer": "**Celery核心概念：**\n1. Broker：消息代理（Redis/RabbitMQ）\n2. Worker：任务执行者\n3. Task：异步任务函数\n4. Result Backend：结果存储\n5. Beat：定时任务调度器\n\n**任务类型：**\n- apply_async()：异步执行\n- delay()：简化的异步调用\n- s()/si()：签名（任务模板）\n\n**任务状态：**\nPENDING → STARTED → SUCCESS/FAILURE\n\n**常用配置：**\n- CELERY_BROKER_URL\n- CELERY_RESULT_BACKEND\n- CELERY_TASK_SERIALIZER\n- CELERY_TIMEZONE",
+      "code": {
+        "python": "# celery_config.py\nfrom celery import Celery\n\napp = Celery('tasks',\n             broker='redis://localhost:6379/0',\n             backend='redis://localhost:6379/1')\n\napp.conf.update(\n    task_serializer='json',\n    accept_content=['json'],\n    result_serializer='json',\n    timezone='Asia/Shanghai',\n    enable_utc=True,\n)\n\n# 定义任务\n@app.task(bind=True)\ndef add(self, x, y):\n    \"\"\"简单加法任务\"\"\"\n    return x + y\n\n@app.task(bind=True, max_retries=3)\ndef send_email(self, to, subject, body):\n    \"\"\"发送邮件任务\"\"\"\n    try:\n        # 发送邮件逻辑\n        pass\n    except Exception as exc:\n        raise self.retry(exc=exc, countdown=60)\n\n@app.task\ndef process_file(file_path):\n    \"\"\"处理文件任务\"\"\"\n    # 处理逻辑\n    return {'status': 'done', 'file': file_path}\n\n# 定时任务配置\napp.conf.beat_schedule = {\n    'add-every-30-seconds': {\n        'task': 'tasks.add',\n        'schedule': 30.0,\n        'args': (16, 16)\n    },\n}\n\n# 使用任务\nif __name__ == '__main__':\n    # 异步调用\n    result = add.delay(4, 5)\n    print(result.id)  # 任务ID\n    print(result.status)  # 状态\n    print(result.get())  # 获取结果（阻塞）\n    \n    # 带参数的异步调用\n    result = add.apply_async(args=[10, 20], countdown=10)  # 10秒后执行"
+      }
+    },
+    {
+      "id": "python-050",
+      "title": "Python性能优化技巧",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "性能优化",
+        "cProfile",
+        "Cython",
+        "时间复杂度",
+        "内存优化"
+      ],
+      "content": "Python性能优化的常用方法有哪些？如何使用性能分析工具？",
+      "answer": "**性能分析工具：**\n1. cProfile：内置性能分析器\n2. line_profiler：逐行分析\n3. memory_profiler：内存分析\n4. timeit：代码计时\n\n**优化策略：**\n1. 算法优化：选择合适的数据结构和算法\n2. 内置函数：使用map/filter代替循环\n3. 列表推导：比普通循环快\n4. 生成器：节省内存\n5. 局部变量：访问比全局变量快\n6. 字典查找：O(1)比列表O(n)快\n\n**高级优化：**\n1. NumPy：数值计算\n2. Cython：编译为C\n3. Numba：JIT编译\n4. 多进程：利用多核",
+      "code": {
+        "python": "# 性能分析\nimport cProfile\nimport pstats\nfrom io import StringIO\n\ndef slow_function():\n    total = 0\n    for i in range(100000):\n        total += i\n    return total\n\n# 使用cProfile\npr = cProfile.Profile()\npr.enable()\nslow_function()\npr.disable()\n\ns = StringIO()\nps = pstats.Stats(pr, stream=s).sort_stats('cumulative')\nps.print_stats(10)\nprint(s.getvalue())\n\n# 优化示例\n# 1. 使用内置函数\n# 慢\ntotal = 0\nfor x in range(1000):\n    total += x\n# 快\ntotal = sum(range(1000))\n\n# 2. 列表推导 vs 循环\n# 慢\nsquares = []\nfor x in range(1000):\n    squares.append(x ** 2)\n# 快\nsquares = [x ** 2 for x in range(1000)]\n\n# 3. 字典查找 vs 列表查找\n# 慢 (O(n))\nitems = ['a', 'b', 'c', 'd', 'e']\nif 'c' in items: pass\n# 快 (O(1))\nitems_set = set(items)\nif 'c' in items_set: pass\n\n# 4. 使用生成器节省内存\n# 内存占用大\nbig_list = [x ** 2 for x in range(1000000)]\n# 内存友好\nbig_gen = (x ** 2 for x in range(1000000))\n\n# 5. timeit计时\nimport timeit\ntimeit.timeit('sum(range(1000))', number=10000)"
+      }
+    },
+    {
+      "id": "python-051",
+      "title": "Python安全编程",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "安全",
+        "SQL注入",
+        "XSS",
+        "密码哈希",
+        "输入验证"
+      ],
+      "content": "Python中如何防止常见的安全漏洞？",
+      "answer": "**常见安全漏洞：**\n1. SQL注入：使用参数化查询\n2. XSS：转义用户输入\n3. CSRF：使用token验证\n4. 密码存储：使用哈希而非明文\n5. 路径遍历：验证文件路径\n6. 代码注入：避免eval/exec\n\n**防护措施：**\n1. 参数化查询：防止SQL注入\n2. 输入验证：白名单验证\n3. 输出转义：防止XSS\n4. 密码哈希：bcrypt/argon2\n5. HTTPS：加密传输\n6. 最小权限：限制文件/网络访问",
+      "code": {
+        "python": "import bcrypt\nimport secrets\nfrom pathlib import Path\nimport re\nimport html\n\n# 1. 防止SQL注入 - 使用参数化查询\nimport sqlite3\nconn = sqlite3.connect('users.db')\ncursor = conn.cursor()\n\n# 错误方式（易受SQL注入）\n# cursor.execute(f\"SELECT * FROM users WHERE name = '{user_input}'\")\n\n# 正确方式（参数化查询）\nuser_input = \"admin' OR '1'='1\"\ncursor.execute(\"SELECT * FROM users WHERE name = ?\", (user_input,))\n\n# 2. 密码哈希\npassword = b\"user_password\"\n# 生成盐并哈希\nhashed = bcrypt.hashpw(password, bcrypt.gensalt())\n# 验证密码\nif bcrypt.checkpw(password, hashed):\n    print(\"密码正确\")\n\n# 3. 防止XSS - 转义HTML\nuser_input = '<script>alert(\"XSS\")</script>'\nsafe_output = html.escape(user_input)\nprint(safe_output)  # &lt;script&gt;alert(\"XSS\")&lt;/script&gt;\n\n# 4. 输入验证\ndef validate_email(email):\n    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n    if not re.match(pattern, email):\n        raise ValueError(\"无效邮箱格式\")\n    return email\n\n# 5. 防止路径遍历\ndef safe_path(base_dir, filename):\n    base = Path(base_dir).resolve()\n    target = (base / filename).resolve()\n    if not str(target).startswith(str(base)):\n        raise ValueError(\"非法路径\")\n    return target\n\n# 6. 安全随机数\ntoken = secrets.token_hex(32)  # 生成安全的随机token\n\n# 7. 避免代码注入\n# 危险\n# eval(user_input)\n# exec(user_code)\n\n# 安全替代\nimport ast\ntry:\n    result = ast.literal_eval(\"[1, 2, 3]\")  # 只解析字面量\nexcept:\n    print(\"无效输入\")"
+      }
+    },
+    {
+      "id": "python-052",
+      "title": "Python数据科学基础：NumPy与Pandas",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "NumPy",
+        "Pandas",
+        "数据分析",
+        "DataFrame",
+        "数据科学"
+      ],
+      "content": "NumPy和Pandas的核心概念和常用操作有哪些？",
+      "answer": "**NumPy核心：**\n1. ndarray：N维数组，同构数据\n2. 向量化运算：避免Python循环，底层C实现\n3. 广播机制：不同形状数组运算\n4. 切片和索引：支持高级索引\n\n**Pandas核心：**\n1. Series：一维带标签数组\n2. DataFrame：二维表格数据\n3. 索引：loc（标签）、iloc（位置）\n4. 分组聚合：groupby + agg\n5. 合并：merge、join、concat\n6. 时间序列：datetime处理\n\n**性能优化：**\n- 向量化替代循环\n- 使用category类型减少内存\n- 避免逐行操作（iterrows）\n- 使用eval/query加速表达式",
+      "code": {
+        "python": "import numpy as np\nimport pandas as pd\n\n# ===== NumPy基础 =====\n# 创建数组\narr = np.array([1, 2, 3, 4, 5])\nmatrix = np.array([[1, 2], [3, 4]])\nzeros = np.zeros((3, 3))\nones = np.ones((2, 4))\nrand = np.random.randn(3, 3)\n\n# 向量化运算（比Python循环快10-100倍）\narr = np.arange(1000000)\nresult = arr ** 2 + arr * 2  # 向量化\n\n# 广播机制\na = np.array([[1], [2], [3]])    # shape (3,1)\nb = np.array([10, 20, 30])       # shape (3,)\nc = a + b  # shape (3,3) 广播\n\n# 切片和索引\nmatrix = np.arange(12).reshape(3, 4)\nprint(matrix[1:, 2:])      # 第2行起，第3列起\nprint(matrix[matrix > 5])  # 布尔索引\n\n# ===== Pandas基础 =====\n# 创建DataFrame\ndf = pd.DataFrame({\n    \"name\": [\"Alice\", \"Bob\", \"Charlie\"],\n    \"age\": [25, 30, 35],\n    \"salary\": [5000, 6000, 7000]\n})\n\n# 查看数据\nprint(df.head())\nprint(df.describe())\nprint(df.info())\n\n# 索引\nprint(df.loc[0])           # 按标签\nprint(df.iloc[:, 1:3])     # 按位置\n\n# 条件筛选\nhigh_salary = df[df[\"salary\"] > 5500]\n\n# 分组聚合\ndf.groupby(\"age\").agg({\"salary\": [\"mean\", \"sum\", \"count\"]})\n\n# 合并\ndf2 = pd.DataFrame({\"name\": [\"Alice\", \"Bob\"], \"dept\": [\"IT\", \"HR\"]})\nmerged = pd.merge(df, df2, on=\"name\", how=\"left\")\n\n# 缺失值处理\ndf.fillna(0)\ndf.dropna()\n\n# 性能优化：避免iterrows\n# 慢：for idx, row in df.iterrows(): ...\n# 快：df[\"new_col\"] = df[\"col1\"] * df[\"col2\"]"
+      }
+    },
+    {
+      "id": "python-053",
+      "title": "Python项目打包与发布",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "setuptools",
+        "pyproject.toml",
+        "pip",
+        "wheel",
+        "打包发布"
+      ],
+      "content": "如何打包和发布Python项目？pyproject.toml和setup.py的区别？",
+      "answer": "**现代打包方式（PEP 517/518）：**\n- pyproject.toml：统一项目配置文件\n- 替代setup.py、setup.cfg、requirements.txt\n\n**核心概念：**\n1. **wheel（.whl）**：二进制分发格式，安装快\n2. **sdist（.tar.gz）**：源码分发格式\n3. **build**：构建工具（pip install build）\n\n**pyproject.toml结构：**\n- [build-system]：构建后端（setuptools/hatch/poetry）\n- [project]：项目元数据（PEP 621）\n- [tool.xxx]：工具配置\n\n**发布流程：**\n1. 编写pyproject.toml\n2. pip install build\n3. python -m build\n4. twine upload dist/*\n\n**依赖管理：**\n- dependencies：运行时依赖\n- optional-dependencies：可选依赖\n- dev-dependencies：开发依赖",
+      "code": {
+        "python": "# ===== pyproject.toml 示例 =====\nconfig = \"\"\"\n[build-system]\nrequires = [\"setuptools>=68.0\", \"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"my-package\"\nversion = \"1.0.0\"\ndescription = \"My awesome package\"\nreadme = \"README.md\"\nlicense = {text = \"MIT\"}\nrequires-python = \">=3.8\"\nauthors = [{name = \"Author\", email = \"author@example.com\"}]\n\n# 运行时依赖\ndependencies = [\n    \"requests>=2.28.0\",\n    \"numpy>=1.20.0\",\n]\n\n# 可选依赖\n[project.optional-dependencies]\ndev = [\"pytest>=7.0\", \"black\", \"mypy\"]\ndocs = [\"sphinx\", \"sphinx-rtd-theme\"]\n\n# 入口点\n[project.scripts]\nmytool = \"my_package.cli:main\"\n\n[project.entry-points.\"myapp.plugins\"]\nplugin1 = \"my_package.plugin1\"\n\n# setuptools配置\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n\"\"\"\n\nprint(config)\n\n# ===== 构建和发布命令 =====\nbuild_commands = \"\"\"\n# 1. 安装构建工具\npip install build twine\n\n# 2. 构建包（生成dist/目录下的.whl和.tar.gz）\npython -m build\n\n# 3. 检查包\ntwine check dist/*\n\n# 4. 上传到PyPI\ntwine upload dist/*\n\n# 5. 安装测试\npip install my-package  # 从PyPI安装\npip install ./dist/my_package-1.0.0-py3-none-any.whl  # 从本地安装\n\n# ===== setup.py（旧方式，仍广泛使用）=====\n# from setuptools import setup, find_packages\n# setup(\n#     name=\"my-package\",\n#     version=\"1.0.0\",\n#     packages=find_packages(where=\"src\"),\n#     install_requires=[\"requests>=2.28.0\"],\n#     entry_points={\"console_scripts\": [\"mytool=my_package.cli:main\"]},\n# )\n\"\"\"\n\nprint(build_commands)"
+      }
+    },
+    {
+      "id": "python-054",
+      "title": "Python标准库：collections与itertools",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "collections",
+        "itertools",
+        "标准库",
+        "Counter",
+        "defaultdict"
+      ],
+      "content": "collections和itertools模块有哪些常用类？",
+      "answer": "**collections模块：**\n- Counter：计数器，自动统计元素出现次数\n- defaultdict：带默认值的字典\n- OrderedDict：保持插入顺序的字典（Python 3.7+ dict已实现）\n- deque：双端队列，O(1)两端操作\n- namedtuple：命名元组\n- ChainMap：多个字典的链式视图\n\n**itertools模块：**\n- permutations：排列\n- combinations：组合\n- product：笛卡尔积\n- groupby：分组\n- accumulate：累积\n- chain：连接多个迭代器",
+      "code": {
+        "python": "from collections import Counter, defaultdict, deque, namedtuple\nfrom itertools import permutations, combinations, groupby, chain\n\n# Counter\nc = Counter([1,2,2,3,3,3])\nprint(c.most_common(2))  # [(3,3), (2,2)]\n\n# defaultdict\nd = defaultdict(list)\nd[\"key\"].append(1)  # 自动创建空列表\n\n# deque\ndq = deque([1,2,3])\ndq.appendleft(0)\ndq.pop()\n\n# namedtuple\nPoint = namedtuple(\"Point\", [\"x\", \"y\"])\np = Point(1, 2)\n\n# itertools\nprint(list(permutations([1,2,3], 2)))  # 排列\nprint(list(combinations([1,2,3], 2)))  # 组合"
+      }
+    },
+    {
+      "id": "python-055",
+      "title": "Python文件与IO操作",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "文件IO",
+        "pathlib",
+        "StringIO",
+        "上下文管理器"
+      ],
+      "content": "Python中如何进行文件和IO操作？pathlib模块的优势？",
+      "answer": "**文件操作基础：**\n- open()函数：r/w/a/x/b/t模式\n- with语句：自动关闭文件\n- read/readline/readlines\n- write/writelines\n\n**pathlib模块（Python 3.6+）：**\n- 面向对象的路径操作\n- 替代os.path\n- 支持路径拼接（/运算符）\n- 跨平台兼容\n\n**内存IO：**\n- StringIO：内存中的文本流\n- BytesIO：内存中的字节流\n\n**序列化：**\n- json：文本格式，可读性好\n- pickle：二进制格式，Python专用",
+      "code": {
+        "python": "from pathlib import Path\nfrom io import StringIO\nimport json\n\n# pathlib使用\np = Path(\"/home/user/docs\")\nnew_path = p / \"file.txt\"  # 路径拼接\nprint(new_path.exists())\nprint(new_path.suffix)     # .txt\nprint(new_path.stem)       # file\n\n# 遍历目录\nfor file in Path(\".\").glob(\"*.py\"):\n    print(file)\n\n# StringIO\nsio = StringIO()\nsio.write(\"Hello\")\nsio.seek(0)\nprint(sio.read())\n\n# JSON序列化\ndata = {\"name\": \"Alice\", \"age\": 30}\njson_str = json.dumps(data, ensure_ascii=False)\nobj = json.loads(json_str)"
+      }
+    },
+    {
+      "id": "python-056",
+      "title": "Python异常处理深入",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "异常处理",
+        "try-except",
+        "自定义异常",
+        "异常链"
+      ],
+      "content": "Python异常处理的完整语法是什么？如何自定义异常？",
+      "answer": "**异常处理语法：**\n- try/except/else/finally\n- except可以捕获多个异常\n- as获取异常对象\n- raise抛出异常\n\n**自定义异常：**\n- 继承Exception或其子类\n- 可以添加自定义属性\n\n**异常链：**\n- raise ... from ...：保留原始异常信息\n- __cause__属性\n\n**最佳实践：**\n- 捕获具体异常而非Exception\n- 不要捕获所有异常后pass\n- 使用finally或上下文管理器确保资源释放",
+      "code": {
+        "python": "class ValidationError(Exception):\n    def __init__(self, field, message):\n        self.field = field\n        self.message = message\n        super().__init__(f\"{field}: {message}\")\n\ndef validate_age(age):\n    try:\n        age = int(age)\n        if age < 0 or age > 150:\n            raise ValidationError(\"age\", \"Invalid age range\")\n        return age\n    except ValueError as e:\n        raise ValidationError(\"age\", \"Must be integer\") from e\n\n# 异常链\ntry:\n    validate_age(\"abc\")\nexcept ValidationError as e:\n    print(f\"Error: {e}\")\n    print(f\"Cause: {e.__cause__}\")\n\n# 完整语法\ntry:\n    result = 1 / 1\nexcept ZeroDivisionError:\n    print(\"Division by zero\")\nelse:\n    print(f\"Result: {result}\")  # 无异常时执行\nfinally:\n    print(\"Cleanup\")  # 总是执行"
+      }
+    },
+    {
+      "id": "python-057",
+      "title": "Python异步编程：asyncio深入",
+      "category": "python",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "asyncio",
+        "异步编程",
+        "协程",
+        "await",
+        "事件循环"
+      ],
+      "content": "asyncio的工作原理是什么？async/await如何使用？",
+      "answer": "**asyncio核心概念：**\n- 协程（Coroutine）：使用async def定义的函数\n- 事件循环（Event Loop）：调度协程执行\n- await：挂起协程，等待结果\n- Task：包装协程，用于并发执行\n\n**关键API：**\n- asyncio.run()：运行主协程\n- asyncio.create_task()：创建任务\n- asyncio.gather()：并发执行多个协程\n- asyncio.sleep()：非阻塞等待\n\n**并发vs并行：**\n- asyncio是单线程并发（协程切换）\n- 适合IO密集型任务\n- CPU密集型需使用多进程",
+      "code": {
+        "python": "import asyncio\n\nasync def fetch_data(url):\n    print(f\"Fetching {url}\")\n    await asyncio.sleep(1)  # 模拟IO\n    return f\"Data from {url}\"\n\nasync def main():\n    # 顺序执行\n    result1 = await fetch_data(\"url1\")\n    result2 = await fetch_data(\"url2\")\n    \n    # 并发执行\n    tasks = [\n        asyncio.create_task(fetch_data(f\"url{i}\"))\n        for i in range(3)\n    ]\n    results = await asyncio.gather(*tasks)\n    print(results)\n\n# 运行\nasyncio.run(main())\n\n# 与同步代码结合\nasync def run_in_thread(func, *args):\n    loop = asyncio.get_event_loop()\n    return await loop.run_in_executor(None, func, *args)"
+      }
+    },
+    {
+      "id": "python-058",
+      "title": "Python类型提示与类型检查",
+      "category": "python",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "typing",
+        "类型提示",
+        "mypy",
+        "类型注解",
+        "PEP 484"
+      ],
+      "content": "Python的类型提示如何使用？typing模块有哪些重要类型？",
+      "answer": "**类型提示基础：**\n- 变量：x: int = 10\n- 函数参数和返回值\n- 不影响运行时性能\n- mypy等工具进行静态检查\n\n**typing模块：**\n- List, Dict, Set, Tuple\n- Optional：可选类型\n- Union：联合类型\n- Callable：可调用类型\n- TypeVar：泛型变量\n- Generic：泛型类\n- Protocol：结构子类型\n\n**Python 3.10+新语法：**\n- | 替代Union（int | str）\n- 内置类型可直接使用（list[int]）",
+      "code": {
+        "python": "from typing import List, Dict, Optional, Union, Callable, TypeVar, Generic\n\n# 函数类型提示\ndef greet(name: str, times: int = 1) -> str:\n    return name * times\n\n# 容器类型\nnumbers: List[int] = [1, 2, 3]\ndata: Dict[str, int] = {\"a\": 1, \"b\": 2}\n\n# Optional\ndef find_user(user_id: int) -> Optional[str]:\n    return None  # 或返回str\n\n# Union（Python 3.10+可用 | 语法）\ndef process(value: Union[int, str]) -> str:\n    return str(value)\n\n# 泛型\nT = TypeVar(\"T\")\n\ndef first(items: List[T]) -> Optional[T]:\n    return items[0] if items else None\n\n# 泛型类\nclass Stack(Generic[T]):\n    def __init__(self) -> None:\n        self._items: List[T] = []\n    \n    def push(self, item: T) -> None:\n        self._items.append(item)\n    \n    def pop(self) -> Optional[T]:\n        return self._items.pop() if self._items else None\n\n# 使用\nstack: Stack[int] = Stack()\nstack.push(1)"
+      }
+    }
+  ]
+}

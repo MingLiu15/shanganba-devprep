@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>装饰器的原理和应用 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="装饰器本质上是一个高阶函数，接受一个函数作为参数，返回一个新的增强函数。通过@语法糖可以简洁地应用到目标函数上。  实现原理： - 装饰器是一个接受函数并返回函数的函数（或实现了__call__的类）。 - @decorator等价于func = decorator(func)。 - 使用functools.wraps...">
+<meta name="keywords" content="装饰器的原理和应用,Python面试题,基础语法, 装饰器, 高阶函数, 闭包,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-004.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="装饰器的原理和应用 - Python面试题">
+<meta property="og:description" content="装饰器本质上是一个高阶函数，接受一个函数作为参数，返回一个新的增强函数。通过@语法糖可以简洁地应用到目标函数上。  实现原理： - 装饰器是一个接受函数并返回函数的函数（或实现了__call__的类）。 - @decorator等价于func = decorator(func)。 - 使用functools.wraps...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-004.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "装饰器的原理和应用",
+    "text": "解释Python装饰器的原理、实现方式及常见应用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "装饰器本质上是一个高阶函数，接受一个函数作为参数，返回一个新的增强函数。通过@语法糖可以简洁地应用到目标函数上。  实现原理： - 装饰器是一个接受函数并返回函数的函数（或实现了__call__的类）。 - @decorator等价于func = decorator(func)。 - 使用functools.wraps保留原函数的元信息（__name__、__doc__等）。  常见应用场景： - 日志记录：记录函数调用信息和执行时间。 - 权限校验：检查用户是否有权限执行操作。 - 缓存：缓存函数返回值（如functools.lru_cache）。 - 重试机制：自动重试失败的函数调用。 - 单例模式：确保类只有一个实例。  高级用法： - 带参数的装饰器：外层函数接受参数，返回装饰器函数。 - 类装饰器：使用类实现__call__方法。 - 多个装饰器叠加：从下往上依次执行。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>装饰器的原理和应用</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：基础语法, 装饰器, 高阶函数, 闭包</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python装饰器的原理、实现方式及常见应用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">装饰器本质上是一个高阶函数，接受一个函数作为参数，返回一个新的增强函数。通过@语法糖可以简洁地应用到目标函数上。</div><br><div class="answer-line">实现原理：</div><div class="answer-line">- 装饰器是一个接受函数并返回函数的函数（或实现了__call__的类）。</div><div class="answer-line">- @decorator等价于func = decorator(func)。</div><div class="answer-line">- 使用functools.wraps保留原函数的元信息（__name__、__doc__等）。</div><br><div class="answer-line">常见应用场景：</div><div class="answer-line">- 日志记录：记录函数调用信息和执行时间。</div><div class="answer-line">- 权限校验：检查用户是否有权限执行操作。</div><div class="answer-line">- 缓存：缓存函数返回值（如functools.lru_cache）。</div><div class="answer-line">- 重试机制：自动重试失败的函数调用。</div><div class="answer-line">- 单例模式：确保类只有一个实例。</div><br><div class="answer-line">高级用法：</div><div class="answer-line">- 带参数的装饰器：外层函数接受参数，返回装饰器函数。</div><div class="answer-line">- 类装饰器：使用类实现__call__方法。</div><div class="answer-line">- 多个装饰器叠加：从下往上依次执行。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import functools
+import time
+
+def timer(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        print(f&#039;{func.__name__} took {time.time()-start:.4f}s&#039;)
+        return result
+    return wrapper
+
+# 带参数的装饰器
+def retry(max_times=3):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for i in range(max_times):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    print(f&#039;第{i+1}次重试: {e}&#039;)
+            raise Exception(f&#039;{func.__name__} 执行失败&#039;)
+        return wrapper
+    return decorator
+
+@retry(max_times=3)
+def fetch_data(url):
+    pass  # 网络请求逻辑</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

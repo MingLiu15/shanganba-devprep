@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flask框架核心概念 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Flask核心概念：**  1. **应用对象**：Flask(__name__) 创建应用实例 2. **路由**：@app.route() 装饰器绑定URL和视图函数 3. **请求对象**：request 包含请求数据 4. **响应对象**：Response 或直接返回字符串/元组 5. **蓝图**：Bl...">
+<meta name="keywords" content="Flask框架核心概念,Python面试题,Flask, Web框架, 路由, 蓝图, 中间件,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-045.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask框架核心概念 - Python面试题">
+<meta property="og:description" content="**Flask核心概念：**  1. **应用对象**：Flask(__name__) 创建应用实例 2. **路由**：@app.route() 装饰器绑定URL和视图函数 3. **请求对象**：request 包含请求数据 4. **响应对象**：Response 或直接返回字符串/元组 5. **蓝图**：Bl...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-045.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Flask框架核心概念",
+    "text": "Flask框架的核心概念有哪些？路由、蓝图、中间件如何使用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Flask核心概念：**  1. **应用对象**：Flask(__name__) 创建应用实例 2. **路由**：@app.route() 装饰器绑定URL和视图函数 3. **请求对象**：request 包含请求数据 4. **响应对象**：Response 或直接返回字符串/元组 5. **蓝图**：Blueprint 模块化组织应用 6. **上下文**：应用上下文(app context)和请求上下文(request context)  **蓝图使用：** ```python from flask import Blueprint user_bp = Blueprint(&#039;user&#039;, __name__)  @user_bp.route(&#039;/profile&#039;) def profile():     return &#039;User Profile&#039;  # 注册蓝图 app.register_blueprint(user_bp, url_prefix=&#039;/user&#039;) ```  **中间件模式：** - before_request：请求前处理 - after_request：请求后处理 - teardown_request：请求结束清理"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Flask框架核心概念</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：Flask, Web框架, 路由, 蓝图, 中间件</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Flask框架的核心概念有哪些？路由、蓝图、中间件如何使用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Flask核心概念：**</div><br><div class="answer-line"><strong>1. **应用对象**：Flask(__name__) 创建应用实例</strong></div><div class="answer-line"><strong>2. **路由**：@app.route() 装饰器绑定URL和视图函数</strong></div><div class="answer-line"><strong>3. **请求对象**：request 包含请求数据</strong></div><div class="answer-line"><strong>4. **响应对象**：Response 或直接返回字符串/元组</strong></div><div class="answer-line"><strong>5. **蓝图**：Blueprint 模块化组织应用</strong></div><div class="answer-line"><strong>6. **上下文**：应用上下文(app context)和请求上下文(request context)</strong></div><br><div class="answer-line">**蓝图使用：**</div><div class="answer-line">```python</div><div class="answer-line">from flask import Blueprint</div><div class="answer-line">user_bp = Blueprint(&#039;user&#039;, __name__)</div><br><div class="answer-line">@user_bp.route(&#039;/profile&#039;)</div><div class="answer-line">def profile():</div><div class="answer-line">    return &#039;User Profile&#039;</div><br><div class="answer-line"># 注册蓝图</div><div class="answer-line">app.register_blueprint(user_bp, url_prefix=&#039;/user&#039;)</div><div class="answer-line">```</div><br><div class="answer-line">**中间件模式：**</div><div class="answer-line">- before_request：请求前处理</div><div class="answer-line">- after_request：请求后处理</div><div class="answer-line">- teardown_request：请求结束清理</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from flask import Flask, request, Blueprint, jsonify
+
+app = Flask(__name__)
+
+# 基本路由
+@app.route(&#039;/&#039;)
+def index():
+    return &#039;Hello Flask&#039;
+
+# 动态路由
+@app.route(&#039;/user/&lt;int:user_id&gt;&#039;)
+def get_user(user_id):
+    return f&#039;User {user_id}&#039;
+
+# HTTP方法
+@app.route(&#039;/api/data&#039;, methods=[&#039;GET&#039;, &#039;POST&#039;])
+def api_data():
+    if request.method == &#039;POST&#039;:
+        data = request.get_json()
+        return jsonify({&#039;received&#039;: data})
+    return jsonify({&#039;method&#039;: &#039;GET&#039;})
+
+# 蓝图
+api_bp = Blueprint(&#039;api&#039;, __name__)
+
+@api_bp.route(&#039;/users&#039;)
+def list_users():
+    return jsonify([&#039;user1&#039;, &#039;user2&#039;])
+
+app.register_blueprint(api_bp, url_prefix=&#039;/api/v1&#039;)
+
+# 中间件
+@app.before_request
+def before_request():
+    print(f&#039;请求: {request.path}&#039;)
+
+@app.after_request
+def after_request(response):
+    response.headers[&#039;X-Custom&#039;] = &#039;value&#039;
+    return response
+
+if __name__ == &#039;__main__&#039;:
+    app.run(debug=True)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

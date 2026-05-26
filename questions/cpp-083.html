@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++11 模板与SFINAE - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**SFINAE（Substitution Failure Is Not An Error）：** - 模板参数替换失败不是编译错误 - 只是从重载候选集中移除该模板 - 用于编译期条件选择和类型检查  **std::enable_if：** - 条件为true时产生有效类型 - 条件为false时产生替换失败（应用S...">
+<meta name="keywords" content="C++11 模板与SFINAE,C/C++面试题,C++11, 模板, SFINAE, enable_if, 类型萃取, 元编程,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-083.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 模板与SFINAE - C/C++面试题">
+<meta property="og:description" content="**SFINAE（Substitution Failure Is Not An Error）：** - 模板参数替换失败不是编译错误 - 只是从重载候选集中移除该模板 - 用于编译期条件选择和类型检查  **std::enable_if：** - 条件为true时产生有效类型 - 条件为false时产生替换失败（应用S...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-083.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++11 模板与SFINAE",
+    "text": "什么是SFINAE？enable_if和类型萃取如何工作？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**SFINAE（Substitution Failure Is Not An Error）：** - 模板参数替换失败不是编译错误 - 只是从重载候选集中移除该模板 - 用于编译期条件选择和类型检查  **std::enable_if：** - 条件为true时产生有效类型 - 条件为false时产生替换失败（应用SFINAE） - 用于函数重载的条件选择  **类型萃取（Type Traits）：** - 编译期获取类型信息 - std::is_integral、std::is_pointer等 - 用于模板元编程和类型检查  **C++20 Concepts：** - 更清晰的模板约束语法 - 替代复杂的SFINAE技巧"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++11 模板与SFINAE</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：C++11, 模板, SFINAE, enable_if, 类型萃取, 元编程</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是SFINAE？enable_if和类型萃取如何工作？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**SFINAE（Substitution Failure Is Not An Error）：**</div><div class="answer-line">- 模板参数替换失败不是编译错误</div><div class="answer-line">- 只是从重载候选集中移除该模板</div><div class="answer-line">- 用于编译期条件选择和类型检查</div><br><div class="answer-line">**std::enable_if：**</div><div class="answer-line">- 条件为true时产生有效类型</div><div class="answer-line">- 条件为false时产生替换失败（应用SFINAE）</div><div class="answer-line">- 用于函数重载的条件选择</div><br><div class="answer-line">**类型萃取（Type Traits）：**</div><div class="answer-line">- 编译期获取类型信息</div><div class="answer-line">- std::is_integral、std::is_pointer等</div><div class="answer-line">- 用于模板元编程和类型检查</div><br><div class="answer-line">**C++20 Concepts：**</div><div class="answer-line">- 更清晰的模板约束语法</div><div class="answer-line">- 替代复杂的SFINAE技巧</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;type_traits&gt;
+#include &lt;vector&gt;
+
+// enable_if基本用法
+template&lt;typename T&gt;
+typename std::enable_if&lt;std::is_integral&lt;T&gt;::value, T&gt;::type
+foo(T t) {
+    std::cout &lt;&lt; &quot;Integral version: &quot; &lt;&lt; t &lt;&lt; std::endl;
+    return t;
+}
+
+template&lt;typename T&gt;
+typename std::enable_if&lt;!std::is_integral&lt;T&gt;::value, T&gt;::type
+foo(T t) {
+    std::cout &lt;&lt; &quot;Non-integral version: &quot; &lt;&lt; t &lt;&lt; std::endl;
+    return t;
+}
+
+// 类型萃取示例
+template&lt;typename T&gt;
+void check_type() {
+    std::cout &lt;&lt; &quot;is_integral: &quot; &lt;&lt; std::is_integral&lt;T&gt;::value &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;is_pointer: &quot; &lt;&lt; std::is_pointer&lt;T&gt;::value &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;is_reference: &quot; &lt;&lt; std::is_reference&lt;T&gt;::value &lt;&lt; std::endl;
+}
+
+// 编译期if（C++17 constexpr if）
+template&lt;typename T&gt;
+auto get_value(T t) {
+    if constexpr (std::is_pointer_v&lt;T&gt;) {
+        return *t;  // 解引用
+    } else {
+        return t;   // 直接返回
+    }
+}
+
+// 自定义类型萃取
+template&lt;typename T&gt;
+struct is_container : std::false_type {};
+
+template&lt;typename T, typename Alloc&gt;
+struct is_container&lt;std::vector&lt;T, Alloc&gt;&gt; : std::true_type {};
+
+// 概念（C++20）
+// template&lt;typename T&gt;
+// concept Integral = std::is_integral_v&lt;T&gt;;
+//
+// template&lt;Integral T&gt;
+// T add(T a, T b) { return a + b; }
+
+int main() {
+    // enable_if函数重载
+    foo(42);        // 调用integral版本
+    foo(3.14);      // 调用non-integral版本
+    
+    // 类型萃取
+    check_type&lt;int&gt;();
+    check_type&lt;double*&gt;();
+    
+    // 编译期if
+    int x = 42;
+    std::cout &lt;&lt; get_value(x) &lt;&lt; std::endl;    // 42
+    std::cout &lt;&lt; get_value(&amp;x) &lt;&lt; std::endl;   // 42（解引用）
+    
+    // 自定义类型萃取
+    std::cout &lt;&lt; &quot;is_container&lt;vector&gt;: &quot; &lt;&lt; is_container&lt;std::vector&lt;int&gt;&gt;::value &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;is_container&lt;int&gt;: &quot; &lt;&lt; is_container&lt;int&gt;::value &lt;&lt; std::endl;
+    
+    return 0;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

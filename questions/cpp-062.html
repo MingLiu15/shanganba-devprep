@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二叉树的遍历方式 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="四种遍历方式：  1. 前序遍历（根-左-右）：    - 先访问根节点，再左子树，再右子树    - 应用：复制树、序列化  2. 中序遍历（左-根-右）：    - 先左子树，再根节点，再右子树    - BST中序遍历得到有序序列  3. 后序遍历（左-右-根）：    - 先左子树，再右子树，再根节点    -...">
+<meta name="keywords" content="二叉树的遍历方式,C/C++面试题,二叉树, 遍历, 前序, 中序, 后序, 层序, 递归, 算法,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-062.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树的遍历方式 - C/C++面试题">
+<meta property="og:description" content="四种遍历方式：  1. 前序遍历（根-左-右）：    - 先访问根节点，再左子树，再右子树    - 应用：复制树、序列化  2. 中序遍历（左-根-右）：    - 先左子树，再根节点，再右子树    - BST中序遍历得到有序序列  3. 后序遍历（左-右-根）：    - 先左子树，再右子树，再根节点    -...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-062.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "二叉树的遍历方式",
+    "text": "列举二叉树的各种遍历方式及其实现。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "四种遍历方式：  1. 前序遍历（根-左-右）：    - 先访问根节点，再左子树，再右子树    - 应用：复制树、序列化  2. 中序遍历（左-根-右）：    - 先左子树，再根节点，再右子树    - BST中序遍历得到有序序列  3. 后序遍历（左-右-根）：    - 先左子树，再右子树，再根节点    - 应用：释放树、计算目录大小  4. 层序遍历（BFS）：    - 按层从上到下、从左到右    - 使用队列实现    - 应用：求树的宽度、最短路径  实现方式： - 递归：代码简洁 - 迭代（栈）：避免递归栈溢出 - Morris遍历：O(1)空间，修改树结构"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>二叉树的遍历方式</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：二叉树, 遍历, 前序, 中序, 后序, 层序, 递归, 算法</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>列举二叉树的各种遍历方式及其实现。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">四种遍历方式：</div><br><div class="answer-line"><strong>1. 前序遍历（根-左-右）：</strong></div><div class="answer-line">   - 先访问根节点，再左子树，再右子树</div><div class="answer-line">   - 应用：复制树、序列化</div><br><div class="answer-line"><strong>2. 中序遍历（左-根-右）：</strong></div><div class="answer-line">   - 先左子树，再根节点，再右子树</div><div class="answer-line">   - BST中序遍历得到有序序列</div><br><div class="answer-line"><strong>3. 后序遍历（左-右-根）：</strong></div><div class="answer-line">   - 先左子树，再右子树，再根节点</div><div class="answer-line">   - 应用：释放树、计算目录大小</div><br><div class="answer-line"><strong>4. 层序遍历（BFS）：</strong></div><div class="answer-line">   - 按层从上到下、从左到右</div><div class="answer-line">   - 使用队列实现</div><div class="answer-line">   - 应用：求树的宽度、最短路径</div><br><div class="answer-line">实现方式：</div><div class="answer-line">- 递归：代码简洁</div><div class="answer-line">- 迭代（栈）：避免递归栈溢出</div><div class="answer-line">- Morris遍历：O(1)空间，修改树结构</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">struct TreeNode {
+    int val;
+    TreeNode *left, *right;
+};
+
+// 前序遍历（递归）
+void preorder(TreeNode* root) {
+    if (!root) return;
+    cout &lt;&lt; root-&gt;val &lt;&lt; &quot; &quot;;
+    preorder(root-&gt;left);
+    preorder(root-&gt;right);
+}
+
+// 中序遍历（迭代）
+void inorder(TreeNode* root) {
+    stack&lt;TreeNode*&gt; stk;
+    TreeNode* cur = root;
+    while (cur || !stk.empty()) {
+        while (cur) { stk.push(cur); cur = cur-&gt;left; }
+        cur = stk.top(); stk.pop();
+        cout &lt;&lt; cur-&gt;val &lt;&lt; &quot; &quot;;
+        cur = cur-&gt;right;
+    }
+}
+
+// 层序遍历（BFS）
+void levelOrder(TreeNode* root) {
+    queue&lt;TreeNode*&gt; q;
+    if (root) q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        for (int i = 0; i &lt; size; i++) {
+            TreeNode* node = q.front(); q.pop();
+            cout &lt;&lt; node-&gt;val &lt;&lt; &quot; &quot;;
+            if (node-&gt;left) q.push(node-&gt;left);
+            if (node-&gt;right) q.push(node-&gt;right);
+        }
+    }
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

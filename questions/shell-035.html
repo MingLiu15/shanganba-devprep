@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进程替换与Here Document高级用法 - Shell脚本面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**进程替换（Process Substitution）：** - `&lt;(command)`：将命令输出作为文件读取 - `&gt;(command)`：将写入的内容传递给命令处理 - 本质上是创建临时管道文件 - 优势：可以像操作文件一样操作命令输出  **Here Document：** - `&lt;&lt;EOF`：标准here...">
+<meta name="keywords" content="进程替换与Here Document高级用法,Shell脚本面试题,进程替换, Here Document, Here String, 高级重定向, Process Substitution,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/shell-035.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程替换与Here Document高级用法 - Shell脚本面试题">
+<meta property="og:description" content="**进程替换（Process Substitution）：** - `&lt;(command)`：将命令输出作为文件读取 - `&gt;(command)`：将写入的内容传递给命令处理 - 本质上是创建临时管道文件 - 优势：可以像操作文件一样操作命令输出  **Here Document：** - `&lt;&lt;EOF`：标准here...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/shell-035.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "进程替换与Here Document高级用法",
+    "text": "什么是进程替换？Here Document有哪些高级用法？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**进程替换（Process Substitution）：** - `&lt;(command)`：将命令输出作为文件读取 - `&gt;(command)`：将写入的内容传递给命令处理 - 本质上是创建临时管道文件 - 优势：可以像操作文件一样操作命令输出  **Here Document：** - `&lt;&lt;EOF`：标准here document - `&lt;&lt;-EOF`：去除前导制表符（用于缩进） - `&lt;&lt;&#039;EOF&#039;`：禁用变量展开和命令替换 - `&lt;&lt;&lt; string`：Here String（单行）  **应用场景：** - 进程替换：比较两个命令输出、多输入源 - Here Document：多行输入、SQL脚本、配置文件生成"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>进程替换与Here Document高级用法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Shell脚本</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：进程替换, Here Document, Here String, 高级重定向, Process Substitution</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是进程替换？Here Document有哪些高级用法？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**进程替换（Process Substitution）：**</div><div class="answer-line">- `&lt;(command)`：将命令输出作为文件读取</div><div class="answer-line">- `&gt;(command)`：将写入的内容传递给命令处理</div><div class="answer-line">- 本质上是创建临时管道文件</div><div class="answer-line">- 优势：可以像操作文件一样操作命令输出</div><br><div class="answer-line">**Here Document：**</div><div class="answer-line">- `&lt;&lt;EOF`：标准here document</div><div class="answer-line">- `&lt;&lt;-EOF`：去除前导制表符（用于缩进）</div><div class="answer-line">- `&lt;&lt;&#039;EOF&#039;`：禁用变量展开和命令替换</div><div class="answer-line">- `&lt;&lt;&lt; string`：Here String（单行）</div><br><div class="answer-line">**应用场景：**</div><div class="answer-line">- 进程替换：比较两个命令输出、多输入源</div><div class="answer-line">- Here Document：多行输入、SQL脚本、配置文件生成</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 进程替换示例
+print(&#039;&#039;&#039;
+# 比较两个命令输出（无需临时文件）
+diff &lt;(ls dir1) &lt;(ls dir2)
+
+# 同时读取多个命令输出
+cat &lt;(echo &quot;Header&quot;) &lt;(cat data.txt) &lt;(echo &quot;Footer&quot;)
+
+# 结合while循环
+while read line; do
+    echo &quot;Processing: $line&quot;
+done &lt; &lt;(grep &quot;pattern&quot; file.txt)
+
+# Here Document标准用法
+cat &lt;&lt; EOF
+This is line 1
+This is line 2
+EOF
+
+# 去除前导制表符
+cat &lt;&lt;- EOF
+\tThis line has no leading tab
+EOF
+
+# 禁用变量展开
+cat &lt;&lt; &#039;EOF&#039;
+This $variable will not expand
+EOF
+
+# Here String
+grep &quot;pattern&quot; &lt;&lt;&lt; &quot;this is a test string&quot;
+&#039;&#039;&#039;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

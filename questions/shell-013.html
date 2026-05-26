@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进程管理命令 - Shell脚本面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**查看进程：** - `ps` - 显示进程状态 - `ps aux` - 显示所有进程详细信息 - `ps -ef` - 标准格式显示 - `pgrep` - 按名称查找进程 - `pidof` - 获取进程PID - `top/htop` - 实时监控  **终止进程：** - `kill PID` - 发送SI...">
+<meta name="keywords" content="进程管理命令,Shell脚本面试题,进程管理, ps, kill, top, 后台进程,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/shell-013.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程管理命令 - Shell脚本面试题">
+<meta property="og:description" content="**查看进程：** - `ps` - 显示进程状态 - `ps aux` - 显示所有进程详细信息 - `ps -ef` - 标准格式显示 - `pgrep` - 按名称查找进程 - `pidof` - 获取进程PID - `top/htop` - 实时监控  **终止进程：** - `kill PID` - 发送SI...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/shell-013.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "进程管理命令",
+    "text": "Shell中如何管理进程？常用命令有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**查看进程：** - `ps` - 显示进程状态 - `ps aux` - 显示所有进程详细信息 - `ps -ef` - 标准格式显示 - `pgrep` - 按名称查找进程 - `pidof` - 获取进程PID - `top/htop` - 实时监控  **终止进程：** - `kill PID` - 发送SIGTERM - `kill -9 PID` - 发送SIGKILL - `killall name` - 按名称终止 - `pkill pattern` - 按模式终止  **后台进程：** - `command &amp;` - 后台运行 - `nohup command &amp;` - 忽略SIGHUP - `jobs` - 查看后台任务 - `fg/bg` - 前台/后台切换 - `disown` - 从jobs移除  **进程监控：** - `wait` - 等待后台进程 - `watch` - 周期执行命令"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>进程管理命令</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Shell脚本</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：进程管理, ps, kill, top, 后台进程</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Shell中如何管理进程？常用命令有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**查看进程：**</div><div class="answer-line">- `ps` - 显示进程状态</div><div class="answer-line">- `ps aux` - 显示所有进程详细信息</div><div class="answer-line">- `ps -ef` - 标准格式显示</div><div class="answer-line">- `pgrep` - 按名称查找进程</div><div class="answer-line">- `pidof` - 获取进程PID</div><div class="answer-line">- `top/htop` - 实时监控</div><br><div class="answer-line">**终止进程：**</div><div class="answer-line">- `kill PID` - 发送SIGTERM</div><div class="answer-line">- `kill -9 PID` - 发送SIGKILL</div><div class="answer-line">- `killall name` - 按名称终止</div><div class="answer-line">- `pkill pattern` - 按模式终止</div><br><div class="answer-line">**后台进程：**</div><div class="answer-line">- `command &amp;` - 后台运行</div><div class="answer-line">- `nohup command &amp;` - 忽略SIGHUP</div><div class="answer-line">- `jobs` - 查看后台任务</div><div class="answer-line">- `fg/bg` - 前台/后台切换</div><div class="answer-line">- `disown` - 从jobs移除</div><br><div class="answer-line">**进程监控：**</div><div class="answer-line">- `wait` - 等待后台进程</div><div class="answer-line">- `watch` - 周期执行命令</div></div>
+  </div>
+  
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

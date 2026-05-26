@@ -1,0 +1,713 @@
+{
+  "questions": [
+    {
+      "id": "shell-001",
+      "title": "Shell脚本执行方式区别",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "执行方式",
+        "source",
+        "exec",
+        "子shell",
+        "环境变量"
+      ],
+      "content": "Shell脚本有几种执行方式？它们有什么区别？",
+      "answer": "Shell脚本主要有4种执行方式：\n\n1. **直接执行** `./script.sh`\n   - 需要执行权限（chmod +x）\n   - 在子shell中执行\n   - 脚本中的变量修改不影响当前shell\n\n2. **bash执行** `bash script.sh`\n   - 不需要执行权限\n   - 在子shell中执行\n   - 可以指定解释器\n\n3. **source执行** `source script.sh` 或 `. script.sh`\n   - 在当前shell中执行\n   - 脚本中的变量修改会影响当前shell\n   - 常用于加载环境变量\n\n4. **exec执行** `exec ./script.sh`\n   - 在当前shell中执行，替换当前进程\n   - 执行后不会返回原shell\n   - 常用于脚本链式调用",
+      "code": {
+        "bash": "# 演示不同执行方式的区别\n\n# === test.sh ===\n#!/bin/bash\nexport MY_VAR=\"hello\"\ncd /tmp\necho \"当前目录: $(pwd)\"\n\n# === 在当前shell执行 ===\n# source test.sh\n# echo $MY_VAR  # 输出: hello\n# pwd           # 输出: /tmp\n\n# === 在子shell执行 ===\n# ./test.sh\n# echo $MY_VAR  # 输出: (空)\n# pwd           # 输出: 原目录"
+      }
+    },
+    {
+      "id": "shell-002",
+      "title": "变量作用域与环境变量",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "变量",
+        "环境变量",
+        "export",
+        "作用域",
+        "local"
+      ],
+      "content": "Shell中普通变量和环境变量有什么区别？export的作用是什么？",
+      "answer": "**普通变量 vs 环境变量：**\n\n1. **普通变量（局部变量）**\n   - 仅在当前shell有效\n   - 子进程无法访问\n   - 定义：`VAR=value`\n\n2. **环境变量**\n   - 可被子进程继承\n   - 使用`export`声明\n   - 定义：`export VAR=value`\n\n**export的作用：**\n- 将普通变量转为环境变量\n- 使子进程可以访问该变量\n- 常用于配置PATH、JAVA_HOME等\n\n**相关命令：**\n- `env` - 显示所有环境变量\n- `set` - 显示所有变量（包括局部变量）\n- `unset` - 删除变量\n- `local` - 函数内定义局部变量",
+      "code": {
+        "bash": "# 变量作用域演示\n\n# 普通变量\nmy_var=\"local\"\n\n# 环境变量\nexport MY_ENV=\"global\"\n\n# 子进程测试\nbash -c 'echo \"普通变量: $my_var\"'   # 输出: 普通变量: (空)\nbash -c 'echo \"环境变量: $MY_ENV\"'   # 输出: 环境变量: global\n\n# 函数中的local变量\nmy_func() {\n    local local_var=\"function_local\"\n    echo \"函数内: $local_var\"\n}\n\nmy_func\necho \"函数外: $local_var\"  # 输出: 函数外: (空)\n\n# 查看变量\nenv | grep MY_ENV\nset | grep my_var"
+      }
+    },
+    {
+      "id": "shell-003",
+      "title": "特殊变量$? $$ $! $0 $# $@ $*",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "特殊变量",
+        "位置参数",
+        "退出状态",
+        "进程ID"
+      ],
+      "content": "Shell中的特殊变量有哪些？分别表示什么含义？",
+      "answer": "**位置参数变量：**\n- `$0` - 脚本名称/路径\n- `$1`~`$9` - 第1到第9个参数\n- `${10}` - 第10个及以后的参数\n- `$#` - 参数个数\n- `$@` - 所有参数（作为独立字符串）\n- `$*` - 所有参数（作为单个字符串）\n\n**进程相关变量：**\n- `$$` - 当前进程PID\n- `$!` - 最后一个后台进程PID\n- `$?` - 上一个命令退出状态码（0成功，非0失败）\n- `$_` - 上一个命令的最后一个参数\n\n**$@和$*的区别：**\n- `$*` - 所有参数合并为一个字符串\n- `$@` - 每个参数独立，保留空格",
+      "code": {
+        "bash": "#!/bin/bash\n# 特殊变量演示\n\necho \"脚本名: $0\"\necho \"参数个数: $#\"\necho \"所有参数($@): $@\"\necho \"所有参数($*): $*\"\necho \"当前PID: $$\"\n\n# 测试退出状态\nls /nonexistent 2>/dev/null\necho \"ls失败状态: $?\"  # 非零\n\nls /\necho \"ls成功状态: $?\"  # 0\n\n# 后台进程PID\nsleep 100 &\necho \"后台进程PID: $!\"\nkill $!\n\n# $@ vs $* 区别演示\necho \"---$@遍历---\"\nfor arg in \"$@\"; do\n    echo \"[$arg]\"\ndone\n\necho \"---$*遍历---\"\nfor arg in \"$*\"; do\n    echo \"[$arg]\"\ndone"
+      }
+    },
+    {
+      "id": "shell-004",
+      "title": "引号的区别：单引号、双引号、反引号",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "引号",
+        "转义",
+        "变量展开",
+        "命令替换"
+      ],
+      "content": "Shell中单引号、双引号、反引号有什么区别？",
+      "answer": "**单引号 ''**\n- 完全字面引用，不进行任何解析\n- 变量不展开：`'$VAR'` 输出 `$VAR`\n- 命令不执行：`'$(date)'` 输出 `$(date)`\n- 转义符无效：`'\\n'` 输出 `\\n`\n\n**双引号 \"\"**\n- 部分引用，保留字面值但展开变量和命令\n- 变量展开：`\"$VAR\"` 输出变量值\n- 命令执行：`\"$(date)\"` 执行命令\n- 转义符有效：`\"\\$VAR\"` 输出 `$VAR`\n- 保留空格和换行\n\n**反引号 `` 或 $()**\n- 命令替换，执行命令并获取输出\n- `` 是旧语法，$() 是新语法（推荐）\n- $() 支持嵌套，`` 不支持\n\n**使用建议：**\n- 字面字符串用单引号\n- 包含变量用双引号\n- 命令替换用 $()",
+      "code": {
+        "bash": "# 引号演示\n\nname=\"World\"\n\n# 单引号 - 字面引用\necho 'Hello $name'      # 输出: Hello $name\necho 'Today is $(date)' # 输出: Today is $(date)\n\n# 双引号 - 变量展开\necho \"Hello $name\"      # 输出: Hello World\necho \"Today is $(date +%Y-%m-%d)\"\n\n# 反引号 vs $()\necho \"当前目录: `pwd`\"   # 旧语法\necho \"当前目录: $(pwd)\"  # 新语法（推荐）\n\n# $() 嵌套支持\necho \"嵌套: $(echo $(date +%Y))\"  # 正常工作\n\n# 保留空格\ntext=\"hello    world\"\necho $text    # 输出: hello world（空格丢失）\necho \"$text\"  # 输出: hello    world（空格保留）\n\n# 转义\necho \"价格: \\$100\"  # 输出: 价格: $100"
+      }
+    },
+    {
+      "id": "shell-005",
+      "title": "条件判断：test、[ ]、[[ ]]",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "条件判断",
+        "test",
+        "比较运算",
+        "逻辑运算"
+      ],
+      "content": "Shell中test、[ ]和[[ ]]有什么区别？",
+      "answer": "**test命令**\n- 最基本的条件测试命令\n- 语法：`test expression`\n- 返回0为真，非0为假\n\n**[ ]（等价于test）**\n- test的语法糖\n- 注意：`[` 后必须有空格，`]` 前必须有空格\n- 不支持正则和逻辑运算符\n- 字符串比较用`=`和`!=`\n\n**[[ ]]（增强版）**\n- Bash扩展语法（POSIX不兼容）\n- 支持正则匹配：`=~`\n- 支持逻辑运算符：`&&`、`||`\n- 支持模式匹配：`==` 支持通配符\n- 变量不需要引号保护\n- 更安全，推荐使用\n\n**常用判断：**\n- 文件：`-e`存在 `-f`普通文件 `-d`目录 `-r`可读 `-w`可写 `-x`可执行\n- 字符串：`-z`空 `-n`非空 `=`相等 `!=`不等\n- 数值：`-eq` `-ne` `-gt` `-lt` `-ge` `-le`",
+      "code": {
+        "bash": "# 条件判断演示\n\nfile=\"/etc/passwd\"\n\n# test命令\ntest -f $file && echo \"文件存在\"\n\n# [ ] 语法\nif [ -f \"$file\" ]; then\n    echo \"是普通文件\"\nfi\n\n# [[ ]] 语法（推荐）\nif [[ -f $file && -r $file ]]; then\n    echo \"文件存在且可读\"\nfi\n\n# 字符串比较\nstr=\"hello\"\n[ \"$str\" = \"hello\" ] && echo \"相等\"\n[[ $str == \"hello\" ]] && echo \"相等\"\n\n# 正则匹配\n[[ $str =~ ^h.*o$ ]] && echo \"匹配成功\"\n\n# 模式匹配\n[[ \"test.txt\" == *.txt ]] && echo \"是txt文件\"\n\n# 数值比较\nnum=10\n[ $num -gt 5 ] && echo \"大于5\"\n(( num > 5 )) && echo \"大于5（算术语法）\"\n\n# 逻辑运算\n[[ -f $file && -r $file ]]  # [[ ]] 支持 &&\n[ -f \"$file\" ] && [ -r \"$file\" ]  # [ ] 需要分开写"
+      }
+    },
+    {
+      "id": "shell-006",
+      "title": "循环语句：for、while、until",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "循环",
+        "for",
+        "while",
+        "until",
+        "迭代"
+      ],
+      "content": "Shell中的循环语句有哪些？如何使用？",
+      "answer": "**for循环**\n1. 列表形式：`for var in list; do ...; done`\n2. C风格：`for ((i=0; i<n; i++)); do ...; done`\n3. 遍历文件：`for file in *.txt`\n\n**while循环**\n- 条件为真时循环\n- 语法：`while condition; do ...; done`\n- 常用于读取文件：`while read line`\n\n**until循环**\n- 条件为假时循环（与while相反）\n- 语法：`until condition; do ...; done`\n\n**循环控制：**\n- `break` - 跳出循环\n- `continue` - 跳过本次迭代\n- `break n` - 跳出n层循环\n\n**常用技巧：**\n- `seq 1 10` 或 `{1..10}` 生成序列\n- `for i in $(cat file)` 遍历文件内容",
+      "code": {
+        "bash": "# for循环\n\n# 列表形式\nfor color in red green blue; do\n    echo \"颜色: $color\"\ndone\n\n# C风格\nfor ((i=1; i<=5; i++)); do\n    echo \"计数: $i\"\ndone\n\n# 范围遍历\nfor i in {1..10}; do\n    echo $i\ndone\n\n# 遍历文件\nfor file in *.txt; do\n    echo \"处理: $file\"\ndone\n\n# while循环\ncount=0\nwhile [ $count -lt 5 ]; do\n    echo $count\n    ((count++))\ndone\n\n# 读取文件\nwhile IFS= read -r line; do\n    echo \"行: $line\"\ndone < file.txt\n\n# until循环\nnum=10\nuntil [ $num -eq 0 ]; do\n    echo $num\n    ((num--))\ndone\n\n# 循环控制\nfor i in {1..10}; do\n    [ $i -eq 3 ] && continue  # 跳过3\n    [ $i -eq 7 ] && break     # 到7停止\n    echo $i\ndone"
+      }
+    },
+    {
+      "id": "shell-007",
+      "title": "重定向与管道",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "重定向",
+        "管道",
+        "标准流",
+        "文件描述符"
+      ],
+      "content": "Shell中的重定向和管道有哪些？如何使用？",
+      "answer": "**标准流：**\n- stdin (0) - 标准输入\n- stdout (1) - 标准输出\n- stderr (2) - 标准错误\n\n**输出重定向：**\n- `>` - 覆盖写入\n- `>>` - 追加写入\n- `2>` - 重定向错误\n- `&>` - 重定向所有输出\n- `2>&1` - 错误重定向到标准输出\n\n**输入重定向：**\n- `<` - 从文件输入\n- `<<` - here document\n- `<<<` - here string\n\n**管道 |**\n- 将前一命令的stdout连接到后一命令的stdin\n- `|&` 或 `2>&1 |` - 管道包含错误\n\n**常用技巧：**\n- `>/dev/null 2>&1` - 丢弃所有输出\n- `command 2>/dev/null` - 只显示正确输出",
+      "code": {
+        "bash": "# 输出重定向\necho \"hello\" > file.txt      # 覆盖\necho \"world\" >> file.txt     # 追加\n\n# 错误重定向\nls /nonexistent 2> error.log    # 只重定向错误\nls /nonexistent &> all.log      # 重定向所有\nls /nonexistent > out.log 2>&1  # 标准写法\n\n# 丢弃输出\ncommand >/dev/null 2>&1  # 丢弃所有输出\ncommand 2>/dev/null      # 只丢弃错误\n\n# 输入重定向\nwhile read line; do\n    echo $line\ndone < file.txt\n\n# Here Document\ncat << EOF\n这是多行文本\n变量展开: $HOME\nEOF\n\n# Here String（不展开变量）\ngrep 'pattern' <<< 'test string $VAR'\n\n# 管道\nps aux | grep nginx | grep -v grep\n\ncat file.txt | sort | uniq | wc -l\n\n# 管道包含错误\nls /nonexistent /etc |& cat\n\n# 进程替换\ndiff <(sort file1.txt) <(sort file2.txt)"
+      }
+    },
+    {
+      "id": "shell-008",
+      "title": "grep命令详解",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "grep",
+        "正则表达式",
+        "文本搜索",
+        "过滤"
+      ],
+      "content": "grep命令有哪些常用选项和用法？",
+      "answer": "**基本用法：**\n- `grep pattern file` - 在文件中搜索\n- `grep pattern` - 从标准输入搜索\n\n**常用选项：**\n- `-i` - 忽略大小写\n- `-v` - 反向匹配（不匹配的行）\n- `-n` - 显示行号\n- `-c` - 只显示匹配行数\n- `-l` - 只显示文件名\n- `-r/-R` - 递归搜索目录\n- `-w` - 匹配整个单词\n- `-x` - 匹配整行\n- `-o` - 只输出匹配部分\n- `-A n` - 显示匹配行后n行\n- `-B n` - 显示匹配行前n行\n- `-C n` - 显示匹配行前后各n行\n- `-E` - 扩展正则表达式（等价于egrep）\n- `-F` - 固定字符串（等价于fgrep）\n\n**正则表达式：**\n- `^` 行首 `$` 行尾\n- `.` 任意字符 `*` 重复前字符\n- `[]` 字符集 `[^]` 排除\n- `\\{n,m\\}` 重复次数",
+      "code": {
+        "bash": "# 基本搜索\ngrep \"error\" /var/log/syslog\ngrep -i \"error\" file.txt  # 忽略大小写\n\n# 显示上下文\ngrep -n \"function\" code.py      # 显示行号\ngrep -C 3 \"error\" log.txt      # 显示上下3行\n\n# 递归搜索\ngrep -r \"TODO\" ./src/          # 递归搜索目录\ngrep -rl \"pattern\" ./          # 只显示文件名\n\n# 反向匹配\ngrep -v \"^#\" config.conf       # 排除注释行\ngrep -v \"^$\" file.txt          # 排除空行\n\n# 统计匹配\ngrep -c \"error\" log.txt        # 匹配行数\n\n# 扩展正则\ngrep -E \"error|warning\" log.txt  # 或匹配\ngrep -E \"[0-9]{4}\" file.txt     # 4位数字\n\n# 匹配整个单词\ngrep -w \"cat\" file.txt  # 匹配cat但不匹配category\n\n# 只输出匹配部分\ngrep -oE \"[0-9]+\" file.txt  # 只输出数字\n\n# 实用组合\n# 查找包含特定函数的文件\ngrep -rl \"def process_data\" ./src/\n\n# 统计代码行数（排除空行和注释）\ngrep -v \"^#\\|^$\\|^[[:space:]]*#\" script.sh | wc -l"
+      }
+    },
+    {
+      "id": "shell-009",
+      "title": "sed流编辑器",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "sed",
+        "文本替换",
+        "流编辑",
+        "行处理"
+      ],
+      "content": "sed命令如何使用？有哪些常用操作？",
+      "answer": "**基本语法：**\n`sed [选项] '命令' 文件`\n\n**常用选项：**\n- `-n` - 抑制自动输出\n- `-i` - 直接修改文件\n- `-e` - 多个命令\n- `-r/-E` - 扩展正则\n\n**常用命令：**\n- `s/old/new/` - 替换（默认每行第一个）\n- `s/old/new/g` - 全局替换\n- `p` - 打印行\n- `d` - 删除行\n- `a` - 行后追加\n- `i` - 行前插入\n- `c` - 替换整行\n\n**地址定界：**\n- `n` - 第n行\n- `n,m` - 第n到m行\n- `/pattern/` - 匹配行\n- `$` - 最后一行",
+      "code": {
+        "bash": "# 替换操作\necho \"hello world\" | sed 's/world/bash/'  # hello bash\n\n# 全局替换\necho \"aaa\" | sed 's/a/b/g'  # bbb\n\n# 删除行\nsed '3d' file.txt           # 删除第3行\nsed '1,5d' file.txt         # 删除1-5行\nsed '/^$/d' file.txt        # 删除空行\nsed '/^#/d' file.txt        # 删除注释行\n\n# 打印特定行\nsed -n '5p' file.txt        # 只打印第5行\nsed -n '10,20p' file.txt    # 打印10-20行\nsed -n '/error/p' log.txt   # 只打印匹配行\n\n# 追加/插入\nsed '2a new line' file.txt  # 第2行后追加\nsed '2i new line' file.txt  # 第2行前插入\n\n# 直接修改文件\nsed -i 's/old/new/g' file.txt\nsed -i.bak 's/old/new/g' file.txt  # 备份后修改\n\n# 多个命令\nsed -e 's/a/A/g' -e 's/b/B/g' file.txt\n\n# 使用不同分隔符（处理路径）\nsed 's#/old/path#/new/path#g' file.txt\n\n# 提取特定内容\n# 提取IP地址\necho \"IP: 192.168.1.100\" | sed -n 's/.*\\([0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\.[0-9]\\{1,3\\}\\).*/\\1/p'\n\n# 删除HTML标签\necho \"<p>content</p>\" | sed 's/<[^>]*>//g'"
+      }
+    },
+    {
+      "id": "shell-010",
+      "title": "awk文本处理",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "awk",
+        "文本处理",
+        "字段处理",
+        "报表生成"
+      ],
+      "content": "awk命令如何使用？有哪些常用操作？",
+      "answer": "**基本语法：**\n`awk 'pattern {action}' file`\n\n**内置变量：**\n- `$0` - 整行\n- `$1,$2...` - 第n个字段\n- `NF` - 字段数\n- `NR` - 行号\n- `FNR` - 当前文件行号\n- `FS` - 字段分隔符（默认空格）\n- `OFS` - 输出分隔符\n- `RS` - 记录分隔符\n- `FILENAME` - 当前文件名\n\n**常用模式：**\n- `/pattern/` - 正则匹配\n- `expression` - 条件表达式\n- `BEGIN` - 处理前执行\n- `END` - 处理后执行\n\n**内置函数：**\n- `print`、`printf` - 输出\n- `length()` - 字符串长度\n- `substr()` - 子串\n- `split()` - 分割\n- `gsub()/sub()` - 替换",
+      "code": {
+        "bash": "# 打印字段\necho \"a b c\" | awk '{print $1}'        # a\necho \"a b c\" | awk '{print $1, $3}'     # a c\n\n# 指定分隔符\nawk -F: '{print $1}' /etc/passwd        # 冒号分隔\nawk -F, '{print $1, $2}' data.csv       # CSV文件\n\n# 行号和字段数\nawk '{print NR, NF, $0}' file.txt\n\n# 条件过滤\nawk '$3 > 100' data.txt                 # 第3列大于100\nawk '/error/ {print $0}' log.txt        # 匹配error的行\n\n# BEGIN/END\nawk 'BEGIN {sum=0} {sum+=$1} END {print sum}' numbers.txt\n\n# 计算平均值\nawk '{sum+=$1; count++} END {print sum/count}' data.txt\n\n# 格式化输出\nawk '{printf \"%-10s %5d\\n\", $1, $2}' data.txt\n\n# 字符串操作\nawk '{print length($0)}' file.txt       # 每行长度\nawk '{print substr($1, 1, 3)}' file.txt # 前3个字符\n\n# 多条件\nawk '$1 > 10 && $2 < 100 {print}' data.txt\n\n# 统计词频\nawk '{for(i=1;i<=NF;i++) count[$i]++} END {for(w in count) print w, count[w]}' file.txt\n\n# 提取特定行范围\nawk 'NR>=10 && NR<=20' file.txt\n\n# 合并文件\nawk 'NR==FNR{a[$1]=$2; next} {print $1, a[$1]}' file1 file2"
+      }
+    },
+    {
+      "id": "shell-011",
+      "title": "find文件查找",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "find",
+        "文件搜索",
+        "条件查找",
+        "批量操作"
+      ],
+      "content": "find命令如何使用？有哪些常用查找条件？",
+      "answer": "**基本语法：**\n`find [路径] [条件] [动作]`\n\n**按名称查找：**\n- `-name` - 文件名（支持通配符）\n- `-iname` - 忽略大小写\n- `-path` - 路径匹配\n- `-regex` - 正则匹配\n\n**按类型查找：**\n- `-type f` - 普通文件\n- `-type d` - 目录\n- `-type l` - 符号链接\n\n**按大小查找：**\n- `-size +n` - 大于n\n- `-size -n` - 小于n\n- 单位：c(字节), k(KB), M(MB), G(GB)\n\n**按时间查找：**\n- `-mtime n` - 修改时间\n- `-atime n` - 访问时间\n- `-ctime n` - 创建时间\n\n**动作：**\n- `-exec command {} \\;` - 执行命令\n- `-delete` - 删除文件\n- `-print` - 打印路径（默认）",
+      "code": {
+        "bash": "# 按名称查找\nfind . -name \"*.txt\"           # 当前目录下所有txt文件\nfind /home -name \"*.log\"       # /home下所有log文件\nfind . -iname \"README\"         # 忽略大小写\n\n# 按类型查找\nfind . -type d                 # 所有目录\nfind . -type f -name \"*.sh\"    # 所有shell脚本\nfind . -type l                 # 所有符号链接\n\n# 按大小查找\nfind . -size +100M             # 大于100M的文件\nfind . -size -1k               # 小于1K的文件\nfind . -empty                  # 空文件/目录\n\n# 按时间查找\nfind . -mtime -7               # 7天内修改的文件\nfind . -mtime +30              # 30天前修改的文件\nfind . -atime -1               # 1天内访问的文件\n\n# 按权限查找\nfind . -perm 755               # 权限为755的文件\nfind . -executable             # 可执行文件\n\n# 组合条件\nfind . -name \"*.log\" -size +10M -mtime -7  # 大于10M且7天内修改的log文件\n\n# 执行命令\nfind . -name \"*.tmp\" -delete   # 删除所有tmp文件\nfind . -name \"*.sh\" -exec chmod +x {} \\;  # 添加执行权限\nfind . -type f -exec grep \"TODO\" {} \\;    # 在所有文件中搜索TODO\n\n# 使用xargs（更高效）\nfind . -name \"*.log\" | xargs gzip  # 压缩所有log文件\nfind . -name \"*.txt\" -print0 | xargs -0 rm  # 处理含空格文件名\n\n# 查找并统计\nfind . -name \"*.py\" | wc -l     # Python文件数量\nfind . -type f -exec wc -l {} + | sort -n  # 按行数排序"
+      }
+    },
+    {
+      "id": "shell-012",
+      "title": "信号处理与trap命令",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "信号",
+        "trap",
+        "进程管理",
+        "清理",
+        "SIGINT"
+      ],
+      "content": "Shell脚本如何处理信号？trap命令怎么用？",
+      "answer": "**常见信号：**\n- `SIGINT (2)` - Ctrl+C 中断\n- `SIGTERM (15)` - 正常终止（kill默认）\n- `SIGKILL (9)` - 强制终止（不可捕获）\n- `SIGHUP (1)` - 挂起/重载配置\n- `SIGQUIT (3)` - Ctrl+\\ 退出\n- `SIGUSR1/2` - 用户自定义信号\n\n**trap命令：**\n- 捕获信号并执行指定操作\n- 语法：`trap 'commands' signals`\n- `trap - signal` - 恢复默认行为\n- `trap '' signal` - 忽略信号\n\n**常见用途：**\n1. 清理临时文件\n2. 优雅退出\n3. 防止意外中断\n4. 重载配置",
+      "code": {
+        "bash": "#!/bin/bash\n# 信号处理示例\n\n# 清理函数\ncleanup() {\n    echo \"\\n正在清理...\"\n    rm -f /tmp/mytemp_$$\n    echo \"清理完成\"\n    exit 1\n}\n\n# 捕获SIGINT(Ctrl+C)和SIGTERM\ntrap cleanup SIGINT SIGTERM\n\n# 捕获退出信号（脚本结束时执行）\ntrap 'echo \"脚本结束\"' EXIT\n\n# 忽略SIGINT\n# trap '' SIGINT\n\n# 恢复默认行为\n# trap - SIGINT\n\n# 创建临时文件\ntemp_file=\"/tmp/mytemp_$$\"\ntouch \"$temp_file\"\n\necho \"PID: $$\"\necho \"临时文件: $temp_file\"\necho \"按Ctrl+C测试信号处理...\"\n\n# 模拟长时间运行\nwhile true; do\n    echo \"运行中...\"\n    sleep 2\ndone\n\n# === 另一个示例：防止脚本重复运行 ===\n#!/bin/bash\nLOCK_FILE=\"/tmp/myapp.lock\"\n\n# 检查锁文件\nif [ -f \"$LOCK_FILE\" ]; then\n    echo \"脚本已在运行\"\n    exit 1\nfi\n\n# 创建锁文件并设置清理\necho $$ > \"$LOCK_FILE\"\ntrap 'rm -f \"$LOCK_FILE\"; exit' EXIT SIGINT SIGTERM\n\n# 主逻辑\n# ...\n\n# === 优雅重启示例 ===\n#!/bin/bash\nPID_FILE=\"/var/run/myapp.pid\"\n\nreload() {\n    echo \"收到HUP信号，重载配置...\"\n    # 重载配置逻辑\n}\n\ntrap reload SIGHUP"
+      }
+    },
+    {
+      "id": "shell-013",
+      "title": "进程管理命令",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "进程管理",
+        "ps",
+        "kill",
+        "top",
+        "后台进程"
+      ],
+      "content": "Shell中如何管理进程？常用命令有哪些？",
+      "answer": "**查看进程：**\n- `ps` - 显示进程状态\n- `ps aux` - 显示所有进程详细信息\n- `ps -ef` - 标准格式显示\n- `pgrep` - 按名称查找进程\n- `pidof` - 获取进程PID\n- `top/htop` - 实时监控\n\n**终止进程：**\n- `kill PID` - 发送SIGTERM\n- `kill -9 PID` - 发送SIGKILL\n- `killall name` - 按名称终止\n- `pkill pattern` - 按模式终止\n\n**后台进程：**\n- `command &` - 后台运行\n- `nohup command &` - 忽略SIGHUP\n- `jobs` - 查看后台任务\n- `fg/bg` - 前台/后台切换\n- `disown` - 从jobs移除\n\n**进程监控：**\n- `wait` - 等待后台进程\n- `watch` - 周期执行命令",
+      "code": {
+        "bash": "# 查看进程\nps aux                      # 所有进程\nps aux | grep nginx         # 查找nginx进程\npgrep -l nginx              # 按名称查找\npidof nginx                 # 获取PID\n\n# 终止进程\nkill 1234                   # 正常终止\nkill -9 1234                # 强制终止\nkill -HUP 1234              # 重载配置\nkillall nginx               # 按名称终止\npkill -f \"python.*script\"   # 按命令行匹配\n\n# 后台运行\nsleep 100 &                 # 后台运行\necho $!                      # 获取后台进程PID\njobs                         # 查看后台任务\nfg %1                        # 调到前台\nbg %1                        # 继续后台运行\n\n# nohup - 退出终端后继续运行\nnohup ./server.sh > server.log 2>&1 &\n\n# 等待所有后台进程\nfor i in {1..5}; do\n    process_data $i &\ndone\nwait  # 等待所有后台任务完成\necho \"所有任务完成\"\n\n# 进程监控\nwatch -n 1 'ps aux | grep nginx'  # 每秒刷新\n\n# 检查进程是否存在\nif pgrep -x \"nginx\" > /dev/null; then\n    echo \"nginx正在运行\"\nelse\n    echo \"nginx未运行\"\nfi\n\n# 获取进程信息\nps -p $PID -o pid,ppid,%cpu,%mem,cmd  # 指定格式"
+      }
+    },
+    {
+      "id": "shell-014",
+      "title": "数组操作",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "数组",
+        "数组操作",
+        "遍历",
+        "切片"
+      ],
+      "content": "Bash中如何定义和操作数组？",
+      "answer": "**定义数组：**\n- `arr=(a b c)` - 直接定义\n- `arr=([0]=a [1]=b)` - 指定索引\n- `arr[$i]=value` - 逐个赋值\n- `declare -a arr` - 声明数组\n\n**访问元素：**\n- `${arr[i]}` - 第i个元素\n- `${arr[@]}` - 所有元素\n- `${arr[*]}` - 所有元素（单字符串）\n- `${#arr[@]}` - 数组长度\n- `${!arr[@]}` - 所有索引\n\n**数组操作：**\n- `arr+=(new)` - 追加元素\n- `unset arr[i]` - 删除元素\n- `${arr[@]:start:len}` - 切片\n\n**关联数组：**\n- `declare -A arr` - 声明关联数组\n- `arr=([key1]=val1 [key2]=val2)`",
+      "code": {
+        "bash": "# 普通数组\narr=(apple banana cherry)\n\necho ${arr[0]}           # apple\necho ${arr[@]}           # apple banana cherry\necho ${#arr[@]}          # 3\n\n# 遍历数组\nfor item in \"${arr[@]}\"; do\n    echo \"$item\"\ndone\n\n# 带索引遍历\nfor i in \"${!arr[@]}\"; do\n    echo \"$i: ${arr[$i]}\"\ndone\n\n# 追加元素\narr+=(orange)\narr+=(grape melon)  # 追加多个\n\n# 切片\necho ${arr[@]:1:2}      # banana cherry\n\n# 删除元素\nunset arr[1]            # 删除索引1\n\n# 从命令输出创建数组\nfiles=($(ls *.txt))\n\n# 关联数组\ndeclare -A user\nuser=([name]=\"Alice\" [age]=25 [city]=\"Beijing\")\n\necho ${user[name]}      # Alice\necho ${!user[@]}        # name age city\n\n# 遍历关联数组\nfor key in \"${!user[@]}\"; do\n    echo \"$key: ${user[$key]}\"\ndone\n\n# 数组作为函数参数\nprint_array() {\n    local arr=(\"$@\")\n    for item in \"${arr[@]}\"; do\n        echo \"$item\"\n    done\n}\nprint_array \"${arr[@]}\""
+      }
+    },
+    {
+      "id": "shell-015",
+      "title": "字符串操作",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "字符串",
+        "截取",
+        "替换",
+        "长度",
+        "分割"
+      ],
+      "content": "Shell中如何进行字符串操作？",
+      "answer": "**获取长度：**\n- `${#var}` - 字符串长度\n\n**截取子串：**\n- `${var:offset}` - 从offset开始\n- `${var:offset:length}` - 指定长度\n\n**删除匹配：**\n- `${var#pattern}` - 删除最短前缀匹配\n- `${var##pattern}` - 删除最长前缀匹配\n- `${var%pattern}` - 删除最短后缀匹配\n- `${var%%pattern}` - 删除最长后缀匹配\n\n**替换：**\n- `${var/old/new}` - 替换第一个\n- `${var//old/new}` - 替换所有\n- `${var/#old/new}` - 替换开头\n- `${var/%old/new}` - 替换结尾\n\n**大小写：**\n- `${var^^}` - 转大写\n- `${var,,}` - 转小写",
+      "code": {
+        "bash": "str=\"Hello World Shell\"\n\n# 长度\necho ${#str}  # 17\n\n# 截取\necho ${str:6}        # World Shell\necho ${str:6:5}      # World\necho ${str: -5}      # Shell（注意空格）\n\n# 删除前缀匹配\nfile=\"/path/to/file.txt\"\necho ${file#*/}      # path/to/file.txt\necho ${file##*/}     # file.txt（获取文件名）\n\n# 删除后缀匹配\necho ${file%/*}      # /path/to（获取目录）\necho ${file%%/*}     # 空\n\n# 替换\necho ${str/World/Bash}      # Hello Bash Shell\necho ${str//l/L}            # HeLLo WorLD SheLL\n\n# 替换开头/结尾\nstr2=\"hello.txt\"\necho ${str2/#hello/HELLO}   # HELLO.txt\necho ${str2/%txt/md}       # hello.md\n\n# 大小写转换\necho ${str^^}  # HELLO WORLD SHELL\necho ${str,,}  # hello world shell\n\n# 判断子串\n[[ $str == *World* ]] && echo \"包含World\"\n\n# 分割字符串\nIFS=' ' read -ra words <<< \"$str\"\nfor word in \"${words[@]}\"; do\n    echo \"$word\"\ndone\n\n# 实用示例：获取文件扩展名\nfilename=\"document.pdf\"\next=${filename##*.}\necho \"$ext\"  # pdf\n\n# 移除扩展名\nname=${filename%.*}\necho \"$name\"  # document"
+      }
+    },
+    {
+      "id": "shell-016",
+      "title": "函数定义与参数传递",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "函数",
+        "参数传递",
+        "返回值",
+        "局部变量"
+      ],
+      "content": "Shell中如何定义函数？参数如何传递？",
+      "answer": "**定义函数：**\n```bash\nfunction name() {\n    commands\n}\n# 或\nname() {\n    commands\n}\n```\n\n**参数传递：**\n- 函数内使用 `$1, $2, ...` 获取参数\n- `$@` 所有参数\n- `$#` 参数个数\n\n**返回值：**\n- `return n` - 返回退出状态码（0-255）\n- 使用 `echo` 返回字符串结果\n- 捕获结果：`result=$(func)`\n\n**局部变量：**\n- `local var=value` - 定义局部变量\n- 避免污染全局命名空间\n\n**递归：**\n- Shell支持函数递归调用",
+      "code": {
+        "bash": "# 基本函数定义\ngreet() {\n    echo \"Hello, $1!\"\n}\ngreet \"World\"  # Hello, World!\n\n# 多参数函数\nadd() {\n    echo $(($1 + $2))\n}\nresult=$(add 5 3)\necho \"结果: $result\"  # 8\n\n# 返回状态码\ncheck_file() {\n    if [ -f \"$1\" ]; then\n        return 0  # 成功\n    else\n        return 1  # 失败\n    fi\n}\n\nif check_file \"/etc/passwd\"; then\n    echo \"文件存在\"\nfi\n\n# 局部变量\ncounter() {\n    local count=0  # 局部变量\n    ((count++))\n    echo $count\n}\n\n# 数组参数\nprint_args() {\n    for arg in \"$@\"; do\n        echo \"$arg\"\n    done\n}\nprint_args a b c\n\n# 返回多个值\nget_info() {\n    echo \"Alice\"\n    echo \"25\"\n}\nread name age <<< $(get_info)\n\n# 递归函数\nfactorial() {\n    if [ $1 -le 1 ]; then\n        echo 1\n    else\n        local prev=$(factorial $(($1 - 1)))\n        echo $(($1 * prev))\n    fi\n}\necho $(factorial 5)  # 120"
+      }
+    },
+    {
+      "id": "shell-017",
+      "title": "正则表达式在Shell中的应用",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "正则表达式",
+        "grep",
+        "sed",
+        "awk",
+        "模式匹配"
+      ],
+      "content": "Shell中如何使用正则表达式？",
+      "answer": "**正则表达式类型：**\n1. **基本正则（BRE）** - grep默认\n2. **扩展正则（ERE）** - grep -E 或 egrep\n3. **Perl正则（PCRE）** - grep -P\n\n**常用元字符：**\n- `.` - 任意字符\n- `^` `$` - 行首行尾\n- `*` `+` `?` - 重复次数\n- `[]` - 字符集\n- `()` - 分组\n- `|` - 或\n- `\\b` - 单词边界\n- `\\d` - 数字（PCRE）\n\n**使用场景：**\n- grep -E/grep -P\n- sed -r/sed -E\n- awk\n- [[ var =~ regex ]]",
+      "code": {
+        "bash": "# grep正则\n\n# 基本正则\ngrep \"^error\" log.txt           # 以error开头\ngrep \"error$\" log.txt           # 以error结尾\ngrep \"err.*or\" log.txt          # err...or\n\n# 扩展正则 (-E)\ngrep -E \"error|warning\" log.txt # error或warning\ngrep -E \"[0-9]{4}\" file.txt    # 4位数字\ngrep -E \"(ab)+\" file.txt       # ab重复多次\n\n# Perl正则 (-P)\ngrep -P \"\\d{3}-\\d{4}\" file.txt  # 电话号码格式\ngrep -P \"\\bword\\b\" file.txt    # 完整单词\n\n# sed正则\n# 提取邮箱\necho \"email: test@example.com\" | sed -n 's/.*\\([a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]*\\.[a-zA-Z]\\{2,\\}\\).*/\\1/p'\n\n# awk正则\nawk '/^[0-9]/' file.txt        # 以数字开头\nawk '/[A-Z][a-z]+/' file.txt   # 大写开头的单词\n\n# [[ ]] 正则匹配\nstr=\"hello123\"\n[[ $str =~ ^hello[0-9]+$ ]] && echo \"匹配成功\"\n\n# 提取匹配部分\n[[ $str =~ ([a-z]+)([0-9]+) ]]\necho \"字母: ${BASH_REMATCH[1]}\"  # hello\necho \"数字: ${BASH_REMATCH[2]}\"  # 123\n\n# 常用正则模式\n# IP地址\nip_regex=\"([0-9]{1,3}\\.){3}[0-9]{1,3}\"\n\n# 邮箱\nemail_regex=\"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\"\n\n# 日期 YYYY-MM-DD\ndate_regex=\"[0-9]{4}-[0-9]{2}-[0-9]{2}\"\n\n# 手机号（中国大陆）\nphone_regex=\"1[3-9][0-9]{9}\""
+      }
+    },
+    {
+      "id": "shell-018",
+      "title": "Shell脚本调试技巧",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "调试",
+        "set",
+        "bashdb",
+        "错误处理",
+        "日志"
+      ],
+      "content": "如何调试Shell脚本？有哪些常用技巧？",
+      "answer": "**调试选项：**\n- `bash -x script.sh` - 显示执行的每条命令\n- `bash -v script.sh` - 显示读取的每行\n- `bash -n script.sh` - 语法检查（不执行）\n\n**set命令：**\n- `set -x` / `set +x` - 开启/关闭调试\n- `set -e` - 命令失败立即退出\n- `set -u` - 使用未定义变量报错\n- `set -o pipefail` - 管道失败传递\n- `set -o nounset` - 同 -u\n\n**常用组合：**\n```bash\n#!/bin/bash\nset -euo pipefail  # 严格模式\n```\n\n**调试技巧：**\n1. 在关键位置添加 `echo` 或 `printf`\n2. 使用 `trap` 捕获错误\n3. 检查退出状态 `$?`\n4. 使用 `tee` 记录执行过程",
+      "code": {
+        "bash": "#!/bin/bash\n# 调试示例脚本\n\n# 严格模式\nset -euo pipefail\n\n# 错误处理函数\nerror_handler() {\n    echo \"错误发生在第 $1 行\"\n    echo \"命令: $2\"\n    echo \"退出码: $3\"\n}\n\ntrap 'error_handler $LINENO \"$BASH_COMMAND\" $?' ERR\n\n# 调试输出\ndebug() {\n    if [[ $DEBUG == \"true\" ]]; then\n        echo \"[DEBUG] $*\"\n    fi\n}\n\nDEBUG=\"true\"\n\n# 示例函数\nprocess_file() {\n    local file=$1\n    debug \"处理文件: $file\"\n\n    if [[ ! -f $file ]]; then\n        echo \"文件不存在: $file\" >&2\n        return 1\n    fi\n\n    # 处理逻辑\n    local lines=$(wc -l < \"$file\")\n    debug \"文件行数: $lines\"\n\n    echo \"$lines\"\n}\n\n# 主逻辑\ndebug \"脚本开始执行\"\ndebug \"参数: $@\"\n\n# 测试\nresult=$(process_file \"/etc/passwd\")\necho \"结果: $result\"\n\n# === 运行方式 ===\n# 调试模式: bash -x script.sh\n# 或: DEBUG=true ./script.sh\n\n# === 语法检查 ===\n# bash -n script.sh\n\n# === 查看变量 ===\n# declare -p  # 显示所有变量\n# set         # 显示所有变量和函数"
+      }
+    },
+    {
+      "id": "shell-019",
+      "title": "并发与并行处理",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "并发",
+        "并行",
+        "xargs",
+        "GNU parallel",
+        "后台任务"
+      ],
+      "content": "Shell中如何实现并发和并行处理？",
+      "answer": "**后台进程：**\n- `command &` - 后台运行\n- `wait` - 等待所有后台进程\n- `wait $PID` - 等待特定进程\n\n**xargs并行：**\n- `xargs -P n` - n个并行进程\n- `xargs -n 1` - 每次一个参数\n\n**GNU parallel：**\n- 更强大的并行工具\n- 支持参数替换、进度显示\n\n**进程池模式：**\n- 控制并发数量\n- 使用命名管道或文件锁\n\n**注意事项：**\n- 避免资源竞争\n- 控制并发数量\n- 处理共享资源",
+      "code": {
+        "bash": "# 基本并行 - 后台进程\nfor i in {1..10}; do\n    process_item $i &\ndone\nwait  # 等待所有完成\necho \"全部完成\"\n\n# 限制并发数\nMAX_PARALLEL=4\ncount=0\n\nfor item in items/*; do\n    process_item \"$item\" &\n    ((count++))\n\n    if ((count >= MAX_PARALLEL)); then\n        wait -n  # 等待任意一个完成\n        ((count--))\n    fi\ndone\nwait\n\n# xargs并行\nfind . -name \"*.txt\" | xargs -P 4 -I {} process_file {}\n\n# GNU parallel（需要安装）\n# parallel -j 4 process_item {} ::: {1..10}\n# find . -name \"*.txt\" | parallel -j 4 process_file {}\n\n# 并行处理示例：批量压缩\ncompress_files() {\n    local file=$1\n    gzip \"$file\"\n    echo \"已压缩: $file\"\n}\nexport -f compress_files\n\nfind . -name \"*.log\" | xargs -P 4 -I {} bash -c 'compress_file \"$@\"' _ {}\n\n# 带进度显示\ntotal=$(find . -name \"*.txt\" | wc -l)\ncurrent=0\n\nfor file in *.txt; do\n    process_file \"$file\" &\n    ((current++))\n    echo \"进度: $current / $total\"\ndone\nwait\n\n# 使用命名管道控制并发\nMAX_PARALLEL=4\npipe=/tmp/my_pipe_$$\nmkfifo \"$pipe\"\nexec 3<>\"$pipe\"\nrm \"$pipe\"\n\nfor ((i=0; i<MAX_PARALLEL; i++)); do\n    echo >&3\ndone\n\nfor item in items/*; do\n    read -u 3\n    {\n        process_item \"$item\"\n        echo >&3\n    } &\ndone\nwait\nexec 3>&-"
+      }
+    },
+    {
+      "id": "shell-020",
+      "title": "Shell脚本最佳实践",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "最佳实践",
+        "代码规范",
+        "安全",
+        "可维护性"
+      ],
+      "content": "编写高质量Shell脚本有哪些最佳实践？",
+      "answer": "**脚本头部：**\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\nIFS=$'\\n\\t'\n```\n\n**代码规范：**\n1. 使用有意义的变量名\n2. 函数化，模块化\n3. 添加注释说明\n4. 统一缩进（2或4空格）\n\n**安全实践：**\n1. 引用变量：`\"$var\"`\n2. 检查命令是否存在\n3. 验证输入参数\n4. 使用临时文件的安全方式\n5. 避免命令注入\n\n**错误处理：**\n1. 检查命令返回值\n2. 使用trap清理资源\n3. 有意义的退出码\n\n**可维护性：**\n1. 使用函数组织代码\n2. 配置与代码分离\n3. 日志记录",
+      "code": {
+        "bash": "#!/usr/bin/env bash\n#\n# 脚本说明：数据处理脚本\n# 作者：xxx\n# 日期：2024-01-01\n#\n\n# 严格模式\nset -euo pipefail\nIFS=$'\\n\\t'\n\n# 常量定义\nreadonly SCRIPT_DIR=$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\nreadonly LOG_FILE=\"/var/log/myapp.log\"\nreadonly MAX_RETRIES=3\n\n# 日志函数\nlog() {\n    local level=$1\n    shift\n    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $*\" | tee -a \"$LOG_FILE\"\n}\n\nlog_info() { log \"INFO\" \"$@\"; }\nlog_error() { log \"ERROR\" \"$@\"; }\n\n# 清理函数\ncleanup() {\n    local exit_code=$?\n    log_info \"清理临时文件...\"\n    rm -f \"$TEMP_FILE\" 2>/dev/null || true\n    exit $exit_code\n}\ntrap cleanup EXIT\n\n# 检查依赖\ncheck_dependencies() {\n    local deps=(\"jq\" \"curl\" \"rsync\")\n    for dep in \"${deps[@]}\"; do\n        if ! command -v \"$dep\" &>/dev/null; then\n            log_error \"缺少依赖: $dep\"\n            exit 1\n        fi\n    done\n}\n\n# 安全创建临时文件\ncreate_temp_file() {\n    local temp_dir=${TMPDIR:-/tmp}\n    mktemp \"$temp_dir/myapp.XXXXXX\" || {\n        log_error \"无法创建临时文件\"\n        exit 1\n    }\n}\n\n# 参数验证\nvalidate_args() {\n    if [[ $# -lt 1 ]]; then\n        echo \"用法: $0 <input_file>\"\n        exit 1\n    fi\n\n    if [[ ! -f $1 ]]; then\n        log_error \"文件不存在: $1\"\n        exit 1\n    fi\n}\n\n# 主函数\nmain() {\n    validate_args \"$@\"\n    check_dependencies\n\n    local input_file=$1\n    TEMP_FILE=$(create_temp_file)\n\n    log_info \"开始处理: $input_file\"\n\n    # 处理逻辑...\n\n    log_info \"处理完成\"\n}\n\n# 入口\nmain \"$@\""
+      }
+    },
+    {
+      "id": "shell-021",
+      "title": "cut/sort/uniq文本处理",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "cut",
+        "sort",
+        "uniq",
+        "文本处理",
+        "列提取"
+      ],
+      "content": "cut、sort、uniq命令如何使用？",
+      "answer": "**cut命令 - 列提取：**\n- `-d` - 指定分隔符\n- `-f` - 提取指定列\n- `-c` - 按字符提取\n\n**sort命令 - 排序：**\n- `-n` - 数值排序\n- `-r` - 逆序\n- `-k` - 按指定列排序\n- `-t` - 指定分隔符\n- `-u` - 去重\n\n**uniq命令 - 去重：**\n- `-c` - 统计重复次数\n- `-d` - 只显示重复行\n- `-u` - 只显示不重复行\n- 需要先sort才能正确去重",
+      "code": {
+        "bash": "# cut - 提取列\n# 提取第1列（冒号分隔）\ncut -d: -f1 /etc/passwd\n\n# 提取第1和第3列\ncut -d: -f1,3 /etc/passwd\n\n# 提取前5个字符\ncut -c1-5 file.txt\n\n# sort - 排序\n# 默认字典序\nsort file.txt\n\n# 数值排序\nsort -n numbers.txt\n\n# 逆序\nsort -r file.txt\n\n# 按第2列数值排序\nsort -t: -k2 -n data.txt\n\n# 按内存使用排序进程\nps aux --sort=-%mem | head\n\n# uniq - 去重\n# 基本去重（需先sort）\nsort file.txt | uniq\n\n# 统计重复次数\nsort file.txt | uniq -c | sort -rn\n\n# 只显示重复行\nsort file.txt | uniq -d\n\n# 组合使用：统计访问最多的IP\nawk '{print $1}' access.log | sort | uniq -c | sort -rn | head -10"
+      }
+    },
+    {
+      "id": "shell-022",
+      "title": "head/tail/wc文件查看统计",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "medium",
+      "tags": [
+        "head",
+        "tail",
+        "wc",
+        "文件查看",
+        "统计"
+      ],
+      "content": "head、tail、wc命令如何使用？",
+      "answer": "**head命令 - 查看文件开头：**\n- `-n NUM` - 显示前NUM行\n- `-c NUM` - 显示前NUM字节\n\n**tail命令 - 查看文件末尾：**\n- `-n NUM` - 显示后NUM行\n- `-f` - 实时追踪（follow）\n- `-F` - 追踪并处理文件轮转\n\n**wc命令 - 统计：**\n- `-l` - 行数\n- `-w` - 词数\n- `-c` - 字节数\n- `-m` - 字符数",
+      "code": {
+        "bash": "# head - 查看开头\nhead file.txt           # 前10行\nhead -n 20 file.txt     # 前20行\nhead -n -5 file.txt     # 除最后5行\nhead -c 100 file.txt    # 前100字节\n\n# tail - 查看末尾\ntail file.txt           # 后10行\ntail -n 20 file.txt     # 后20行\ntail -n +5 file.txt     # 从第5行开始\ntail -f /var/log/syslog  # 实时监控日志\ntail -f -n 100 log.txt  # 最后100行并追踪\n\n# wc - 统计\nwc file.txt             # 行数 词数 字节数\nwc -l file.txt          # 只显示行数\nwc -w file.txt          # 只显示词数\nwc -c file.txt          # 只显示字节数\n\n# 组合使用\n# 统计代码行数\nfind . -name \"*.py\" | xargs wc -l\n\n# 查看文件中间部分（第10-20行）\nhead -n 20 file.txt | tail -n 11\n\n# 实时监控错误日志\ntail -f /var/log/app.log | grep --color=auto ERROR\n\n# 统计目录下所有文件总行数\nfind . -type f -name \"*.txt\" -exec cat {} \\; | wc -l"
+      }
+    },
+    {
+      "id": "shell-023",
+      "title": "tar/gzip压缩解压",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "tar",
+        "gzip",
+        "压缩",
+        "解压",
+        "归档"
+      ],
+      "content": "tar和gzip如何进行压缩和解压？",
+      "answer": "**tar命令 - 归档：**\n- `-c` - 创建归档\n- `-x` - 解开归档\n- `-v` - 显示过程\n- `-f` - 指定文件\n- `-z` - gzip压缩/解压\n- `-j` - bzip2压缩/解压\n- `-J` - xz压缩/解压\n- `-C` - 解压到指定目录\n\n**gzip命令：**\n- `gzip file` - 压缩（原文件删除）\n- `gzip -k file` - 压缩并保留原文件\n- `gunzip file.gz` - 解压\n- `zcat file.gz` - 查看压缩文件内容",
+      "code": {
+        "bash": "# tar打包（不压缩）\ntar -cvf archive.tar dir/\n\n# tar + gzip压缩\ntar -czvf archive.tar.gz dir/\n\n# tar + bzip2压缩\ntar -cjvf archive.tar.bz2 dir/\n\n# 解压tar\ntar -xvf archive.tar\n\n# 解压tar.gz\ntar -xzvf archive.tar.gz\n\n# 解压到指定目录\ntar -xzvf archive.tar.gz -C /target/dir/\n\n# 只查看不解压\ntar -tvf archive.tar.gz\n\n# 压缩时排除某些文件\ntar -czvf archive.tar.gz --exclude='*.log' dir/\n\n# gzip单独使用\ngzip file.txt          # 压缩为file.txt.gz\ngzip -k file.txt       # 保留原文件\ngzip -d file.txt.gz    # 解压\ngunzip file.txt.gz     # 解压\n\n# 压缩级别（1-9，9最高）\ngzip -9 file.txt       # 最高压缩率\n\n# 查看压缩文件内容\nzcat file.txt.gz\nzless file.txt.gz\n\n# 批量压缩\nfind . -name \"*.log\" -exec gzip {} \\;\n\n# 压缩远程传输\ntar -czf - dir/ | ssh user@host 'tar -xzf - -C /backup/'"
+      }
+    },
+    {
+      "id": "shell-024",
+      "title": "crontab定时任务",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "crontab",
+        "定时任务",
+        "调度",
+        "周期执行"
+      ],
+      "content": "如何配置crontab定时任务？",
+      "answer": "**crontab格式：**\n```\n分 时 日 月 周 命令\n*  *  *  *  *  command\n```\n\n**时间字段：**\n- 分钟：0-59\n- 小时：0-23\n- 日期：1-31\n- 月份：1-12\n- 周几：0-7（0和7都是周日）\n\n**特殊符号：**\n- `*` - 任意值\n- `,` - 列表分隔\n- `-` - 范围\n- `/` - 步长\n\n**常用命令：**\n- `crontab -e` - 编辑\n- `crontab -l` - 列出\n- `crontab -r` - 删除",
+      "code": {
+        "bash": "# 编辑定时任务\ncrontab -e\n\n# 查看当前定时任务\ncrontab -l\n\n# 删除所有定时任务\ncrontab -r\n\n# ===== 常用示例 =====\n\n# 每分钟执行\n* * * * * /path/to/script.sh\n\n# 每小时执行\n0 * * * * /path/to/script.sh\n\n# 每天凌晨2点执行\n0 2 * * * /path/to/backup.sh\n\n# 每周一早上8点执行\n0 8 * * 1 /path/to/script.sh\n\n# 每月1号凌晨执行\n0 0 1 * * /path/to/monthly.sh\n\n# 每5分钟执行\n*/5 * * * * /path/to/check.sh\n\n# 每小时第15和45分钟执行\n15,45 * * * * /path/to/script.sh\n\n# 工作日早上9点到下午5点，每小时执行\n0 9-17 * * 1-5 /path/to/work.sh\n\n# 每2小时执行\n0 */2 * * * /path/to/script.sh\n\n# ===== 注意事项 =====\n# 1. 使用绝对路径\n# 2. 输出重定向或丢弃\n# 3. 环境变量可能不同\n\n# 示例：每天备份并记录日志\n0 2 * * * /home/user/backup.sh >> /var/log/backup.log 2>&1\n\n# 示例：每5分钟检查服务状态\n*/5 * * * * /usr/bin/pgrep nginx > /dev/null || /usr/sbin/service nginx start"
+      }
+    },
+    {
+      "id": "shell-025",
+      "title": "ssh/scp/rsync远程操作",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "ssh",
+        "scp",
+        "rsync",
+        "远程连接",
+        "文件传输"
+      ],
+      "content": "如何使用ssh、scp、rsync进行远程操作？",
+      "answer": "**ssh - 远程登录：**\n- `ssh user@host` - 远程登录\n- `ssh -p port user@host` - 指定端口\n- `ssh -i key.pem user@host` - 使用密钥\n- `ssh user@host 'command'` - 执行远程命令\n\n**scp - 远程复制：**\n- `scp file user@host:/path` - 上传\n- `scp user@host:/path/file .` - 下载\n- `-r` - 递归复制目录\n- `-P` - 指定端口\n\n**rsync - 增量同步：**\n- `-a` - 归档模式\n- `-v` - 详细输出\n- `-z` - 压缩传输\n- `--delete` - 删除目标多余文件\n- `--exclude` - 排除文件",
+      "code": {
+        "bash": "# ===== SSH =====\n# 基本连接\nssh user@192.168.1.100\n\n# 指定端口\nssh -p 2222 user@host\n\n# 使用密钥\nssh -i ~/.ssh/mykey.pem user@host\n\n# 执行远程命令\nssh user@host 'uptime'\nssh user@host 'cat /etc/os-release'\n\n# 隧道/端口转发\n# 本地转发\nssh -L 8080:localhost:80 user@host\n# 远程转发\nssh -R 8080:localhost:80 user@host\n\n# SSH配置文件 (~/.ssh/config)\nHost myserver\n    HostName 192.168.1.100\n    User admin\n    Port 2222\n    IdentityFile ~/.ssh/mykey.pem\n\n# 使用别名连接\nssh myserver\n\n# ===== SCP =====\n# 上传文件\nscp file.txt user@host:/remote/path/\n\n# 下载文件\nscp user@host:/remote/file.txt ./local/path/\n\n# 复制目录\nscp -r mydir/ user@host:/remote/path/\n\n# 指定端口\nscp -P 2222 file.txt user@host:/path/\n\n# ===== RSYNC =====\n# 基本同步\nrsync -avz source/ user@host:/dest/\n\n# 显示进度\nrsync -avz --progress source/ user@host:/dest/\n\n# 删除目标多余文件（完全同步）\nrsync -avz --delete source/ user@host:/dest/\n\n# 排除文件\nrsync -avz --exclude='*.log' --exclude='tmp/' source/ user@host:/dest/\n\n# 增量备份（只传输变化）\nrsync -avz --backup --backup-dir=/backup/$(date +%Y%m%d) source/ user@host:/dest/\n\n# 本地同步\nrsync -avz /source/ /dest/\n\n# 限速传输\nrsync -avz --bwlimit=1000 source/ user@host:/dest/"
+      }
+    },
+    {
+      "id": "shell-026",
+      "title": "日志分析脚本实战",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "日志分析",
+        "实战",
+        "grep",
+        "awk",
+        "统计"
+      ],
+      "content": "如何编写Shell脚本分析日志文件？",
+      "answer": "**常见日志分析场景：**\n1. 统计访问量\n2. 分析错误日志\n3. 查找异常IP\n4. 性能分析\n5. 日志清洗\n\n**常用工具组合：**\n- grep：过滤匹配\n- awk：字段提取和统计\n- sort/uniq：排序去重\n- sed：文本替换",
+      "code": {
+        "bash": "#!/bin/bash\n# 日志分析脚本示例\n\nLOG_FILE=\"/var/log/nginx/access.log\"\n\n# 1. 统计总请求数\necho \"总请求数: $(wc -l < $LOG_FILE)\"\n\n# 2. 统计独立IP数\necho \"独立IP数: $(awk '{print $1}' $LOG_FILE | sort -u | wc -l)\"\n\n# 3. 访问量最多的前10个IP\necho \"\\n访问量TOP 10 IP:\"\nawk '{print $1}' $LOG_FILE | sort | uniq -c | sort -rn | head -10\n\n# 4. 统计各HTTP状态码数量\necho \"\\n状态码统计:\"\nawk '{print $9}' $LOG_FILE | sort | uniq -c | sort -rn\n\n# 5. 统计4xx/5xx错误\necho \"\\n错误统计:\"\necho \"4xx错误: $(awk '$9 ~ /^4/ {print}' $LOG_FILE | wc -l)\"\necho \"5xx错误: $(awk '$9 ~ /^5/ {print}' $LOG_FILE | wc -l)\"\n\n# 6. 最常访问的URL\necho \"\\n访问量TOP 10 URL:\"\nawk '{print $7}' $LOG_FILE | sort | uniq -c | sort -rn | head -10\n\n# 7. 统计每小时的访问量\necho \"\\n每小时访问量:\"\nawk '{print substr($4, 14, 2)}' $LOG_FILE | sort | uniq -c\n\n# 8. 查找特定时间段的日志\necho \"\\n上午10点的日志:\"\nawk '$4 ~ /:10:/ {print}' $LOG_FILE | head -10\n\n# 9. 统计响应时间最慢的请求（假设最后字段是响应时间）\necho \"\\n响应最慢的10个请求:\"\nawk '{print $NF, $7}' $LOG_FILE | sort -rn | head -10\n\n# 10. 检测异常访问（单IP高频访问）\necho \"\\n异常高频IP (超过100次/分钟):\"\nawk '{print $1, substr($4, 1, 17)}' $LOG_FILE | \\\n    sort | uniq -c | awk '$1 > 100 {print $1, $2, $3}'\n\n# 11. 实时监控错误日志\ntail -f /var/log/app/error.log | while read line; do\n    if echo \"$line\" | grep -q \"ERROR\"; then\n        echo \"[$(date)] 发现错误: $line\" | mail -s \"应用错误告警\" admin@example.com\n    fi\ndone"
+      }
+    },
+    {
+      "id": "shell-027",
+      "title": "自动化部署脚本",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "自动化",
+        "部署",
+        "CI/CD",
+        "实战"
+      ],
+      "content": "如何编写自动化部署脚本？",
+      "answer": "**部署脚本要素：**\n1. 环境检查\n2. 代码拉取\n3. 依赖安装\n4. 配置更新\n5. 服务重启\n6. 健康检查\n7. 回滚机制\n\n**最佳实践：**\n- 使用set -e失败即退出\n- 记录日志\n- 锁机制防止并发\n- 保留旧版本便于回滚",
+      "code": {
+        "bash": "#!/bin/bash\n# 自动化部署脚本\nset -euo pipefail\n\n# 配置变量\nAPP_NAME=\"myapp\"\nDEPLOY_DIR=\"/var/www/$APP_NAME\"\nREPO_URL=\"git@github.com:user/$APP_NAME.git\"\nBRANCH=\"main\"\nLOG_FILE=\"/var/log/deploy.log\"\nKEEP_VERSIONS=5\n\n# 日志函数\nlog() {\n    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] $*\" | tee -a $LOG_FILE\n}\n\n# 错误处理\nerror_exit() {\n    log \"ERROR: $1\"\n    exit 1\n}\n\n# 检查依赖\ncheck_dependencies() {\n    local deps=(\"git\" \"npm\" \"pm2\")\n    for dep in \"${deps[@]}\"; do\n        command -v $dep >/dev/null || error_exit \"缺少依赖: $dep\"\n    done\n}\n\n# 获取代码\npull_code() {\n    log \"拉取最新代码...\"\n    cd $DEPLOY_DIR\n    git fetch origin\n    git checkout $BRANCH\n    git pull origin $BRANCH\n}\n\n# 安装依赖\ninstall_deps() {\n    log \"安装依赖...\"\n    npm ci --production\n}\n\n# 备份当前版本\nbackup() {\n    local backup_dir=\"/backup/$APP_NAME\"\n    mkdir -p $backup_dir\n    local timestamp=$(date +%Y%m%d_%H%M%S)\n    tar -czf \"$backup_dir/$APP_NAME-$timestamp.tar.gz\" -C $DEPLOY_DIR .\n    log \"已备份到: $backup_dir/$APP_NAME-$timestamp.tar.gz\"\n    \n    # 清理旧备份\n    ls -t $backup_dir/*.tar.gz | tail -n +$((KEEP_VERSIONS + 1)) | xargs rm -f 2>/dev/null || true\n}\n\n# 数据库迁移\nmigrate_db() {\n    log \"执行数据库迁移...\"\n    npm run migrate\n}\n\n# 重启服务\nrestart_service() {\n    log \"重启服务...\"\n    pm2 restart $APP_NAME\n    sleep 5\n}\n\n# 健康检查\nhealth_check() {\n    log \"健康检查...\"\n    local max_retries=10\n    local retry=0\n    while [ $retry -lt $max_retries ]; do\n        if curl -sf http://localhost:3000/health >/dev/null; then\n            log \"服务启动成功\"\n            return 0\n        fi\n        ((retry++))\n        sleep 2\n    done\n    error_exit \"健康检查失败\"\n}\n\n# 回滚\nrollback() {\n    log \"执行回滚...\"\n    local last_backup=$(ls -t /backup/$APP_NAME/*.tar.gz | head -1)\n    tar -xzf \"$last_backup\" -C $DEPLOY_DIR\n    restart_service\n    log \"回滚完成\"\n}\n\n# 主流程\nmain() {\n    log \"========== 开始部署 ==========\"\n    \n    check_dependencies\n    backup\n    pull_code\n    install_deps\n    migrate_db\n    restart_service\n    health_check\n    \n    log \"========== 部署完成 ==========\"\n}\n\n# 支持回滚参数\nif [ \"${1:-}\" = \"rollback\" ]; then\n    rollback\nelse\n    main\nfi"
+      }
+    },
+    {
+      "id": "shell-028",
+      "title": "系统监控脚本",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "监控",
+        "系统",
+        "性能",
+        "告警"
+      ],
+      "content": "如何编写系统监控脚本？",
+      "answer": "**监控指标：**\n1. CPU使用率\n2. 内存使用率\n3. 磁盘使用率\n4. 网络流量\n5. 进程状态\n6. 服务状态\n\n**告警机制：**\n- 阈值判断\n- 邮件/短信通知\n- 日志记录",
+      "code": {
+        "bash": "#!/bin/bash\n# 系统监控脚本\n\n# 配置阈值\nCPU_THRESHOLD=80\nMEM_THRESHOLD=90\nDISK_THRESHOLD=85\nALERT_EMAIL=\"admin@example.com\"\nLOG_FILE=\"/var/log/monitor.log\"\n\n# 日志函数\nlog() {\n    echo \"[$(date '+%Y-%m-%d %H:%M:%S')] $*\" >> $LOG_FILE\n}\n\n# 发送告警\nsend_alert() {\n    local subject=\"$1\"\n    local message=\"$2\"\n    log \"ALERT: $subject - $message\"\n    echo \"$message\" | mail -s \"$subject\" $ALERT_EMAIL\n}\n\n# CPU监控\ncheck_cpu() {\n    local cpu_usage=$(top -bn1 | grep \"Cpu(s)\" | awk '{print int($2)}')\n    log \"CPU使用率: ${cpu_usage}%\"\n    \n    if [ $cpu_usage -gt $CPU_THRESHOLD ]; then\n        send_alert \"CPU告警\" \"CPU使用率 ${cpu_usage}% 超过阈值 ${CPU_THRESHOLD}%\"\n    fi\n}\n\n# 内存监控\ncheck_memory() {\n    local mem_usage=$(free | awk '/Mem/{printf \"%.0f\", $3/$2*100}')\n    log \"内存使用率: ${mem_usage}%\"\n    \n    if [ $mem_usage -gt $MEM_THRESHOLD ]; then\n        send_alert \"内存告警\" \"内存使用率 ${mem_usage}% 超过阈值 ${MEM_THRESHOLD}%\"\n        # 显示内存占用最高的进程\n        log \"内存占用TOP 5:\"\n        ps aux --sort=-%mem | head -6 >> $LOG_FILE\n    fi\n}\n\n# 磁盘监控\ncheck_disk() {\n    df -h | grep -vE '^Filesystem|tmpfs|cdrom' | while read line; do\n        local usage=$(echo $line | awk '{print int($5)}')\n        local mount=$(echo $line | awk '{print $6}')\n        log \"磁盘 $mount 使用率: ${usage}%\"\n        \n        if [ $usage -gt $DISK_THRESHOLD ]; then\n            send_alert \"磁盘告警\" \"磁盘 $mount 使用率 ${usage}% 超过阈值 ${DISK_THRESHOLD}%\"\n        fi\n    done\n}\n\n# 进程监控\ncheck_process() {\n    local processes=(\"nginx\" \"mysql\" \"redis\")\n    for proc in \"${processes[@]}\"; do\n        if ! pgrep -x \"$proc\" >/dev/null; then\n            send_alert \"进程告警\" \"进程 $proc 未运行\"\n            # 尝试重启\n            systemctl restart $proc\n            log \"已尝试重启 $proc\"\n        else\n            log \"进程 $proc 运行正常\"\n        fi\n    done\n}\n\n# 网络监控\ncheck_network() {\n    local interfaces=$(ip link show | grep -E '^[0-9]+:' | awk -F: '{print $2}' | tr -d ' ')\n    for iface in $interfaces; do\n        if [ \"$iface\" != \"lo\" ]; then\n            local rx=$(cat /sys/class/net/$iface/statistics/rx_bytes)\n            local tx=$(cat /sys/class/net/$iface/statistics/tx_bytes)\n            log \"接口 $iface: 接收 $((rx/1024/1024))MB, 发送 $((tx/1024/1024))MB\"\n        fi\n    done\n}\n\n# 负载监控\ncheck_load() {\n    local load=$(uptime | awk -F'load average:' '{print $2}')\n    local load1=$(echo $load | awk '{print $1}' | tr -d ',')\n    local cpu_cores=$(nproc)\n    log \"系统负载: $load (CPU核心数: $cpu_cores)\"\n    \n    # 负载超过CPU核心数告警\n    if (( $(echo \"$load1 > $cpu_cores\" | bc -l) )); then\n        send_alert \"负载告警\" \"系统负载 $load1 超过CPU核心数 $cpu_cores\"\n    fi\n}\n\n# 主函数\nmain() {\n    log \"========== 系统监控开始 ==========\"\n    check_cpu\n    check_memory\n    check_disk\n    check_process\n    check_network\n    check_load\n    log \"========== 系统监控结束 ==========\"\n}\n\nmain"
+      }
+    },
+    {
+      "id": "shell-029",
+      "title": "Linux基础命令：权限与磁盘管理",
+      "category": "shell",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "chmod",
+        "chown",
+        "df",
+        "du",
+        "权限管理",
+        "磁盘管理"
+      ],
+      "content": "Linux文件权限如何管理？如何查看磁盘使用情况？",
+      "answer": "**文件权限：**\n- rwx：读(4)、写(2)、执行(1)\n- 三类用户：所有者(u)、组(g)、其他(o)\n- chmod：修改权限\n  - 数字模式：chmod 755 file\n  - 符号模式：chmod u+x file\n- chown：修改所有者\n  - chown user:group file\n\n**特殊权限：**\n- SUID(4)：以文件所有者权限执行\n- SGID(2)：以文件所属组权限执行\n- Sticky(1)：目录下文件只能由所有者删除\n\n**磁盘管理：**\n- df -h：查看文件系统磁盘空间\n- du -sh dir：查看目录大小\n- du -h --max-depth=1：查看一级子目录大小",
+      "code": {
+        "python": "# Shell命令示例\ncommands = \"\"\"\n# 修改权限\nchmod 755 script.sh\nchmod u+x script.sh\nchmod -R 644 dir/\n\n# 修改所有者\nchown user:group file.txt\nchown -R www-data:www-data /var/www\n\n# 查看磁盘\ndf -h\ndu -sh /home/user\ndu -h --max-depth=1 /var/log | sort -hr | head -10\n\n# 特殊权限\nchmod 4755 script   # SUID\nchmod 2755 dir      # SGID\nchmod 1777 /tmp     # Sticky\n\"\"\"\nprint(commands)"
+      }
+    },
+    {
+      "id": "shell-030",
+      "title": "Linux网络工具：curl/wget/nc",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "curl",
+        "wget",
+        "nc",
+        "netcat",
+        "网络工具",
+        "HTTP"
+      ],
+      "content": "curl、wget和nc（netcat）的常用用法？",
+      "answer": "**curl：**\n- 强大的HTTP客户端\n- 支持各种协议（HTTP、FTP、SMTP等）\n- 常用于API测试、文件下载\n\n**wget：**\n- 专注于文件下载\n- 支持断点续传\n- 递归下载网站\n\n**nc（netcat）：**\n- 网络瑞士军刀\n- 端口扫描、文件传输\n- 创建简单服务器\n- 网络调试",
+      "code": {
+        "python": "# curl常用命令\ncurl_commands = \"\"\"\n# GET请求\ncurl https://api.example.com/users\n\n# POST请求\ncurl -X POST -H \"Content-Type: application/json\" -d '{\"name\":\"Alice\"}' https://api.example.com/users\n\n# 下载文件\ncurl -O https://example.com/file.zip\ncurl -o myfile.zip https://example.com/file.zip\n\n# 跟随重定向\ncurl -L https://bit.ly/xxx\n\n# 显示响应头\ncurl -I https://example.com\n\"\"\"\n\n# wget常用命令\nwget_commands = \"\"\"\n# 下载文件\nwget https://example.com/file.zip\n\n# 断点续传\nwget -c https://example.com/large-file.zip\n\n# 后台下载\nwget -b https://example.com/file.zip\n\n# 递归下载网站\nwget -r -l 2 https://example.com\n\"\"\"\n\n# nc常用命令\nnc_commands = \"\"\"\n# 端口扫描\nnc -zv localhost 20-80\n\n# 创建简单服务器\nnc -l 8080\n\n# 文件传输（接收方）\nnc -l 1234 > received_file\n\n# 文件传输（发送方）\nnc receiver_ip 1234 < file_to_send\n\n# 作为代理\nnc -l 8080 | nc target_host 80\n\"\"\"\n\nprint(curl_commands)\nprint(wget_commands)\nprint(nc_commands)"
+      }
+    },
+    {
+      "id": "shell-031",
+      "title": "systemctl与Linux服务管理",
+      "category": "shell",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "systemctl",
+        "systemd",
+        "服务管理",
+        "Linux",
+        "守护进程"
+      ],
+      "content": "如何使用systemctl管理服务？如何编写systemd服务单元文件？",
+      "answer": "**systemctl常用命令：**\n- systemctl start/stop/restart service\n- systemctl enable/disable service（开机启动）\n- systemctl status service\n- systemctl list-units --type=service\n\n**服务单元文件（.service）：**\n- [Unit]：描述和依赖\n- [Service]：服务配置\n  - Type：simple/forking/oneshot\n  - ExecStart：启动命令\n  - Restart：自动重启策略\n- [Install]：安装配置\n  - WantedBy：目标运行级别",
+      "code": {
+        "python": "# systemd服务单元文件示例\nservice_file = \"\"\"\n[Unit]\nDescription=My Application Service\nAfter=network.target\n\n[Service]\nType=simple\nUser=www-data\nWorkingDirectory=/opt/myapp\nExecStart=/usr/bin/python3 /opt/myapp/main.py\nRestart=always\nRestartSec=10\n\n[Install]\nWantedBy=multi-user.target\n\"\"\"\n\n# 常用命令\ncommands = \"\"\"\n# 重新加载配置\nsystemctl daemon-reload\n\n# 启动服务\nsystemctl start myapp\n\n# 开机启动\nsystemctl enable myapp\n\n# 查看日志\njournalctl -u myapp -f\n\n# 查看所有服务\nsystemctl list-units --type=service --state=running\n\"\"\"\n\nprint(service_file)\nprint(commands)"
+      }
+    },
+    {
+      "id": "shell-032",
+      "title": "sed分组捕获与保持空间",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "sed",
+        "分组捕获",
+        "保持空间",
+        "高级替换",
+        "正则表达式"
+      ],
+      "content": "sed的正则分组捕获和保持空间如何使用？",
+      "answer": "**分组捕获（Capture Groups）：**\n- \\(pattern\\)：定义捕获组\n- \\1, \\2：引用捕获内容\n- 支持最多9个分组\n\n**保持空间（Hold Space）：**\n- 模式空间（Pattern Space）：当前行\n- 保持空间（Hold Space）：额外存储\n- h/H：复制/追加到保持空间\n- g/G：复制/追加到模式空间\n- x：交换模式空间和保持空间\n\n**应用场景：**\n- 多行模式匹配\n- 复杂文本转换\n- 行列转置",
+      "code": {
+        "python": "# sed分组捕获示例\nsed_examples = \"\"\"\n# 基本分组替换：交换first和last\nsed -E 's/([A-Za-z]+), ([A-Za-z]+)/\\\\2 \\\\1/' file.txt\n\n# 提取域名\necho \"user@example.com\" | sed -E 's/.*@([^.]+)\\\\..*/\\\\1/'\n\n# 去除HTML标签\ncat index.html | sed -E 's/<[^>]+>//g'\n\n# 多次分组引用\nsed -E 's/([0-9]+)-([0-9]+)-([0-9]+)/(\\\\1) \\\\2-\\\\3/' file\n\n# 保持空间示例：反转行\nsed -n '{1!G; h; $p}' file.txt\n\n# 保持空间示例：行列转置\nsed -n '{H; g; s/\\\\n//g; p}' file.txt\n\n# 复杂示例：处理多行记录\nsed -E ':a; N; s/([0-9]+)\\\\n([0-9]+)/\\\\1 \\\\2/; ba' file\n\"\"\"\nprint(sed_examples)"
+      }
+    },
+    {
+      "id": "shell-033",
+      "title": "awk自定义函数与关联数组",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "awk",
+        "自定义函数",
+        "关联数组",
+        "数组排序",
+        "高级用法"
+      ],
+      "content": "awk的自定义函数和关联数组有哪些高级用法？",
+      "answer": "**自定义函数：**\n- function name(params) { statements; return value }\n- 支持递归调用\n- 可以定义在BEGIN块之前\n\n**关联数组：**\n- 键可以是字符串或数字\n- 自动创建，无需声明\n- 支持in运算符检查键存在\n- delete array[key]删除元素\n\n**数组操作：**\n- asort()：值排序\n- asorti()：键排序\n- split()：字符串分割\n- PROCINFO[\"sorted_in\"]：控制遍历顺序\n\n**高级技巧：**\n- 二维数组模拟\n- 数组去重\n- 动态键构建",
+      "code": {
+        "python": "awk_examples = \"\"\"\n# 定义函数\nfunction max(a, b) { return (a > b) ? a : b }\n{ print max($1, $2) }\n\n# 关联数组\n{ count[$1]++ }\nEND { for (name in count) print name, count[name] }\n\n# asort排序\nEND { n = asort(count, s); for(i=1; i<=n; i++) print s[i] }\n\n# split函数\nn = split($1, parts, \":\"); for(i=1; i<=n; i++) print parts[i]\n\n# 统计日志\nawk '{count[$7]++} END { for(url in count) print count[url], url}' access.log\n\"\"\"\nprint(awk_examples)"
+      }
+    },
+    {
+      "id": "shell-034",
+      "title": "xargs高级用法与expect自动化交互",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "low",
+      "tags": [
+        "xargs",
+        "expect",
+        "自动化交互",
+        "并行处理",
+        "高级用法"
+      ],
+      "content": "xargs的高级用法有哪些？expect如何实现自动化交互？",
+      "answer": "**xargs高级用法：**\n\n1. **并行处理：**\n   - -P n：并行执行n个进程\n   - 大幅提升批量处理速度\n\n2. **占位符控制：**\n   - -I {}：自定义占位符\n   - 支持多次引用\n\n3. **空字符分隔：**\n   - -0：处理含空格的文件名\n   - 配合find -print0使用\n\n4. **批量参数：**\n   - -n 1：每次传递1个参数\n   - -L 1：每次传递1行\n\n**expect自动化交互：**\n- 自动响应交互式程序\n- spawn：启动程序\n- expect：等待特定输出\n- send：发送输入\n- 适用于ssh、ftp、passwd等",
+      "code": {
+        "python": "# xargs高级用法示例\nxargs_examples = \"\"\"\n# 并行处理（4个并发）\nfind . -name \"*.log\" | xargs -P 4 gzip\n\n# 自定义占位符\ncat files.txt | xargs -I {} cp {} /backup/{}\n\n# 处理含空格的文件名\nfind . -name \"*.txt\" -print0 | xargs -0 rm\n\n# 每次处理1个文件\nls *.py | xargs -n 1 python\n\n# 结合grep递归搜索\nfind . -type f | xargs grep -l \"pattern\"\n\n# 批量重命名\nls | xargs -I {} mv {} prefix_{}\n\"\"\"\n\n# expect脚本示例\nexpect_examples = \"\"\"\n#!/usr/bin/expect\n\n# SSH自动登录\nspawn ssh user@remote_host\nexpect \"password:\"\nsend \"mypassword\\r\"\nexpect \"$ \"\nsend \"ls -la\\r\"\nexpect \"$ \"\ninteract\n\n# 自动FTP上传\nspawn ftp ftp.example.com\nexpect \"Name\"\nsend \"username\\r\"\nexpect \"Password:\"\nsend \"password\\r\"\nexpect \"ftp>\"\nsend \"put localfile remotefile\\r\"\nexpect \"ftp>\"\nsend \"bye\\r\"\n\n# 自动修改密码\nspawn passwd\nexpect \"New password:\"\nsend \"newpass123\\r\"\nexpect \"Retype new password:\"\nsend \"newpass123\\r\"\nexpect eof\n\"\"\"\n\nprint(xargs_examples)\nprint(expect_examples)"
+      }
+    },
+    {
+      "id": "shell-035",
+      "title": "进程替换与Here Document高级用法",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "进程替换",
+        "Here Document",
+        "Here String",
+        "高级重定向",
+        "Process Substitution"
+      ],
+      "content": "什么是进程替换？Here Document有哪些高级用法？",
+      "answer": "**进程替换（Process Substitution）：**\n- `<(command)`：将命令输出作为文件读取\n- `>(command)`：将写入的内容传递给命令处理\n- 本质上是创建临时管道文件\n- 优势：可以像操作文件一样操作命令输出\n\n**Here Document：**\n- `<<EOF`：标准here document\n- `<<-EOF`：去除前导制表符（用于缩进）\n- `<<'EOF'`：禁用变量展开和命令替换\n- `<<< string`：Here String（单行）\n\n**应用场景：**\n- 进程替换：比较两个命令输出、多输入源\n- Here Document：多行输入、SQL脚本、配置文件生成",
+      "code": {
+        "python": "# 进程替换示例\nprint('''\n# 比较两个命令输出（无需临时文件）\ndiff <(ls dir1) <(ls dir2)\n\n# 同时读取多个命令输出\ncat <(echo \"Header\") <(cat data.txt) <(echo \"Footer\")\n\n# 结合while循环\nwhile read line; do\n    echo \"Processing: $line\"\ndone < <(grep \"pattern\" file.txt)\n\n# Here Document标准用法\ncat << EOF\nThis is line 1\nThis is line 2\nEOF\n\n# 去除前导制表符\ncat <<- EOF\n\\tThis line has no leading tab\nEOF\n\n# 禁用变量展开\ncat << 'EOF'\nThis $variable will not expand\nEOF\n\n# Here String\ngrep \"pattern\" <<< \"this is a test string\"\n''')"
+      }
+    },
+    {
+      "id": "shell-036",
+      "title": "Linux性能分析工具：perf/strace/vmstat",
+      "category": "shell",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "性能分析",
+        "perf",
+        "strace",
+        "vmstat",
+        "系统监控",
+        "性能优化"
+      ],
+      "content": "Linux有哪些性能分析工具？如何使用perf、strace和vmstat？",
+      "answer": "**time命令：**\n- real：实际经过时间\n- user：用户态CPU时间\n- sys：内核态CPU时间\n\n**strace：**\n- 跟踪系统调用和信号\n- 用于诊断程序问题\n- `-c`统计系统调用次数\n- `-e`过滤特定系统调用\n\n**perf：**\n- Linux性能分析利器\n- CPU性能计数器\n- 火焰图生成\n- 函数级性能分析\n\n**vmstat：**\n- 系统整体性能监控\n- CPU、内存、IO、进程统计\n- 采样模式持续监控",
+      "code": {
+        "python": "# 性能分析工具示例\nprint('''\n# ===== time命令 =====\ntime ./script.sh\ntime -v ./script.sh\n\n# ===== strace =====\nstrace ./program\nstrace -c ./program\nstrace -e open,read,write ./program\nstrace -f ./program\nstrace -o trace.log ./program\n\n# ===== perf =====\nperf record ./program\nperf report\nperf top\nperf stat -e cache-misses,cache-references ./program\n\n# ===== vmstat =====\nvmstat\nvmstat 1 10\nvmstat -a\n\n# 字段解释：\n# r: 运行队列长度\n# b: 阻塞进程数\n# us/sy/id/wa: CPU用户/系统/空闲/等待时间\n''')"
+      }
+    }
+  ]
+}

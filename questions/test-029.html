@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>兼容性测试与多环境验证 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**兼容性测试类型：**  1. **浏览器兼容性：**    - Chrome、Firefox、Safari、Edge    - 不同版本（最新、上一个、稳定版）    - 内核差异（Blink、Gecko、WebKit）  2. **操作系统兼容性：**    - Windows、macOS、Linux    - ...">
+<meta name="keywords" content="兼容性测试与多环境验证,自动化测试面试题,兼容性测试, 浏览器兼容性, 跨平台, 响应式测试, 设备测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-029.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="兼容性测试与多环境验证 - 自动化测试面试题">
+<meta property="og:description" content="**兼容性测试类型：**  1. **浏览器兼容性：**    - Chrome、Firefox、Safari、Edge    - 不同版本（最新、上一个、稳定版）    - 内核差异（Blink、Gecko、WebKit）  2. **操作系统兼容性：**    - Windows、macOS、Linux    - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-029.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "兼容性测试与多环境验证",
+    "text": "兼容性测试包含哪些类型？如何设计兼容性测试策略？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**兼容性测试类型：**  1. **浏览器兼容性：**    - Chrome、Firefox、Safari、Edge    - 不同版本（最新、上一个、稳定版）    - 内核差异（Blink、Gecko、WebKit）  2. **操作系统兼容性：**    - Windows、macOS、Linux    - 不同版本（Win10/11, macOS 12/13/14）  3. **设备兼容性：**    - 手机、平板、桌面    - 不同屏幕尺寸和分辨率    - 不同浏览器尺寸（响应式）  4. **数据库兼容性：**    - MySQL、PostgreSQL、MongoDB    - 不同版本  **测试策略：** - 优先级矩阵（用户量 × 市场占有率） - 云测试平台（BrowserStack、 Sauce Labs） - 自动化截图对比 - 真机测试实验室"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>兼容性测试与多环境验证</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：兼容性测试, 浏览器兼容性, 跨平台, 响应式测试, 设备测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>兼容性测试包含哪些类型？如何设计兼容性测试策略？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**兼容性测试类型：**</div><br><div class="answer-line"><strong>1. **浏览器兼容性：**</strong></div><div class="answer-line">   - Chrome、Firefox、Safari、Edge</div><div class="answer-line">   - 不同版本（最新、上一个、稳定版）</div><div class="answer-line">   - 内核差异（Blink、Gecko、WebKit）</div><br><div class="answer-line"><strong>2. **操作系统兼容性：**</strong></div><div class="answer-line">   - Windows、macOS、Linux</div><div class="answer-line">   - 不同版本（Win10/11, macOS 12/13/14）</div><br><div class="answer-line"><strong>3. **设备兼容性：**</strong></div><div class="answer-line">   - 手机、平板、桌面</div><div class="answer-line">   - 不同屏幕尺寸和分辨率</div><div class="answer-line">   - 不同浏览器尺寸（响应式）</div><br><div class="answer-line"><strong>4. **数据库兼容性：**</strong></div><div class="answer-line">   - MySQL、PostgreSQL、MongoDB</div><div class="answer-line">   - 不同版本</div><br><div class="answer-line">**测试策略：**</div><div class="answer-line">- 优先级矩阵（用户量 × 市场占有率）</div><div class="answer-line">- 云测试平台（BrowserStack、 Sauce Labs）</div><div class="answer-line">- 自动化截图对比</div><div class="answer-line">- 真机测试实验室</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 兼容性测试示例
+
+# pytest参数化测试（浏览器）
+import pytest
+
+@pytest.mark.parametrize(&quot;browser&quot;, [
+    &quot;chrome&quot;,
+    &quot;firefox&quot;, 
+    &quot;safari&quot;,
+    &quot;edge&quot;
+])
+def test_cross_browser(driver, browser):
+    if browser == &quot;chrome&quot;:
+        options = webdriver.ChromeOptions()
+    elif browser == &quot;firefox&quot;:
+        options = webdriver.FirefoxOptions()
+    driver = webdriver.Remote(command_executor=&#039;http://selenium:4444&#039;, 
+                              options=options)
+    driver.get(&quot;https://example.com&quot;)
+    assert driver.title == &quot;Expected Title&quot;
+
+# 响应式测试
+@pytest.mark.parametrize(&quot;viewport&quot;, [
+    (1920, 1080, &quot;desktop&quot;),
+    (768, 1024, &quot;tablet&quot;),
+    (375, 667, &quot;mobile&quot;)
+])
+def test_responsive_design(driver, viewport):
+    width, height, device = viewport
+    driver.set_window_size(width, height)
+    driver.get(&quot;https://example.com/responsive&quot;)
+    # 验证布局是否正确
+    navbar = driver.find_element(By.CLASS_NAME, &quot;navbar&quot;)
+    assert navbar.is_displayed()
+
+# 数据库兼容性测试
+import pytest
+from sqlalchemy import create_engine
+
+@pytest.mark.parametrize(&quot;db&quot;, [
+    &quot;mysql&quot;,
+    &quot;postgresql&quot;,
+    &quot;sqlite&quot;
+])
+def test_database_operations(db):
+    if db == &quot;mysql&quot;:
+        engine = create_engine(&quot;mysql+pymysql://user:pass@localhost/test&quot;)
+    elif db == &quot;postgresql&quot;:
+        engine = create_engine(&quot;postgresql://user:pass@localhost/test&quot;)
+    else:
+        engine = create_engine(&quot;sqlite:///:memory:&quot;)
+    # 测试CRUD操作
+    with engine.connect() as conn:
+        conn.execute(text(&quot;SELECT 1&quot;))</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

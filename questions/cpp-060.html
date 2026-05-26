@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++20新特性 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="1. Concepts（概念）：    - 对模板参数进行约束    - 提供更清晰的错误信息    - 替代SFINAE  2. Ranges（范围库）：    - 提供函数式风格的数据处理管道    - 惰性求值，性能优化  3. Coroutines（协程）：    - 支持异步编程    - co_await、...">
+<meta name="keywords" content="C++20新特性,C/C++面试题,C++20, Concepts, 协程, Modules, Ranges,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-060.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++20新特性 - C/C++面试题">
+<meta property="og:description" content="1. Concepts（概念）：    - 对模板参数进行约束    - 提供更清晰的错误信息    - 替代SFINAE  2. Ranges（范围库）：    - 提供函数式风格的数据处理管道    - 惰性求值，性能优化  3. Coroutines（协程）：    - 支持异步编程    - co_await、...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-060.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++20新特性",
+    "text": "C++20引入了哪些重要新特性？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1. Concepts（概念）：    - 对模板参数进行约束    - 提供更清晰的错误信息    - 替代SFINAE  2. Ranges（范围库）：    - 提供函数式风格的数据处理管道    - 惰性求值，性能优化  3. Coroutines（协程）：    - 支持异步编程    - co_await、co_yield、co_return    - 轻量级非抢占式并发  4. Modules（模块）：    - 替代头文件包含    - 编译更快，避免宏污染    - export module / import  5. 其他重要特性：    - 三路比较运算符&lt;=&gt;（太空船运算符）    - std::format（格式化输出）    - std::span（视图类型）    - 指定初始化器    - constexpr扩展（支持更多场景）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++20新特性</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：C++20, Concepts, 协程, Modules, Ranges</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++20引入了哪些重要新特性？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line"><strong>1. Concepts（概念）：</strong></div><div class="answer-line">   - 对模板参数进行约束</div><div class="answer-line">   - 提供更清晰的错误信息</div><div class="answer-line">   - 替代SFINAE</div><br><div class="answer-line"><strong>2. Ranges（范围库）：</strong></div><div class="answer-line">   - 提供函数式风格的数据处理管道</div><div class="answer-line">   - 惰性求值，性能优化</div><br><div class="answer-line"><strong>3. Coroutines（协程）：</strong></div><div class="answer-line">   - 支持异步编程</div><div class="answer-line">   - co_await、co_yield、co_return</div><div class="answer-line">   - 轻量级非抢占式并发</div><br><div class="answer-line"><strong>4. Modules（模块）：</strong></div><div class="answer-line">   - 替代头文件包含</div><div class="answer-line">   - 编译更快，避免宏污染</div><div class="answer-line">   - export module / import</div><br><div class="answer-line"><strong>5. 其他重要特性：</strong></div><div class="answer-line">   - 三路比较运算符&lt;=&gt;（太空船运算符）</div><div class="answer-line">   - std::format（格式化输出）</div><div class="answer-line">   - std::span（视图类型）</div><div class="answer-line">   - 指定初始化器</div><div class="answer-line">   - constexpr扩展（支持更多场景）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;concepts&gt;
+#include &lt;ranges&gt;
+#include &lt;format&gt;
+
+// Concepts - 约束模板参数
+template&lt;std::integral T&gt;
+T add(T a, T b) { return a + b; }
+
+// 自定义Concept
+template&lt;typename T&gt;
+concept Sortable = requires(T&amp; t) {
+    { t.size() } -&gt; std::integral;
+    { t.begin() } -&gt; std::random_access_iterator;
+};
+
+// Ranges - 函数式管道
+auto result = std::views::iota(1, 100)
+    | std::views::filter([](int x) { return x % 2 == 0; })
+    | std::views::transform([](int x) { return x * x; })
+    | std::views::take(5);
+
+// 三路比较
+struct Point {
+    int x, y;
+    auto operator&lt;=&gt;(const Point&amp;) const = default;
+};
+
+// std::format
+std::string s = std::format(&quot;Hello, {}! Age: {}&quot;, &quot;Alice&quot;, 25);</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

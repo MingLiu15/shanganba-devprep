@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>容器的实现原理 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="容器是一种轻量级的虚拟化技术，与虚拟机不同，容器共享宿主机内核，通过操作系统级隔离实现资源隔离。  核心技术： 1. Namespace（隔离）：    - PID、Mount、Network、UTS、IPC、User、Cgroup Namespace    - 实现进程、网络、文件系统等资源的隔离  2. Cgrou...">
+<meta name="keywords" content="容器的实现原理,操作系统面试题,容器, Docker, Namespace, Cgroups, 容器技术,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-030.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器的实现原理 - 操作系统面试题">
+<meta property="og:description" content="容器是一种轻量级的虚拟化技术，与虚拟机不同，容器共享宿主机内核，通过操作系统级隔离实现资源隔离。  核心技术： 1. Namespace（隔离）：    - PID、Mount、Network、UTS、IPC、User、Cgroup Namespace    - 实现进程、网络、文件系统等资源的隔离  2. Cgrou...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-030.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "容器的实现原理",
+    "text": "容器（如Docker）是如何实现的？它的核心技术有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "容器是一种轻量级的虚拟化技术，与虚拟机不同，容器共享宿主机内核，通过操作系统级隔离实现资源隔离。  核心技术： 1. Namespace（隔离）：    - PID、Mount、Network、UTS、IPC、User、Cgroup Namespace    - 实现进程、网络、文件系统等资源的隔离  2. Cgroups（限制）：    - 限制CPU、内存、IO、网络等资源使用    - 防止单个容器耗尽宿主机资源  3. UnionFS（文件系统）：    - OverlayFS/AUFS实现分层镜像    - 写时复制机制，高效存储  4. 容器运行时：    - runc：底层容器运行时，创建和运行容器    - containerd：管理容器生命周期  容器 vs 虚拟机： - 容器：共享内核，启动快（秒级），资源占用少 - 虚拟机：独立内核，启动慢（分钟级），资源占用多  容器启动流程： 1. 创建Namespace实现隔离 2. 配置Cgroups限制资源 3. 挂载UnionFS根文件系统 4. 执行容器init进程"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>容器的实现原理</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：容器, Docker, Namespace, Cgroups, 容器技术</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>容器（如Docker）是如何实现的？它的核心技术有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">容器是一种轻量级的虚拟化技术，与虚拟机不同，容器共享宿主机内核，通过操作系统级隔离实现资源隔离。</div><br><div class="answer-line">核心技术：</div><div class="answer-line"><strong>1. Namespace（隔离）：</strong></div><div class="answer-line">   - PID、Mount、Network、UTS、IPC、User、Cgroup Namespace</div><div class="answer-line">   - 实现进程、网络、文件系统等资源的隔离</div><br><div class="answer-line"><strong>2. Cgroups（限制）：</strong></div><div class="answer-line">   - 限制CPU、内存、IO、网络等资源使用</div><div class="answer-line">   - 防止单个容器耗尽宿主机资源</div><br><div class="answer-line"><strong>3. UnionFS（文件系统）：</strong></div><div class="answer-line">   - OverlayFS/AUFS实现分层镜像</div><div class="answer-line">   - 写时复制机制，高效存储</div><br><div class="answer-line"><strong>4. 容器运行时：</strong></div><div class="answer-line">   - runc：底层容器运行时，创建和运行容器</div><div class="answer-line">   - containerd：管理容器生命周期</div><br><div class="answer-line">容器 vs 虚拟机：</div><div class="answer-line">- 容器：共享内核，启动快（秒级），资源占用少</div><div class="answer-line">- 虚拟机：独立内核，启动慢（分钟级），资源占用多</div><br><div class="answer-line">容器启动流程：</div><div class="answer-line"><strong>1. 创建Namespace实现隔离</strong></div><div class="answer-line"><strong>2. 配置Cgroups限制资源</strong></div><div class="answer-line"><strong>3. 挂载UnionFS根文件系统</strong></div><div class="answer-line"><strong>4. 执行容器init进程</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 容器启动的核心系统调用流程
+// 1. clone创建新进程并指定namespace
+int pid = clone(child_func, child_stack,
+                CLONE_NEWPID | CLONE_NEWNET | CLONE_NEWNS |
+                CLONE_NEWUTS | CLONE_NEWIPC, NULL);
+
+// 2. 配置cgroups
+// 写入 /sys/fs/cgroup/&lt;controller&gt;/mycontainer/
+
+// 3. pivot_root切换根文件系统
+// pivot_root(new_root, put_old);
+
+// 4. 执行容器入口程序
+execve(&quot;/bin/sh&quot;, args, env);
+
+// 手动模拟容器启动
+// $ unshare --pid --net --mount --uts --ipc --fork --mount-proc /bin/bash
+// $ echo &#039;1000000&#039; &gt; /sys/fs/cgroup/memory/mycontainer/memory.limit_in_bytes
+// $ echo $$ &gt; /sys/fs/cgroup/memory/mycontainer/cgroup.procs</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

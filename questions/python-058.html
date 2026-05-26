@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python类型提示与类型检查 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**类型提示基础：** - 变量：x: int = 10 - 函数参数和返回值 - 不影响运行时性能 - mypy等工具进行静态检查  **typing模块：** - List, Dict, Set, Tuple - Optional：可选类型 - Union：联合类型 - Callable：可调用类型 - TypeV...">
+<meta name="keywords" content="Python类型提示与类型检查,Python面试题,typing, 类型提示, mypy, 类型注解, PEP 484,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-058.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python类型提示与类型检查 - Python面试题">
+<meta property="og:description" content="**类型提示基础：** - 变量：x: int = 10 - 函数参数和返回值 - 不影响运行时性能 - mypy等工具进行静态检查  **typing模块：** - List, Dict, Set, Tuple - Optional：可选类型 - Union：联合类型 - Callable：可调用类型 - TypeV...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-058.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python类型提示与类型检查",
+    "text": "Python的类型提示如何使用？typing模块有哪些重要类型？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**类型提示基础：** - 变量：x: int = 10 - 函数参数和返回值 - 不影响运行时性能 - mypy等工具进行静态检查  **typing模块：** - List, Dict, Set, Tuple - Optional：可选类型 - Union：联合类型 - Callable：可调用类型 - TypeVar：泛型变量 - Generic：泛型类 - Protocol：结构子类型  **Python 3.10+新语法：** - | 替代Union（int | str） - 内置类型可直接使用（list[int]）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python类型提示与类型检查</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：typing, 类型提示, mypy, 类型注解, PEP 484</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Python的类型提示如何使用？typing模块有哪些重要类型？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**类型提示基础：**</div><div class="answer-line">- 变量：x: int = 10</div><div class="answer-line">- 函数参数和返回值</div><div class="answer-line">- 不影响运行时性能</div><div class="answer-line">- mypy等工具进行静态检查</div><br><div class="answer-line">**typing模块：**</div><div class="answer-line">- List, Dict, Set, Tuple</div><div class="answer-line">- Optional：可选类型</div><div class="answer-line">- Union：联合类型</div><div class="answer-line">- Callable：可调用类型</div><div class="answer-line">- TypeVar：泛型变量</div><div class="answer-line">- Generic：泛型类</div><div class="answer-line">- Protocol：结构子类型</div><br><div class="answer-line">**Python 3.10+新语法：**</div><div class="answer-line">- | 替代Union（int | str）</div><div class="answer-line">- 内置类型可直接使用（list[int]）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from typing import List, Dict, Optional, Union, Callable, TypeVar, Generic
+
+# 函数类型提示
+def greet(name: str, times: int = 1) -&gt; str:
+    return name * times
+
+# 容器类型
+numbers: List[int] = [1, 2, 3]
+data: Dict[str, int] = {&quot;a&quot;: 1, &quot;b&quot;: 2}
+
+# Optional
+def find_user(user_id: int) -&gt; Optional[str]:
+    return None  # 或返回str
+
+# Union（Python 3.10+可用 | 语法）
+def process(value: Union[int, str]) -&gt; str:
+    return str(value)
+
+# 泛型
+T = TypeVar(&quot;T&quot;)
+
+def first(items: List[T]) -&gt; Optional[T]:
+    return items[0] if items else None
+
+# 泛型类
+class Stack(Generic[T]):
+    def __init__(self) -&gt; None:
+        self._items: List[T] = []
+    
+    def push(self, item: T) -&gt; None:
+        self._items.append(item)
+    
+    def pop(self) -&gt; Optional[T]:
+        return self._items.pop() if self._items else None
+
+# 使用
+stack: Stack[int] = Stack()
+stack.push(1)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

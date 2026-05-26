@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>冒烟测试与回归测试 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**冒烟测试（Smoke Testing）：** - 验证软件基本功能是否正常 - 在详细测试前进行快速验证 - 如果冒烟测试失败，停止后续测试 - 类似硬件测试：通电后是否冒烟  **回归测试（Regression Testing）：** - 验证修改是否引入新缺陷 - 在代码变更后执行 - 确保原有功能仍然正常 -...">
+<meta name="keywords" content="冒烟测试与回归测试,自动化测试面试题,冒烟测试, 回归测试, 测试类型, 软件测试, 质量保障,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-032.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="冒烟测试与回归测试 - 自动化测试面试题">
+<meta property="og:description" content="**冒烟测试（Smoke Testing）：** - 验证软件基本功能是否正常 - 在详细测试前进行快速验证 - 如果冒烟测试失败，停止后续测试 - 类似硬件测试：通电后是否冒烟  **回归测试（Regression Testing）：** - 验证修改是否引入新缺陷 - 在代码变更后执行 - 确保原有功能仍然正常 -...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-032.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "冒烟测试与回归测试",
+    "text": "什么是冒烟测试和回归测试？它们有什么区别和联系？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**冒烟测试（Smoke Testing）：** - 验证软件基本功能是否正常 - 在详细测试前进行快速验证 - 如果冒烟测试失败，停止后续测试 - 类似硬件测试：通电后是否冒烟  **回归测试（Regression Testing）：** - 验证修改是否引入新缺陷 - 在代码变更后执行 - 确保原有功能仍然正常 - 可以是全量或选择性执行  **主要区别：** | 特性 | 冒烟测试 | 回归测试 | |------|---------|---------| | 目的 | 验证基本功能 | 验证修改无影响 | | 执行时机 | 构建后 | 代码变更后 | | 覆盖范围 | 核心功能 | 受影响功能 | | 失败处理 | 停止测试 | 修复后重测 |  **联系：** - 冒烟测试是回归测试的子集 - 都可以自动化 - 都是质量保障手段"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>冒烟测试与回归测试</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：冒烟测试, 回归测试, 测试类型, 软件测试, 质量保障</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是冒烟测试和回归测试？它们有什么区别和联系？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**冒烟测试（Smoke Testing）：**</div><div class="answer-line">- 验证软件基本功能是否正常</div><div class="answer-line">- 在详细测试前进行快速验证</div><div class="answer-line">- 如果冒烟测试失败，停止后续测试</div><div class="answer-line">- 类似硬件测试：通电后是否冒烟</div><br><div class="answer-line">**回归测试（Regression Testing）：**</div><div class="answer-line">- 验证修改是否引入新缺陷</div><div class="answer-line">- 在代码变更后执行</div><div class="answer-line">- 确保原有功能仍然正常</div><div class="answer-line">- 可以是全量或选择性执行</div><br><div class="answer-line">**主要区别：**</div><div class="answer-line">| 特性 | 冒烟测试 | 回归测试 |</div><div class="answer-line">|------|---------|---------|</div><div class="answer-line">| 目的 | 验证基本功能 | 验证修改无影响 |</div><div class="answer-line">| 执行时机 | 构建后 | 代码变更后 |</div><div class="answer-line">| 覆盖范围 | 核心功能 | 受影响功能 |</div><div class="answer-line">| 失败处理 | 停止测试 | 修复后重测 |</div><br><div class="answer-line">**联系：**</div><div class="answer-line">- 冒烟测试是回归测试的子集</div><div class="answer-line">- 都可以自动化</div><div class="answer-line">- 都是质量保障手段</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 冒烟测试示例
+smoke_tests = &quot;&quot;&quot;
+# 冒烟测试检查清单
+def smoke_test_suite():
+    tests = [
+        # 1. 应用启动
+        test_application_starts(),
+        
+        # 2. 数据库连接
+        test_database_connection(),
+        
+        # 3. 关键页面加载
+        test_login_page_loads(),
+        test_dashboard_loads(),
+        
+        # 4. 核心API可用
+        test_health_check_api(),
+        test_authentication_api(),
+        
+        # 5. 关键业务流程
+        test_user_can_login(),
+        test_user_can_logout(),
+    ]
+    return all(tests)
+
+# CI/CD中的冒烟测试
+# .github/workflows/smoke.yml
+&quot;&quot;&quot;
+
+# 回归测试示例
+regression_tests = &quot;&quot;&quot;
+# 回归测试策略
+
+# 1. 全量回归
+def full_regression():
+    # 执行所有测试用例
+    run_all_tests()
+
+# 2. 选择性回归
+def selective_regression(changed_files):
+    # 根据代码变更选择相关测试
+    affected_tests = analyze_impact(changed_files)
+    run_tests(affected_tests)
+
+# 3. 自动化回归套件
+regression_suite = [
+    &quot;test_user_management.py&quot;,
+    &quot;test_order_processing.py&quot;,
+    &quot;test_payment_gateway.py&quot;,
+    &quot;test_reporting.py&quot;,
+]
+
+# 优先级划分
+high_priority = [&quot;test_critical_path.py&quot;]
+medium_priority = [&quot;test_standard_features.py&quot;]
+low_priority = [&quot;test_edge_cases.py&quot;]
+&quot;&quot;&quot;
+
+print(smoke_tests)
+print(regression_tests)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

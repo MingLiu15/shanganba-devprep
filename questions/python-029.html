@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>functools常用工具 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="functools是Python标准库中提供高阶函数操作的模块。  常用工具：  1. lru_cache（最近最少使用缓存）： - 缓存函数调用结果，相同参数直接返回缓存值。 - @lru_cache(maxsize=128)：设置缓存大小。 - @lru_cache(maxsize=None)：无限制缓存。 - 适...">
+<meta name="keywords" content="functools常用工具,Python面试题,标准库, functools, lru_cache, 装饰器,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-029.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="functools常用工具 - Python面试题">
+<meta property="og:description" content="functools是Python标准库中提供高阶函数操作的模块。  常用工具：  1. lru_cache（最近最少使用缓存）： - 缓存函数调用结果，相同参数直接返回缓存值。 - @lru_cache(maxsize=128)：设置缓存大小。 - @lru_cache(maxsize=None)：无限制缓存。 - 适...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-029.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "functools常用工具",
+    "text": "介绍Python functools模块中常用的工具函数，包括lru_cache、partial、wraps等。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "functools是Python标准库中提供高阶函数操作的模块。  常用工具：  1. lru_cache（最近最少使用缓存）： - 缓存函数调用结果，相同参数直接返回缓存值。 - @lru_cache(maxsize=128)：设置缓存大小。 - @lru_cache(maxsize=None)：无限制缓存。 - 适合纯函数（相同输入总是返回相同输出）。 - cache_info()查看缓存统计，cache_clear()清除缓存。  2. partial（偏函数）： - 固定函数的部分参数，返回新的可调用对象。 - functools.partial(func, *args, **kwargs)。 - 简化重复调用相同参数的场景。  3. wraps（装饰器工具）： - 保留被装饰函数的元信息（__name__、__doc__、__module__等）。 - 装饰器中必须使用，否则被装饰函数的元信息会丢失。  4. reduce（归约）： - functools.reduce(func, iterable[, initializer])。 - 将可迭代对象归约为单个值。  5. singledispatch（单分派泛型函数）： - 根据第一个参数的类型选择不同的实现。  6. total_ordering： - 只需定义__eq__和一个比较方法，自动生成其余比较方法。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>functools常用工具</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：标准库, functools, lru_cache, 装饰器</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍Python functools模块中常用的工具函数，包括lru_cache、partial、wraps等。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">functools是Python标准库中提供高阶函数操作的模块。</div><br><div class="answer-line">常用工具：</div><br><div class="answer-line"><strong>1. lru_cache（最近最少使用缓存）：</strong></div><div class="answer-line">- 缓存函数调用结果，相同参数直接返回缓存值。</div><div class="answer-line">- @lru_cache(maxsize=128)：设置缓存大小。</div><div class="answer-line">- @lru_cache(maxsize=None)：无限制缓存。</div><div class="answer-line">- 适合纯函数（相同输入总是返回相同输出）。</div><div class="answer-line">- cache_info()查看缓存统计，cache_clear()清除缓存。</div><br><div class="answer-line"><strong>2. partial（偏函数）：</strong></div><div class="answer-line">- 固定函数的部分参数，返回新的可调用对象。</div><div class="answer-line">- functools.partial(func, *args, **kwargs)。</div><div class="answer-line">- 简化重复调用相同参数的场景。</div><br><div class="answer-line"><strong>3. wraps（装饰器工具）：</strong></div><div class="answer-line">- 保留被装饰函数的元信息（__name__、__doc__、__module__等）。</div><div class="answer-line">- 装饰器中必须使用，否则被装饰函数的元信息会丢失。</div><br><div class="answer-line"><strong>4. reduce（归约）：</strong></div><div class="answer-line">- functools.reduce(func, iterable[, initializer])。</div><div class="answer-line">- 将可迭代对象归约为单个值。</div><br><div class="answer-line"><strong>5. singledispatch（单分派泛型函数）：</strong></div><div class="answer-line">- 根据第一个参数的类型选择不同的实现。</div><br><div class="answer-line"><strong>6. total_ordering：</strong></div><div class="answer-line">- 只需定义__eq__和一个比较方法，自动生成其余比较方法。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from functools import lru_cache, partial, wraps, reduce
+
+# lru_cache
+@lru_cache(maxsize=128)
+def fibonacci(n):
+    if n &lt; 2: return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(fibonacci(100))  # 瞬间完成
+print(fibonacci.cache_info())
+# CacheInfo(hits=98, misses=101, maxsize=128, currsize=101)
+
+# partial
+power = partial(pow, exp=2)
+print(power(5))     # 25
+print(power(10))    # 100
+
+# wraps
+def my_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f&#039;调用 {func.__name__}&#039;)
+        return func(*args, **kwargs)
+    return wrapper
+
+@my_decorator
+def hello(name):
+    &quot;&quot;&quot;打招呼&quot;&quot;&quot;
+    return f&#039;Hello, {name}&#039;
+
+print(hello.__name__)  # hello（保留了原名）
+print(hello.__doc__)   # 打招呼
+
+# reduce
+print(reduce(lambda x, y: x + y, [1, 2, 3, 4, 5]))  # 15</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

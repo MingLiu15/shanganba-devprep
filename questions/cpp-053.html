@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STL算法函数 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="STL &lt;algorithm&gt;头文件提供大量通用算法：  查找算法： - find/find_if：查找元素 - binary_search：二分查找（需有序） - lower_bound/upper_bound：查找插入位置  排序算法： - sort：快速排序 - stable_sort：稳定排序 - partia...">
+<meta name="keywords" content="STL算法函数,C/C++面试题,STL算法, algorithm, find, sort, accumulate,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-053.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STL算法函数 - C/C++面试题">
+<meta property="og:description" content="STL &lt;algorithm&gt;头文件提供大量通用算法：  查找算法： - find/find_if：查找元素 - binary_search：二分查找（需有序） - lower_bound/upper_bound：查找插入位置  排序算法： - sort：快速排序 - stable_sort：稳定排序 - partia...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-053.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "STL算法函数",
+    "text": "介绍常用的STL算法函数。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "STL &lt;algorithm&gt;头文件提供大量通用算法：  查找算法： - find/find_if：查找元素 - binary_search：二分查找（需有序） - lower_bound/upper_bound：查找插入位置  排序算法： - sort：快速排序 - stable_sort：稳定排序 - partial_sort：部分排序  数值算法（&lt;numeric&gt;）： - accumulate：求和/累积 - inner_product：内积 - partial_sum：前缀和  修改算法： - copy/copy_if：复制 - transform：转换 - replace/replace_if：替换 - remove/remove_if：删除（需配合erase）  集合算法： - set_union：并集 - set_intersection：交集 - set_difference：差集  其他： - reverse：反转 - unique：去重（需配合erase） - next_permutation：下一个排列"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>STL算法函数</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：STL算法, algorithm, find, sort, accumulate</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍常用的STL算法函数。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">STL &lt;algorithm&gt;头文件提供大量通用算法：</div><br><div class="answer-line">查找算法：</div><div class="answer-line">- find/find_if：查找元素</div><div class="answer-line">- binary_search：二分查找（需有序）</div><div class="answer-line">- lower_bound/upper_bound：查找插入位置</div><br><div class="answer-line">排序算法：</div><div class="answer-line">- sort：快速排序</div><div class="answer-line">- stable_sort：稳定排序</div><div class="answer-line">- partial_sort：部分排序</div><br><div class="answer-line">数值算法（&lt;numeric&gt;）：</div><div class="answer-line">- accumulate：求和/累积</div><div class="answer-line">- inner_product：内积</div><div class="answer-line">- partial_sum：前缀和</div><br><div class="answer-line">修改算法：</div><div class="answer-line">- copy/copy_if：复制</div><div class="answer-line">- transform：转换</div><div class="answer-line">- replace/replace_if：替换</div><div class="answer-line">- remove/remove_if：删除（需配合erase）</div><br><div class="answer-line">集合算法：</div><div class="answer-line">- set_union：并集</div><div class="answer-line">- set_intersection：交集</div><div class="answer-line">- set_difference：差集</div><br><div class="answer-line">其他：</div><div class="answer-line">- reverse：反转</div><div class="answer-line">- unique：去重（需配合erase）</div><div class="answer-line">- next_permutation：下一个排列</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;algorithm&gt;
+#include &lt;numeric&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;int&gt; v = {3, 1, 4, 1, 5, 9, 2, 6};
+
+// 查找
+auto it = std::find(v.begin(), v.end(), 5);
+auto it2 = std::find_if(v.begin(), v.end(), [](int x){ return x &gt; 5; });
+
+// 排序
+std::sort(v.begin(), v.end());
+std::sort(v.begin(), v.end(), std::greater&lt;int&gt;());
+
+// 二分查找（需先排序）
+bool exists = std::binary_search(v.begin(), v.end(), 5);
+
+// 数值算法
+int sum = std::accumulate(v.begin(), v.end(), 0);
+int product = std::accumulate(v.begin(), v.end(), 1, std::multiplies&lt;int&gt;());
+
+// 转换
+std::vector&lt;int&gt; squares;
+std::transform(v.begin(), v.end(), std::back_inserter(squares),
+               [](int x) { return x * x; });
+
+// 删除-擦除惯用法
+v.erase(std::remove(v.begin(), v.end(), 1), v.end());
+
+// 去重
+v.erase(std::unique(v.begin(), v.end()), v.end());</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

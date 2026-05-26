@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux文件权限模型 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="权限分为三组（ugo）： - u（user）：文件所有者 - g（group）：文件所属组 - o（others）：其他用户  每组三个权限（rwx）： - r（read）：读取（4） - w（write）：写入（2） - x（execute）：执行（1）  常见权限： - 755：rwxr-xr-x（所有者全权限，其...">
+<meta name="keywords" content="Linux文件权限模型,操作系统面试题,文件权限, rwx, ugo, suid, sticky, Linux,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-035.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux文件权限模型 - 操作系统面试题">
+<meta property="og:description" content="权限分为三组（ugo）： - u（user）：文件所有者 - g（group）：文件所属组 - o（others）：其他用户  每组三个权限（rwx）： - r（read）：读取（4） - w（write）：写入（2） - x（execute）：执行（1）  常见权限： - 755：rwxr-xr-x（所有者全权限，其...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-035.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Linux文件权限模型",
+    "text": "Linux文件权限模型是如何工作的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "权限分为三组（ugo）： - u（user）：文件所有者 - g（group）：文件所属组 - o（others）：其他用户  每组三个权限（rwx）： - r（read）：读取（4） - w（write）：写入（2） - x（execute）：执行（1）  常见权限： - 755：rwxr-xr-x（所有者全权限，其他读和执行） - 644：rw-r--r--（所有者读写，其他只读） - 700：rwx------（仅所有者全权限）  特殊权限： - SUID（4xxx）：执行时以文件所有者身份运行（如/usr/bin/passwd） - SGID（2xxx）：执行时以文件所属组身份运行；目录下新建文件继承组 - Sticky（1xxx）：目录下文件只有所有者和root能删除（如/tmp）  查看权限： - ls -la：显示权限、所有者、组 - stat：详细信息  修改权限： - chmod 755 file - chown user:group file - umask：设置默认权限掩码"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Linux文件权限模型</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：文件权限, rwx, ugo, suid, sticky, Linux</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Linux文件权限模型是如何工作的？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">权限分为三组（ugo）：</div><div class="answer-line">- u（user）：文件所有者</div><div class="answer-line">- g（group）：文件所属组</div><div class="answer-line">- o（others）：其他用户</div><br><div class="answer-line">每组三个权限（rwx）：</div><div class="answer-line">- r（read）：读取（4）</div><div class="answer-line">- w（write）：写入（2）</div><div class="answer-line">- x（execute）：执行（1）</div><br><div class="answer-line">常见权限：</div><div class="answer-line">- 755：rwxr-xr-x（所有者全权限，其他读和执行）</div><div class="answer-line">- 644：rw-r--r--（所有者读写，其他只读）</div><div class="answer-line">- 700：rwx------（仅所有者全权限）</div><br><div class="answer-line">特殊权限：</div><div class="answer-line">- SUID（4xxx）：执行时以文件所有者身份运行（如/usr/bin/passwd）</div><div class="answer-line">- SGID（2xxx）：执行时以文件所属组身份运行；目录下新建文件继承组</div><div class="answer-line">- Sticky（1xxx）：目录下文件只有所有者和root能删除（如/tmp）</div><br><div class="answer-line">查看权限：</div><div class="answer-line">- ls -la：显示权限、所有者、组</div><div class="answer-line">- stat：详细信息</div><br><div class="answer-line">修改权限：</div><div class="answer-line">- chmod 755 file</div><div class="answer-line">- chown user:group file</div><div class="answer-line">- umask：设置默认权限掩码</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 查看权限
+// $ ls -la
+// -rwxr-xr-x 1 user group 4096 Jan 1 file
+// ||||||||||
+// |||||||||其他: r-x
+// |||||||组: r-x
+// |||||所有者: rwx
+// ||||类型: -（普通文件）
+
+// 特殊权限
+// $ ls -la /usr/bin/passwd
+// -rwsr-xr-x 1 root root ... passwd
+//  ^
+//  SUID位（s替代x）
+
+// $ ls -la /tmp
+// drwxrwxrwt 10 root root ... tmp
+//          ^
+//          Sticky位（t替代x）
+
+// 修改权限
+// chmod 755 file.sh
+// chmod u+x file.sh       // 给所有者加执行权限
+// chmod g-w file.sh       // 去掉组写权限
+// chown user:group file   // 修改所有者和组
+
+// umask
+// umask 0022  // 新文件默认权限 0644 (0666-0022)
+// umask 0002  // 新文件默认权限 0664</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户线程与内核线程 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="用户线程： - 在用户空间管理，OS不可见 - 切换不需要内核介入，速度快 - 一个线程阻塞可能导致整个进程阻塞 - 不能利用多核（取决于实现）  内核线程： - 由OS内核管理 - 切换需要内核介入，开销大 - 一个线程阻塞不影响其他线程 - 可以利用多核并行  三种线程模型： 1. 一对一（1:1）：    - 每...">
+<meta name="keywords" content="用户线程与内核线程,操作系统面试题,用户线程, 内核线程, 线程模型, 1:1, N:1, M:N,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-020.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户线程与内核线程 - 操作系统面试题">
+<meta property="og:description" content="用户线程： - 在用户空间管理，OS不可见 - 切换不需要内核介入，速度快 - 一个线程阻塞可能导致整个进程阻塞 - 不能利用多核（取决于实现）  内核线程： - 由OS内核管理 - 切换需要内核介入，开销大 - 一个线程阻塞不影响其他线程 - 可以利用多核并行  三种线程模型： 1. 一对一（1:1）：    - 每...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-020.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "用户线程与内核线程",
+    "text": "用户线程和内核线程有什么区别？线程模型有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "用户线程： - 在用户空间管理，OS不可见 - 切换不需要内核介入，速度快 - 一个线程阻塞可能导致整个进程阻塞 - 不能利用多核（取决于实现）  内核线程： - 由OS内核管理 - 切换需要内核介入，开销大 - 一个线程阻塞不影响其他线程 - 可以利用多核并行  三种线程模型： 1. 一对一（1:1）：    - 每个用户线程对应一个内核线程    - Linux pthreads采用此模型    - 优点：真正并行，阻塞不影响其他线程    - 缺点：创建开销大，数量受限  2. 多对一（N:1）：    - 多个用户线程映射到一个内核线程    - 优点：创建切换快    - 缺点：不能并行，一个阻塞全部阻塞  3. 多对多（M:N）：    - M个用户线程映射到N个内核线程    - 综合以上优点    - 实现复杂（如Go的goroutine）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>用户线程与内核线程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：用户线程, 内核线程, 线程模型, 1:1, N:1, M:N</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>用户线程和内核线程有什么区别？线程模型有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">用户线程：</div><div class="answer-line">- 在用户空间管理，OS不可见</div><div class="answer-line">- 切换不需要内核介入，速度快</div><div class="answer-line">- 一个线程阻塞可能导致整个进程阻塞</div><div class="answer-line">- 不能利用多核（取决于实现）</div><br><div class="answer-line">内核线程：</div><div class="answer-line">- 由OS内核管理</div><div class="answer-line">- 切换需要内核介入，开销大</div><div class="answer-line">- 一个线程阻塞不影响其他线程</div><div class="answer-line">- 可以利用多核并行</div><br><div class="answer-line">三种线程模型：</div><div class="answer-line"><strong>1. 一对一（1:1）：</strong></div><div class="answer-line">   - 每个用户线程对应一个内核线程</div><div class="answer-line">   - Linux pthreads采用此模型</div><div class="answer-line">   - 优点：真正并行，阻塞不影响其他线程</div><div class="answer-line">   - 缺点：创建开销大，数量受限</div><br><div class="answer-line"><strong>2. 多对一（N:1）：</strong></div><div class="answer-line">   - 多个用户线程映射到一个内核线程</div><div class="answer-line">   - 优点：创建切换快</div><div class="answer-line">   - 缺点：不能并行，一个阻塞全部阻塞</div><br><div class="answer-line"><strong>3. 多对多（M:N）：</strong></div><div class="answer-line">   - M个用户线程映射到N个内核线程</div><div class="answer-line">   - 综合以上优点</div><div class="answer-line">   - 实现复杂（如Go的goroutine）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// Linux pthread（1:1模型）
+#include &lt;pthread.h&gt;
+
+void* thread_func(void* arg) {
+    printf(&quot;线程ID: %lu\n&quot;, pthread_self());
+    return NULL;
+}
+
+int main() {
+    pthread_t tid;
+    pthread_create(&amp;tid, NULL, thread_func, NULL);
+    pthread_join(tid, NULL);
+}
+
+// Go goroutine（M:N模型）
+// go func() {
+//     fmt.Println(&quot;goroutine&quot;)
+// }()</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

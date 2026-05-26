@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上下文管理器（with语句） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="上下文管理器是一种用于管理资源的协议，通过with语句使用，确保资源在使用后被正确释放，即使发生异常。  实现方式： 1. 基于类的实现：实现__enter__和__exit__方法。    - __enter__：进入上下文时执行，返回值赋给as后面的变量。    - __exit__：退出上下文时执行，负责清理资源...">
+<meta name="keywords" content="上下文管理器（with语句）,Python面试题,进阶特性, 上下文管理器, with语句, 资源管理,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-018.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="上下文管理器（with语句） - Python面试题">
+<meta property="og:description" content="上下文管理器是一种用于管理资源的协议，通过with语句使用，确保资源在使用后被正确释放，即使发生异常。  实现方式： 1. 基于类的实现：实现__enter__和__exit__方法。    - __enter__：进入上下文时执行，返回值赋给as后面的变量。    - __exit__：退出上下文时执行，负责清理资源...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-018.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "上下文管理器（with语句）",
+    "text": "解释Python上下文管理器的原理、实现方式及应用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "上下文管理器是一种用于管理资源的协议，通过with语句使用，确保资源在使用后被正确释放，即使发生异常。  实现方式： 1. 基于类的实现：实现__enter__和__exit__方法。    - __enter__：进入上下文时执行，返回值赋给as后面的变量。    - __exit__：退出上下文时执行，负责清理资源。参数接收异常信息。    - __exit__返回True可以抑制异常。  2. 基于生成器的实现：使用contextlib.contextmanager装饰器。    - yield之前的代码相当于__enter__。    - yield的值赋给as后面的变量。    - yield之后的代码相当于__exit__，即使发生异常也会执行。  应用场景： - 文件操作：自动关闭文件。 - 数据库连接：自动关闭连接和游标。 - 线程锁：自动获取和释放锁。 - 临时改变状态：如临时改变工作目录。 - 事务管理：自动提交或回滚。  contextlib模块还提供了closing()、suppress()、redirect_stdout()等实用工具。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>上下文管理器（with语句）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：进阶特性, 上下文管理器, with语句, 资源管理</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python上下文管理器的原理、实现方式及应用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">上下文管理器是一种用于管理资源的协议，通过with语句使用，确保资源在使用后被正确释放，即使发生异常。</div><br><div class="answer-line">实现方式：</div><div class="answer-line"><strong>1. 基于类的实现：实现__enter__和__exit__方法。</strong></div><div class="answer-line">   - __enter__：进入上下文时执行，返回值赋给as后面的变量。</div><div class="answer-line">   - __exit__：退出上下文时执行，负责清理资源。参数接收异常信息。</div><div class="answer-line">   - __exit__返回True可以抑制异常。</div><br><div class="answer-line"><strong>2. 基于生成器的实现：使用contextlib.contextmanager装饰器。</strong></div><div class="answer-line">   - yield之前的代码相当于__enter__。</div><div class="answer-line">   - yield的值赋给as后面的变量。</div><div class="answer-line">   - yield之后的代码相当于__exit__，即使发生异常也会执行。</div><br><div class="answer-line">应用场景：</div><div class="answer-line">- 文件操作：自动关闭文件。</div><div class="answer-line">- 数据库连接：自动关闭连接和游标。</div><div class="answer-line">- 线程锁：自动获取和释放锁。</div><div class="answer-line">- 临时改变状态：如临时改变工作目录。</div><div class="answer-line">- 事务管理：自动提交或回滚。</div><br><div class="answer-line">contextlib模块还提供了closing()、suppress()、redirect_stdout()等实用工具。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 类方式实现
+class Timer:
+    def __enter__(self):
+        import time
+        self.start = time.time()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import time
+        print(f&#039;耗时: {time.time()-self.start:.4f}s&#039;)
+        return False  # 不抑制异常
+
+with Timer():
+    sum(i*i for i in range(1000000))
+
+# contextmanager方式
+from contextlib import contextmanager
+
+@contextmanager
+def file_manager(path, mode=&#039;r&#039;):
+    f = open(path, mode)
+    try:
+        yield f
+    finally:
+        f.close()
+
+with file_manager(&#039;test.txt&#039;, &#039;w&#039;) as f:
+    f.write(&#039;hello&#039;)
+
+# suppress 忽略异常
+from contextlib import suppress
+with suppress(FileNotFoundError):
+    os.remove(&#039;nonexistent.txt&#039;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

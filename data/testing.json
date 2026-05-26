@@ -1,0 +1,714 @@
+{
+  "questions": [
+    {
+      "id": "testing-001",
+      "title": "软件测试的分类",
+      "category": "testing",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "测试分类",
+        "黑盒测试",
+        "白盒测试",
+        "单元测试",
+        "集成测试"
+      ],
+      "content": "软件测试有哪些分类方式？",
+      "answer": "软件测试可以从多个维度分类：\n\n按测试方法：\n1. 黑盒测试：不关心内部实现，只验证输入输出\n2. 白盒测试：了解内部结构，测试代码路径\n3. 灰盒测试：结合两者\n\n按测试阶段：\n1. 单元测试：测试最小代码单元（函数/类）\n2. 集成测试：测试模块间接口\n3. 系统测试：测试完整系统\n4. 验收测试：用户确认需求满足\n\n按测试类型：\n1. 功能测试：验证功能正确性\n2. 性能测试：负载、压力、稳定性\n3. 安全测试：漏洞扫描、渗透测试\n4. 兼容性测试：不同环境/浏览器\n5. 易用性测试：用户体验\n\n按执行方式：\n1. 手动测试：人工执行\n2. 自动化测试：脚本/工具执行\n\n按测试时机：\n1. 冒烟测试：验证基本功能\n2. 回归测试：修改后验证原有功能\n3. 探索性测试：自由探索发现缺陷",
+      "code": {
+        "python": "# 不同测试阶段的代码示例\n\n# 1. 单元测试 - 测试单个函数\ndef add(a, b):\n    return a + b\n\ndef test_add():\n    assert add(1, 2) == 3\n    assert add(-1, 1) == 0\n\n# 2. 集成测试 - 测试模块交互\nclass Database:\n    def connect(self): pass\n    def query(self, sql): pass\n\nclass UserService:\n    def __init__(self, db):\n        self.db = db\n    def get_user(self, id):\n        return self.db.query(f'SELECT * FROM users WHERE id={id}')\n\ndef test_user_service_integration():\n    db = Database()\n    service = UserService(db)\n    user = service.get_user(1)\n\n# 3. 端到端测试\ndef test_user_registration_flow():\n    browser.goto('/register')\n    browser.fill('username', 'testuser')\n    browser.fill('password', 'password123')\n    browser.click('submit')\n    assert browser.url == '/welcome'"
+      }
+    },
+    {
+      "id": "testing-002",
+      "title": "单元测试的核心原则",
+      "category": "testing",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "单元测试",
+        "FIRST原则",
+        "AAA模式",
+        "测试驱动开发"
+      ],
+      "content": "编写好的单元测试应遵循哪些原则？",
+      "answer": "FIRST原则：\n1. Fast（快速）：测试应快速执行，频繁运行\n2. Isolated（独立）：测试间不依赖，可单独运行\n3. Repeatable（可重复）：任何环境结果一致\n4. Self-validating（自验证）：明确通过/失败，无需人工检查\n5. Timely（及时）：与代码同时编写（TDD）\n\nAAA模式（Arrange-Act-Assert）：\n- Arrange：准备测试数据和依赖\n- Act：执行被测操作\n- Assert：验证结果\n\n其他最佳实践：\n1. 一个测试只验证一个概念\n2. 测试名称清晰描述场景和预期\n3. 避免逻辑（if/for）\n4. 使用有意义的断言消息\n5. 保持测试代码简洁",
+      "code": {
+        "python": "import pytest\n\n# AAA模式示例\ndef test_withdraw_sufficient_balance():\n    # Arrange\n    account = Account(balance=1000)\n    \n    # Act\n    result = account.withdraw(500)\n    \n    # Assert\n    assert result is True\n    assert account.balance == 500\n\n# 好的测试命名\ndef test_withdraw_insufficient_balance_returns_false():\n    account = Account(balance=100)\n    result = account.withdraw(200)\n    assert result is False\n\n# 避免多个断言测试不同概念（应拆分）\ndef test_account_deposit_100_increases_balance_by_100():\n    account = Account(balance=0)\n    account.deposit(100)\n    assert account.balance == 100\n\ndef test_account_deposit_50_increases_balance_by_50():\n    account = Account(balance=0)\n    account.deposit(50)\n    assert account.balance == 50"
+      }
+    },
+    {
+      "id": "testing-003",
+      "title": "测试替身（Test Doubles）",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Mock",
+        "Stub",
+        "Fake",
+        "Spy",
+        "测试替身"
+      ],
+      "content": "什么是测试替身？Mock、Stub、Fake、Spy有什么区别？",
+      "answer": "测试替身：测试中替代真实依赖的对象。\n\n1. Dummy（哑元）：仅填充参数，不会被使用\n2. Stub（存根）：提供预设的返回值，控制执行路径\n3. Fake（伪造）：有真实实现，但简化/优化\n4. Spy（间谍）：记录调用信息供验证\n5. Mock（模拟）：预设期望和返回值，验证交互行为\n\n选择建议：\n- 优先使用Fake（简单且真实）\n- 需要验证交互时用Mock/Spy\n- 只需控制返回值用Stub",
+      "code": {
+        "python": "from unittest.mock import Mock, patch\nimport pytest\n\n# 1. Stub - 提供固定返回值\nclass PaymentGatewayStub:\n    def charge(self, amount):\n        return {'success': True, 'transaction_id': 'stub-123'}\n\ndef test_order_processing_with_stub():\n    order = Order(PaymentGatewayStub())\n    result = order.process_payment(100)\n    assert result['success']\n\n# 2. Fake - 简化实现\nclass InMemoryDatabase:\n    def __init__(self):\n        self.data = {}\n    def save(self, key, value):\n        self.data[key] = value\n    def get(self, key):\n        return self.data.get(key)\n\ndef test_user_repository_with_fake():\n    repo = UserRepository(InMemoryDatabase())\n    repo.save(User(id=1, name='Alice'))\n    user = repo.get(1)\n    assert user.name == 'Alice'\n\n# 3. Mock - 验证交互\ndef test_user_service_sends_welcome_email():\n    email_service = Mock()\n    user_service = UserService(email_service)\n    user_service.register('alice@example.com', 'password')\n    email_service.send_welcome.assert_called_once_with('alice@example.com')\n\n# 4. 使用patch进行依赖注入\n@patch('mymodule.requests.get')\ndef test_fetch_data(mock_get):\n    mock_get.return_value.json.return_value = {'data': 'test'}\n    result = fetch_data('http://api.example.com')\n    assert result == {'data': 'test'}\n    mock_get.assert_called_once_with('http://api.example.com')"
+      }
+    },
+    {
+      "id": "testing-004",
+      "title": "Pytest Fixture机制",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "pytest",
+        "fixture",
+        "setup",
+        "teardown",
+        "依赖注入"
+      ],
+      "content": "Pytest的fixture是什么？如何使用？",
+      "answer": "Fixture：pytest提供的测试依赖管理机制，用于准备测试环境和清理资源。\n\n核心特性：\n1. 依赖注入：fixture自动注入到测试函数\n2. 作用域：控制fixture生命周期\n   - function（默认）：每个测试函数\n   - class：每个测试类\n   - module：每个模块\n   - session：整个测试会话\n3. 自动使用：autouse=True自动应用\n4. 参数化：为多个测试提供不同数据\n5. 工厂模式：返回函数用于创建多个实例",
+      "code": {
+        "python": "import pytest\n\n# 基本fixture\n@pytest.fixture\ndef database():\n    db = create_test_database()\n    yield db\n    db.cleanup()\n\ndef test_query(database):\n    result = database.query('SELECT 1')\n    assert result == [(1,)]\n\n# 不同作用域\n@pytest.fixture(scope='module')\ndef shared_resource():\n    resource = ExpensiveResource()\n    yield resource\n    resource.close()\n\n# 参数化fixture\n@pytest.fixture(params=['chrome', 'firefox', 'safari'])\ndef browser(request):\n    return Browser(request.param)\n\ndef test_login(browser):\n    browser.goto('/login')\n\n# fixture工厂\n@pytest.fixture\ndef make_user():\n    def _make_user(name, email):\n        return User(name=name, email=email)\n    return _make_user\n\ndef test_user_creation(make_user):\n    user1 = make_user('Alice', 'alice@example.com')\n    user2 = make_user('Bob', 'bob@example.com')"
+      }
+    },
+    {
+      "id": "testing-005",
+      "title": "Selenium Web自动化测试",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Selenium",
+        "WebDriver",
+        "UI自动化",
+        "浏览器测试",
+        "Page Object"
+      ],
+      "content": "如何使用Selenium进行Web自动化测试？",
+      "answer": "Selenium：Web应用自动化测试工具，支持多种浏览器和语言。\n\n核心组件：\n1. WebDriver：控制浏览器的驱动\n2. WebElement：页面元素的抽象\n3. Expected Conditions：等待条件\n\n最佳实践：\n1. Page Object模式：将页面封装为类\n2. 显式等待：等待元素出现/可点击\n3. 数据驱动：测试数据与代码分离\n4. 截图记录：失败时自动截图\n5. 无头模式：CI/CD环境运行",
+      "code": {
+        "python": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\nimport pytest\n\n# Page Object模式\nclass LoginPage:\n    def __init__(self, driver):\n        self.driver = driver\n        self.url = '/login'\n    \n    def open(self):\n        self.driver.get(self.url)\n        return self\n    \n    def login(self, username, password):\n        self.driver.find_element(By.ID, 'username').send_keys(username)\n        self.driver.find_element(By.ID, 'password').send_keys(password)\n        self.driver.find_element(By.ID, 'login-btn').click()\n        return DashboardPage(self.driver)\n\nclass DashboardPage:\n    def __init__(self, driver):\n        self.driver = driver\n    \n    def get_welcome_message(self):\n        return self.driver.find_element(By.CLASS_NAME, 'welcome').text\n\n# 测试\n@pytest.fixture\ndef driver():\n    options = webdriver.ChromeOptions()\n    options.add_argument('--headless')\n    driver = webdriver.Chrome(options=options)\n    driver.implicitly_wait(10)\n    yield driver\n    driver.quit()\n\ndef test_successful_login(driver):\n    login_page = LoginPage(driver).open()\n    dashboard = login_page.login('admin', 'password')\n    assert 'Welcome, admin' in dashboard.get_welcome_message()\n\n# 显式等待\ndef test_async_content_loads(driver):\n    driver.get('/async-page')\n    element = WebDriverWait(driver, 10).until(\n        EC.presence_of_element_located((By.ID, 'async-content'))\n    )\n    assert element.text == 'Loaded!'"
+      }
+    },
+    {
+      "id": "testing-006",
+      "title": "API接口自动化测试",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "API测试",
+        "REST",
+        "HTTP",
+        "requests",
+        "pytest"
+      ],
+      "content": "如何进行API接口自动化测试？",
+      "answer": "API测试：验证接口功能、性能、安全性的自动化测试。\n\n测试维度：\n1. 功能测试：请求/响应正确性\n2. 边界测试：参数边界值\n3. 异常测试：错误处理\n4. 安全测试：认证/授权\n5. 性能测试：响应时间\n\n常用工具：\n- Python: requests + pytest\n- Java: RestAssured\n- 专业工具: Postman, JMeter",
+      "code": {
+        "python": "import requests\nimport pytest\n\nBASE_URL = 'http://api.example.com'\n\ndef test_get_user():\n    response = requests.get(f'{BASE_URL}/users/1')\n    assert response.status_code == 200\n    data = response.json()\n    assert data['id'] == 1\n    assert 'name' in data\n\ndef test_create_user():\n    payload = {'name': 'Alice', 'email': 'alice@example.com'}\n    response = requests.post(f'{BASE_URL}/users', json=payload)\n    assert response.status_code == 201\n    assert response.json()['name'] == 'Alice'\n\n# 边界测试\n@pytest.mark.parametrize('email,expected_status', [\n    ('valid@example.com', 201),\n    ('', 400),\n    ('invalid-email', 400),\n])\ndef test_email_validation(email, expected_status):\n    response = requests.post(f'{BASE_URL}/users', json={\n        'name': 'Test',\n        'email': email\n    })\n    assert response.status_code == expected_status\n\n# 认证测试\ndef test_protected_endpoint_without_auth():\n    response = requests.get(f'{BASE_URL}/admin/users')\n    assert response.status_code == 401\n\ndef test_protected_endpoint_with_auth():\n    headers = {'Authorization': 'Bearer valid_token'}\n    response = requests.get(f'{BASE_URL}/admin/users', headers=headers)\n    assert response.status_code == 200"
+      }
+    },
+    {
+      "id": "testing-007",
+      "title": "性能测试基础",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "性能测试",
+        "负载测试",
+        "压力测试",
+        "JMeter",
+        "Locust"
+      ],
+      "content": "性能测试有哪些类型？常用工具有哪些？",
+      "answer": "性能测试类型：\n\n1. 负载测试（Load Testing）：测试系统在预期负载下的表现\n2. 压力测试（Stress Testing）：测试系统在极限负载下的表现\n3. 稳定性测试（Soak Testing）：长时间运行，检测内存泄漏\n4. 峰值测试（Spike Testing）：突然增加大量负载\n5. 容量测试（Capacity Testing）：确定系统最大承载能力\n\n常用工具：\n- JMeter：功能强大的GUI工具\n- Locust：Python代码编写，易于版本控制\n- k6：现代JavaScript工具\n- Gatling：Scala编写，高性能\n\n关键指标：响应时间、吞吐量、错误率、并发用户数、CPU/内存/网络IO",
+      "code": {
+        "python": "# Locust性能测试示例\nfrom locust import HttpUser, task, between\n\nclass WebsiteUser(HttpUser):\n    wait_time = between(1, 5)\n    \n    def on_start(self):\n        self.client.post('/login', json={\n            'username': 'user',\n            'password': 'pass'\n        })\n    \n    @task(3)\n    def view_homepage(self):\n        self.client.get('/')\n    \n    @task(2)\n    def view_product(self):\n        self.client.get('/products/1')\n    \n    @task(1)\n    def add_to_cart(self):\n        self.client.post('/cart', json={\n            'product_id': 1, 'quantity': 1\n        })\n\n# Python简单性能测试\nimport time\nimport statistics\nimport requests\n\ndef performance_test(url, num_requests=100):\n    times = []\n    for _ in range(num_requests):\n        start = time.time()\n        response = requests.get(url)\n        times.append(time.time() - start)\n    \n    print(f'平均响应时间: {statistics.mean(times):.3f}s')\n    print(f'95分位数: {sorted(times)[int(len(times)*0.95)]:.3f}s')"
+      }
+    },
+    {
+      "id": "testing-008",
+      "title": "CI/CD中的自动化测试",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "CI/CD",
+        "Jenkins",
+        "GitHub Actions",
+        "GitLab CI",
+        "自动化部署"
+      ],
+      "content": "如何在CI/CD流水线中集成自动化测试？",
+      "answer": "CI/CD测试策略：\n\n1. 测试金字塔在CI/CD中的应用：\n   - 单元测试：快速执行，每次提交运行\n   - 集成测试：合并前运行\n   - E2E测试：部署前运行\n\n2. 流水线阶段：Build → Unit Test → Integration Test → Security Scan → Deploy to Staging → E2E Test → Deploy to Production\n\n3. 测试数据管理：使用Docker Compose启动依赖服务，测试数据库使用内存数据库或Docker\n\n4. 并行执行：测试分片，加速执行",
+      "code": {
+        "python": "# GitHub Actions示例\n# .github/workflows/test.yml\n# name: Test\n# on: [push, pull_request]\n# jobs:\n#   test:\n#     runs-on: ubuntu-latest\n#     steps:\n#     - uses: actions/checkout@v3\n#     - name: Set up Python\n#       uses: actions/setup-python@v4\n#       with:\n#         python-version: '3.10'\n#     - name: Install dependencies\n#       run: pip install -r requirements.txt\n#     - name: Run unit tests\n#       run: pytest tests/unit -v --cov=src\n#     - name: Run integration tests\n#       run: pytest tests/integration -v\n\n# Docker Compose测试环境\n# version: '3'\n# services:\n#   test:\n#     build: .\n#     command: pytest\n#     depends_on:\n#       - db\n#   db:\n#     image: postgres:13\n\n# 测试并行执行\n# pytest.ini: addopts = -n auto\n\n# 根据标记选择测试\n@pytest.mark.slow\ndef test_slow_feature():\n    pass\n\n@pytest.mark.integration\ndef test_integration():\n    pass\n\n# 运行: pytest -m 'not slow'\n# 运行: pytest -m integration"
+      }
+    },
+    {
+      "id": "testing-009",
+      "title": "契约测试（Contract Testing）",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "契约测试",
+        "Pact",
+        "API契约",
+        "微服务测试",
+        "消费者驱动"
+      ],
+      "content": "什么是契约测试？为什么需要契约测试？",
+      "answer": "契约测试：验证服务间交互契约的测试方式，确保消费者和提供者的契约一致。\n\n为什么需要：\n1. 微服务架构中服务间依赖复杂\n2. 传统集成测试慢且不稳定\n3. 服务独立部署，需要提前验证兼容性\n\n契约测试类型：\n1. 消费者驱动契约（CDC）：消费者定义期望，提供者验证\n2. 提供者驱动契约：提供者定义API，消费者遵守\n\n常用工具：\n- Pact：最流行的契约测试框架\n- Spring Cloud Contract：Java生态\n- Pact Broker：契约版本管理",
+      "code": {
+        "python": "# Pact契约测试示例\nfrom pact import Consumer, Provider\nimport requests\n\npact = Consumer('UserService').has_pact_with(Provider('UserAPI'))\n\n@pact.given('a user exists').upon_receiving('a request for user').with_request(\n    method='GET',\n    path='/users/1'\n).will_respond_with(status=200, body={\n    'id': 1,\n    'name': 'Alice',\n    'email': 'alice@example.com'\n})\n\ndef test_get_user():\n    with pact:\n        result = requests.get(pact.uri + '/users/1')\n        assert result.json()['name'] == 'Alice'\n\n# 提供者验证\n# pact-verifier --provider UserAPI --pact-url ./pacts/userservice-userapi.json\n\n# Pact Broker配置\n# 发布契约: pact-broker publish ./pacts --consumer-app-version 1.0.0\n# 验证契约: pact-verifier --provider App --broker-base-url http://pact-broker"
+      }
+    },
+    {
+      "id": "testing-010",
+      "title": "测试覆盖率与质量门禁",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "覆盖率",
+        "Code Coverage",
+        "质量门禁",
+        "SonarQube",
+        "CI质量"
+      ],
+      "content": "如何设置测试覆盖率和质量门禁？",
+      "answer": "测试覆盖率指标：\n1. 行覆盖率（Line Coverage）：执行的代码行比例\n2. 分支覆盖率（Branch Coverage）：执行的分支比例\n3. 函数覆盖率（Function Coverage）：执行的函数比例\n4. 语句覆盖率（Statement Coverage）：执行的语句比例\n\n质量门禁策略：\n1. 覆盖率阈值：最低覆盖率要求（如80%）\n2. 增量覆盖：新代码必须100%覆盖\n3. 静态分析：代码规范、复杂度、漏洞\n4. 测试通过率：所有测试必须通过\n\n常用工具：\n- coverage.py：Python覆盖率\n- JaCoCo：Java覆盖率\n- SonarQube：代码质量平台",
+      "code": {
+        "python": "# pytest-cov配置\n# pytest --cov=src --cov-report=html --cov-report=xml\n\n# .coveragerc配置\n# [run]\n# source = src\n# omit = */tests/*, */venv/*\n# [report]\n# fail_under = 80\n\n# 覆盖率检查脚本\nimport coverage\nimport sys\n\ncov = coverage.Coverage()\ncov.load()\nif cov.get_total_coverage() < 80.0:\n    print('Coverage below 80%')\n    sys.exit(1)\n\n# SonarQube配置\n# sonar.projectKey=myproject\n# sonar.sources=src\n# sonar.python.coverage.reportPaths=coverage.xml\n\n# 增量覆盖检查\n# diff-cover coverage.xml --compare-branch=main --fail-under=100\n\n# 代码复杂度检查\n# radon cc src -a -nc"
+      }
+    },
+    {
+      "id": "testing-011",
+      "title": "移动端自动化测试",
+      "category": "testing",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "Appium",
+        "移动端测试",
+        "Android",
+        "iOS",
+        "UI自动化"
+      ],
+      "content": "如何进行移动端自动化测试？",
+      "answer": "移动端测试挑战：\n1. 设备碎片化：多种屏幕尺寸、系统版本\n2. 手势操作：滑动、长按、捏合等\n3. 原生与混合应用\n4. 性能与稳定性\n\n测试框架：\n1. Appium：跨平台，支持原生/Web/混合应用\n2. Espresso：Android官方框架\n3. XCUITest：iOS官方框架\n4. Detox：React Native专用\n\n测试策略：\n1. 云测试平台：AWS Device Farm、Firebase Test Lab\n2. 真机测试：关键路径\n3. 模拟器测试：快速反馈",
+      "code": {
+        "python": "# Appium移动端测试示例\nfrom appium import webdriver\nfrom appium.options.android import UiAutomator2Options\nimport pytest\n\n@pytest.fixture\ndef driver():\n    options = UiAutomator2Options()\n    options.platform_name = 'Android'\n    options.device_name = 'emulator-5554'\n    options.app = '/path/to/app.apk'\n    options.automation_name = 'UiAutomator2'\n    \n    driver = webdriver.Remote('http://localhost:4723', options=options)\n    yield driver\n    driver.quit()\n\ndef test_login_flow(driver):\n    driver.find_element('id', 'username').send_keys('testuser')\n    driver.find_element('id', 'password').send_keys('password123')\n    driver.find_element('id', 'login').click()\n    welcome = driver.find_element('id', 'welcome')\n    assert 'Welcome' in welcome.text\n\ndef test_swipe_gesture(driver):\n    driver.swipe(start_x=500, start_y=1000, end_x=500, end_y=200, duration=800)\n\n# Page Object模式\nclass LoginPage:\n    def __init__(self, driver):\n        self.driver = driver\n    \n    def login(self, username, password):\n        self.driver.find_element('id', 'username').send_keys(username)\n        self.driver.find_element('id', 'password').send_keys(password)\n        self.driver.find_element('id', 'login').click()\n        return HomePage(self.driver)\n\nclass HomePage:\n    def __init__(self, driver):\n        self.driver = driver\n    \n    def get_title(self):\n        return self.driver.find_element('id', 'title').text"
+      }
+    },
+    {
+      "id": "testing-012",
+      "title": "安全测试基础",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "安全测试",
+        "OWASP",
+        "SQL注入",
+        "XSS",
+        "安全扫描"
+      ],
+      "content": "常见的安全测试类型和工具有哪些？",
+      "answer": "常见安全漏洞（OWASP Top 10）：\n1. 注入攻击：SQL、NoSQL、OS命令注入\n2. 失效的身份认证：弱密码、会话管理\n3. 敏感数据泄露：明文传输、弱加密\n4. XML外部实体（XXE）\n5. 失效的访问控制：越权访问\n6. 安全配置错误\n7. 跨站脚本（XSS）\n8. 不安全的反序列化\n9. 使用含有已知漏洞的组件\n10. 不足的日志记录和监控\n\n安全测试类型：\n1. 静态分析（SAST）：扫描源代码\n2. 动态分析（DAST）：运行时扫描\n3. 依赖扫描：检查第三方库漏洞\n4. 渗透测试：模拟攻击",
+      "code": {
+        "python": "import requests\n\n# SQL注入测试\ndef test_sql_injection():\n    payloads = [\"' OR '1'='1\", \"' OR 1=1--\", \"1; DROP TABLE users--\"]\n    for payload in payloads:\n        response = requests.post('/login', data={'username': payload, 'password': 'test'})\n        assert 'error' in response.json() or response.status_code == 400\n\n# XSS测试\ndef test_xss_protection():\n    xss_payload = '<script>alert(\"xss\")</script>'\n    response = requests.post('/comment', data={'text': xss_payload})\n    assert '<script>' not in response.text or '&lt;script&gt;' in response.text\n\n# 认证测试\ndef test_authentication():\n    weak_passwords = ['123456', 'password', 'admin']\n    for pwd in weak_passwords:\n        response = requests.post('/register', json={'password': pwd})\n        assert response.status_code == 400\n\n# 授权测试\ndef test_authorization():\n    user_a_token = login('user_a', 'pass')\n    response = requests.get('/users/user_b/private', headers={'Authorization': user_a_token})\n    assert response.status_code == 403"
+      }
+    },
+    {
+      "id": "test-013",
+      "title": "测试用例设计方法：等价类划分",
+      "category": "testing",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "测试设计",
+        "等价类划分",
+        "黑盒测试",
+        "测试用例"
+      ],
+      "content": "什么是等价类划分法？如何应用？",
+      "answer": "**等价类划分定义：**\n将输入数据划分为若干等价类，每个等价类中的数据对揭露程序错误具有等效作用。只需从每个等价类中选取一个代表进行测试。\n\n**等价类类型：**\n1. **有效等价类**：合理的、有意义的输入数据集合\n2. **无效等价类**：不合理的、无意义的输入数据集合\n\n**划分原则：**\n- 如果输入条件规定了取值范围，则划分出一个有效等价类和两个无效等价类\n- 如果输入条件规定了必须如何，则划分出一个有效等价类和一个无效等价类\n- 如果输入条件是布尔量，则划分出一个有效等价类和一个无效等价类\n\n**示例：用户名输入（6-20位字母数字）**\n- 有效等价类：6-20位字母数字\n- 无效等价类：<6位、>20位、含特殊字符、空值",
+      "code": {
+        "python": "# 等价类划分测试示例\nimport pytest\n\ndef validate_username(username):\n    \"\"\"验证用户名：6-20位字母数字\"\"\"\n    if not username:\n        raise ValueError(\"用户名不能为空\")\n    if not isinstance(username, str):\n        raise TypeError(\"用户名必须是字符串\")\n    if len(username) < 6:\n        raise ValueError(\"用户名长度不能小于6位\")\n    if len(username) > 20:\n        raise ValueError(\"用户名长度不能超过20位\")\n    if not username.isalnum():\n        raise ValueError(\"用户名只能包含字母和数字\")\n    return True\n\n# 测试用例\nclass TestUsernameValidation:\n    # 有效等价类测试\n    def test_valid_min_length(self):\n        assert validate_username(\"abc123\")  # 刚好6位\n    \n    def test_valid_max_length(self):\n        assert validate_username(\"a\" * 20)  # 刚好20位\n    \n    def test_valid_normal(self):\n        assert validate_username(\"testuser123\")  # 正常长度\n    \n    # 无效等价类测试\n    def test_invalid_too_short(self):\n        with pytest.raises(ValueError, match=\"小于6位\"):\n            validate_username(\"abc\")  # <6位\n    \n    def test_invalid_too_long(self):\n        with pytest.raises(ValueError, match=\"超过20位\"):\n            validate_username(\"a\" * 21)  # >20位\n    \n    def test_invalid_special_char(self):\n        with pytest.raises(ValueError, match=\"字母和数字\"):\n            validate_username(\"test@123\")  # 含特殊字符\n    \n    def test_invalid_empty(self):\n        with pytest.raises(ValueError, match=\"不能为空\"):\n            validate_username(\"\")  # 空值\n    \n    def test_invalid_none(self):\n        with pytest.raises(ValueError):\n            validate_username(None)  # None值"
+      }
+    },
+    {
+      "id": "test-014",
+      "title": "测试用例设计方法：边界值分析",
+      "category": "testing",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "测试设计",
+        "边界值",
+        "黑盒测试",
+        "测试用例"
+      ],
+      "content": "什么是边界值分析法？如何应用？",
+      "answer": "**边界值分析定义：**\n经验表明，大量错误发生在输入范围的边界上。边界值分析是对等价类划分的补充，重点测试边界值及其附近值。\n\n**边界值选取原则：**\n对于范围[a, b]：\n- 最小值 a\n- 略大于最小值 a+\n- 正常值（范围内任意值）\n- 略小于最大值 b-\n- 最大值 b\n\n**边界值类型：**\n1. **上点**：边界上的点（a, b）\n2. **离点**：离边界最近的点（a-1, b+1）\n3. **内点**：范围内的点\n\n**示例：年龄输入（18-60岁）**\n- 边界值：17, 18, 19, 30, 59, 60, 61",
+      "code": {
+        "python": "# 边界值分析测试示例\nimport pytest\n\ndef validate_age(age):\n    \"\"\"验证年龄：18-60岁\"\"\"\n    if not isinstance(age, int):\n        raise TypeError(\"年龄必须是整数\")\n    if age < 18:\n        raise ValueError(\"年龄不能小于18岁\")\n    if age > 60:\n        raise ValueError(\"年龄不能超过60岁\")\n    return True\n\nclass TestAgeBoundary:\n    # 边界值测试\n    def test_boundary_below_min(self):\n        \"\"\"下边界-1: 17岁（无效）\"\"\"\n        with pytest.raises(ValueError):\n            validate_age(17)\n    \n    def test_boundary_min(self):\n        \"\"\"下边界: 18岁（有效）\"\"\"\n        assert validate_age(18)\n    \n    def test_boundary_above_min(self):\n        \"\"\"下边界+1: 19岁（有效）\"\"\"\n        assert validate_age(19)\n    \n    def test_normal_value(self):\n        \"\"\"正常值: 30岁（有效）\"\"\"\n        assert validate_age(30)\n    \n    def test_boundary_below_max(self):\n        \"\"\"上边界-1: 59岁（有效）\"\"\"\n        assert validate_age(59)\n    \n    def test_boundary_max(self):\n        \"\"\"上边界: 60岁（有效）\"\"\"\n        assert validate_age(60)\n    \n    def test_boundary_above_max(self):\n        \"\"\"上边界+1: 61岁（无效）\"\"\"\n        with pytest.raises(ValueError):\n            validate_age(61)\n    \n    # 使用pytest.mark.parametrize参数化\n    @pytest.mark.parametrize(\"age,expected\", [\n        (17, False),  # 下边界-1\n        (18, True),   # 下边界\n        (60, True),   # 上边界\n        (61, False),  # 上边界+1\n    ])\n    def test_age_boundaries(self, age, expected):\n        if expected:\n            assert validate_age(age)\n        else:\n            with pytest.raises(ValueError):\n                validate_age(age)"
+      }
+    },
+    {
+      "id": "test-015",
+      "title": "测试用例设计方法：场景法",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "测试设计",
+        "场景法",
+        "流程测试",
+        "业务测试"
+      ],
+      "content": "什么是场景法？如何设计场景测试用例？",
+      "answer": "**场景法定义：**\n根据用户实际使用场景来设计测试用例，模拟用户操作流程，验证业务逻辑。\n\n**场景类型：**\n1. **基本流（主场景）**：正常流程，用户按预期操作\n2. **备选流（备选场景）**：异常或分支流程\n3. **异常流**：错误处理流程\n\n**设计步骤：**\n1. 分析业务流程，绘制流程图\n2. 确定基本流\n3. 识别备选流和异常流\n4. 组合场景生成测试用例\n\n**示例：用户登录场景**\n- 基本流：输入正确账号密码 → 登录成功\n- 备选流：账号不存在、密码错误、账号锁定\n- 异常流：网络超时、服务不可用",
+      "code": {
+        "python": "# 场景法测试示例\nimport pytest\n\nclass UserService:\n    def __init__(self):\n        self.users = {\"admin\": \"password123\"}\n        self.locked_users = set()\n        self.login_attempts = {}\n    \n    def login(self, username, password):\n        # 检查账号是否锁定\n        if username in self.locked_users:\n            raise ValueError(\"账号已锁定\")\n        \n        # 检查账号是否存在\n        if username not in self.users:\n            raise ValueError(\"账号不存在\")\n        \n        # 检查密码\n        if self.users[username] != password:\n            # 记录失败次数\n            self.login_attempts[username] = self.login_attempts.get(username, 0) + 1\n            if self.login_attempts[username] >= 3:\n                self.locked_users.add(username)\n                raise ValueError(\"密码错误次数过多，账号已锁定\")\n            raise ValueError(\"密码错误\")\n        \n        # 登录成功，重置失败次数\n        self.login_attempts[username] = 0\n        return {\"status\": \"success\", \"user\": username}\n\n@pytest.fixture\ndef user_service():\n    return UserService()\n\nclass TestLoginScenarios:\n    \"\"\"登录场景测试\"\"\"\n    \n    def test_basic_flow_success(self, user_service):\n        \"\"\"基本流：正常登录成功\"\"\"\n        result = user_service.login(\"admin\", \"password123\")\n        assert result[\"status\"] == \"success\"\n    \n    def test_alternate_user_not_exist(self, user_service):\n        \"\"\"备选流：账号不存在\"\"\"\n        with pytest.raises(ValueError, match=\"账号不存在\"):\n            user_service.login(\"unknown\", \"password\")\n    \n    def test_alternate_wrong_password(self, user_service):\n        \"\"\"备选流：密码错误\"\"\"\n        with pytest.raises(ValueError, match=\"密码错误\"):\n            user_service.login(\"admin\", \"wrongpassword\")\n    \n    def test_alternate_account_locked(self, user_service):\n        \"\"\"备选流：账号锁定（连续3次密码错误）\"\"\"\n        # 连续输入错误密码3次\n        for _ in range(3):\n            try:\n                user_service.login(\"admin\", \"wrong\")\n            except ValueError:\n                pass\n        \n        # 第4次尝试登录\n        with pytest.raises(ValueError, match=\"账号已锁定\"):\n            user_service.login(\"admin\", \"password123\")\n    \n    # 组合场景测试\n    @pytest.mark.parametrize(\"username,password,expected\", [\n        (\"admin\", \"password123\", \"success\"),      # 正常登录\n        (\"unknown\", \"password\", \"账号不存在\"),      # 账号不存在\n        (\"admin\", \"wrong\", \"密码错误\"),            # 密码错误\n    ])\n    def test_login_scenarios(self, user_service, username, password, expected):\n        if expected == \"success\":\n            result = user_service.login(username, password)\n            assert result[\"status\"] == \"success\"\n        else:\n            with pytest.raises(ValueError, match=expected):\n                user_service.login(username, password)"
+      }
+    },
+    {
+      "id": "test-016",
+      "title": "pytest进阶：conftest与Fixture共享",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "pytest",
+        "conftest",
+        "Fixture",
+        "共享配置"
+      ],
+      "content": "pytest的conftest.py如何使用？Fixture如何共享？",
+      "answer": "**conftest.py作用：**\n1. 定义共享的fixture\n2. 定义共享的hooks\n3. 自动被同目录及子目录的测试发现\n\n**Fixture作用域：**\n- `function`：每个测试函数调用一次（默认）\n- `class`：每个测试类调用一次\n- `module`：每个模块调用一次\n- `package`：每个包调用一次\n- `session`：整个测试会话调用一次\n\n**Fixture特点：**\n- 支持依赖注入\n- 支持参数化\n- 支持yield（setup/teardown）\n- 支持autouse自动使用",
+      "code": {
+        "python": "# conftest.py - 共享fixture配置\nimport pytest\nimport tempfile\nimport os\nfrom selenium import webdriver\n\n# 数据库fixture（session级别）\n@pytest.fixture(scope=\"session\")\ndef db_connection():\n    \"\"\"创建数据库连接，整个测试会话共享\"\"\"\n    conn = create_db_connection(\"test.db\")\n    yield conn\n    conn.close()\n\n# 临时文件fixture（function级别）\n@pytest.fixture\ndef temp_file():\n    \"\"\"创建临时文件，每个测试独立\"\"\"\n    fd, path = tempfile.mkstemp()\n    yield path\n    os.close(fd)\n    os.unlink(path)\n\n# 测试数据fixture\n@pytest.fixture\ndef sample_user():\n    return {\"username\": \"testuser\", \"email\": \"test@example.com\"}\n\n# 参数化fixture\n@pytest.fixture(params=[\"chrome\", \"firefox\"])\ndef browser(request):\n    \"\"\"多浏览器测试\"\"\"\n    if request.param == \"chrome\":\n        driver = webdriver.Chrome()\n    else:\n        driver = webdriver.Firefox()\n    yield driver\n    driver.quit()\n\n# 自动使用的fixture\n@pytest.fixture(autouse=True)\ndef setup_test_env():\n    \"\"\"每个测试前自动设置环境\"\"\"\n    os.environ[\"TEST_MODE\"] = \"true\"\n    yield\n    del os.environ[\"TEST_MODE\"]\n\n# ===== 测试文件中使用 =====\n# test_user.py\n\ndef test_with_db(db_connection):\n    \"\"\"使用共享数据库连接\"\"\"\n    cursor = db_connection.cursor()\n    cursor.execute(\"SELECT * FROM users\")\n    assert cursor.fetchall() is not None\n\ndef test_with_temp_file(temp_file):\n    \"\"\"使用临时文件\"\"\"\n    with open(temp_file, 'w') as f:\n        f.write(\"test content\")\n    assert os.path.exists(temp_file)\n\ndef test_with_sample(sample_user):\n    \"\"\"使用测试数据\"\"\"\n    assert sample_user[\"username\"] == \"testuser\"\n\ndef test_multiple_browsers(browser):\n    \"\"\"多浏览器测试\"\"\"\n    browser.get(\"https://example.com\")\n    assert browser.title"
+      }
+    },
+    {
+      "id": "test-017",
+      "title": "pytest进阶：标记与过滤",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "pytest",
+        "mark",
+        "标记",
+        "过滤",
+        "分组测试"
+      ],
+      "content": "pytest的mark标记如何使用？如何过滤测试？",
+      "answer": "**内置标记：**\n- `@pytest.mark.skip`：跳过测试\n- `@pytest.mark.skipif`：条件跳过\n- `@pytest.mark.xfail`：预期失败\n- `@pytest.mark.parametrize`：参数化\n\n**自定义标记：**\n在pytest.ini或pyproject.toml中注册\n\n**运行过滤：**\n- `-m MARK`：运行指定标记的测试\n- `-k EXPRESSION`：按名称匹配\n- `--co`：只收集不运行\n- `-v`：详细输出\n- `-x`：第一个失败即停止",
+      "code": {
+        "python": "import pytest\nimport sys\n\n# pytest.ini 配置\n# [pytest]\n# markers =\n#     slow: marks tests as slow\n#     smoke: smoke tests\n#     integration: integration tests\n\n# 自定义标记\n@pytest.mark.slow\ndef test_slow_operation():\n    \"\"\"耗时测试\"\"\"\n    import time\n    time.sleep(5)\n    assert True\n\n@pytest.mark.smoke\ndef test_smoke():\n    \"\"\"冒烟测试\"\"\"\n    assert True\n\n@pytest.mark.integration\ndef test_integration():\n    \"\"\"集成测试\"\"\"\n    assert True\n\n# 组合标记\n@pytest.mark.smoke\n@pytest.mark.slow\ndef test_smoke_slow():\n    assert True\n\n# 条件跳过\n@pytest.mark.skipif(sys.platform == \"win32\", reason=\"不支持Windows\")\ndef test_linux_only():\n    assert True\n\n# 预期失败\n@pytest.mark.xfail(reason=\"已知bug\")\ndef test_known_bug():\n    assert False\n\n# 参数化 + 标记\n@pytest.mark.parametrize(\"input,expected\", [\n    (1, 2),\n    (2, 4),\n    pytest.param(3, 6, marks=pytest.mark.smoke),\n])\ndef test_double(input, expected):\n    assert input * 2 == expected\n\n# ===== 运行命令 =====\n# 运行slow标记的测试\n# pytest -m slow\n\n# 运行smoke标记但不是slow的测试\n# pytest -m \"smoke and not slow\"\n\n# 按名称过滤\n# pytest -k \"test_smoke\"\n\n# 排除某些测试\n# pytest -m \"not slow\"\n\n# 列出所有标记\n# pytest --markers"
+      }
+    },
+    {
+      "id": "test-018",
+      "title": "Allure测试报告",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Allure",
+        "测试报告",
+        "可视化",
+        "pytest"
+      ],
+      "content": "如何使用Allure生成测试报告？",
+      "answer": "**Allure特点：**\n1. 美观的Web报告界面\n2. 支持历史趋势分析\n3. 支持用例分类和过滤\n4. 支持附件（截图、日志）\n5. 支持步骤和严重级别\n\n**安装：**\n```bash\npip install allure-pytest\n```\n\n**常用装饰器：**\n- `@allure.feature`：功能模块\n- `@allure.story`：用户故事\n- `@allure.severity`：严重级别\n- `@allure.step`：测试步骤\n- `@allure.attach`：添加附件",
+      "code": {
+        "python": "import allure\nimport pytest\n\n@allure.feature(\"用户管理\")\nclass TestUser:\n    \n    @allure.story(\"用户登录\")\n    @allure.severity(allure.severity_level.CRITICAL)\n    def test_login_success(self):\n        \"\"\"测试正常登录\"\"\"\n        with allure.step(\"输入用户名\"):\n            username = \"admin\"\n        \n        with allure.step(\"输入密码\"):\n            password = \"password123\"\n        \n        with allure.step(\"点击登录\"):\n            result = login(username, password)\n        \n        with allure.step(\"验证登录结果\"):\n            assert result[\"status\"] == \"success\"\n            allure.attach(str(result), \"登录响应\", allure.attachment_type.JSON)\n    \n    \n    @allure.story(\"用户注册\")\n    @allure.severity(allure.severity_level.NORMAL)\n    def test_register(self):\n        \"\"\"测试用户注册\"\"\"\n        user_data = {\"username\": \"newuser\", \"email\": \"new@example.com\"}\n        \n        allure.attach.dict(user_data, \"注册数据\")\n        \n        result = register(user_data)\n        assert result[\"success\"]\n\n# ===== 运行和生成报告 =====\n# 运行测试并收集数据\n# pytest --alluredir=./allure-results\n\n# 生成报告\n# allure generate ./allure-results -o ./allure-report\n\n# 打开报告\n# allure open ./allure-report\n\n# 清除历史数据\n# allure serve ./allure-results"
+      }
+    },
+    {
+      "id": "test-019",
+      "title": "接口自动化测试框架",
+      "category": "testing",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "接口测试",
+        "requests",
+        "pytest",
+        "框架设计"
+      ],
+      "content": "如何设计接口自动化测试框架？",
+      "answer": "**框架组成：**\n1. 配置管理：环境、URL、认证\n2. 请求封装：统一请求处理\n3. 数据驱动：YAML/JSON测试数据\n4. 断言封装：响应验证\n5. 报告生成：Allure报告\n\n**目录结构：**\n```\napi_test/\n├── config/          # 配置文件\n├── api/             # 接口封装\n├── testcases/       # 测试用例\n├── data/            # 测试数据\n├── utils/           # 工具函数\n└── conftest.py      # 共享fixture\n```",
+      "code": {
+        "python": "# config/config.py\nimport yaml\n\nclass Config:\n    def __init__(self, env=\"test\"):\n        with open(f\"config/{env}.yaml\") as f:\n            self.config = yaml.safe_load(f)\n    \n    @property\n    def base_url(self):\n        return self.config[\"base_url\"]\n\n# api/base.py\nimport requests\n\nclass BaseAPI:\n    def __init__(self, base_url):\n        self.base_url = base_url\n        self.session = requests.Session()\n    \n    def request(self, method, endpoint, **kwargs):\n        url = f\"{self.base_url}{endpoint}\"\n        response = self.session.request(method, url, **kwargs)\n        return response\n    \n    def get(self, endpoint, **kwargs):\n        return self.request(\"GET\", endpoint, **kwargs)\n    \n    def post(self, endpoint, **kwargs):\n        return self.request(\"POST\", endpoint, **kwargs)\n\n# api/user_api.py\nclass UserAPI(BaseAPI):\n    def login(self, username, password):\n        return self.post(\"/api/login\", json={\n            \"username\": username,\n            \"password\": password\n        })\n    \n    def get_user(self, user_id):\n        return self.get(f\"/api/users/{user_id}\")\n\n# conftest.py\nimport pytest\nfrom config.config import Config\nfrom api.user_api import UserAPI\n\n@pytest.fixture(scope=\"session\")\ndef config():\n    return Config()\n\n@pytest.fixture(scope=\"session\")\ndef user_api(config):\n    return UserAPI(config.base_url)\n\n# testcases/test_user.py\nimport pytest\nimport allure\n\n@allure.feature(\"用户接口\")\nclass TestUserAPI:\n    \n    @allure.story(\"登录\")\n    def test_login_success(self, user_api):\n        response = user_api.login(\"admin\", \"password\")\n        assert response.status_code == 200\n        assert response.json()[\"token\"] is not None\n    \n    @allure.story(\"获取用户\")\n    def test_get_user(self, user_api):\n        response = user_api.get_user(1)\n        assert response.status_code == 200\n        assert response.json()[\"id\"] == 1"
+      }
+    },
+    {
+      "id": "test-020",
+      "title": "Mock与打桩测试",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Mock",
+        "unittest.mock",
+        "打桩",
+        "隔离测试"
+      ],
+      "content": "什么是Mock测试？如何使用unittest.mock？",
+      "answer": "**Mock定义：**\n模拟对象，用于隔离测试，替代真实依赖（数据库、API等）。\n\n**unittest.mock核心：**\n1. `Mock`：创建模拟对象\n2. `MagicMock`：支持魔术方法的Mock\n3. `patch`：临时替换对象\n4. `call`：记录调用\n\n**常用断言：**\n- `assert_called()`：被调用过\n- `assert_called_once()`：只调用一次\n- `assert_called_with()`：以指定参数调用\n- `assert_not_called()`：未被调用",
+      "code": {
+        "python": "from unittest.mock import Mock, MagicMock, patch, call\nimport pytest\n\n# 基本Mock\nmock_obj = Mock()\nmock_obj.method()  # 返回另一个Mock\nmock_obj.method.assert_called()\n\n# 设置返回值\nmock_obj = Mock()\nmock_obj.get_name.return_value = \"Alice\"\nassert mock_obj.get_name() == \"Alice\"\n\n# 设置副作用（异常）\nmock_obj = Mock()\nmock_obj risky_method.side_effect = Exception(\"Error\")\n\n# MagicMock支持魔术方法\nmock_list = MagicMock()\nmock_list.__len__.return_value = 5\nassert len(mock_list) == 5\n\n# patch装饰器\n@patch('module.ClassName.method')\ndef test_with_patch(mock_method):\n    mock_method.return_value = 42\n    # 测试代码\n    pass\n\n# patch上下文管理器\ndef test_with_context():\n    with patch('requests.get') as mock_get:\n        mock_get.return_value.json.return_value = {\"data\": \"test\"}\n        # 测试代码\n        pass\n\n# 实际示例：模拟数据库\nclass UserService:\n    def __init__(self, db):\n        self.db = db\n    \n    def get_user(self, user_id):\n        return self.db.query(f\"SELECT * FROM users WHERE id={user_id}\")\n\ndef test_get_user():\n    mock_db = Mock()\n    mock_db.query.return_value = {\"id\": 1, \"name\": \"Alice\"}\n    \n    service = UserService(mock_db)\n    result = service.get_user(1)\n    \n    assert result[\"name\"] == \"Alice\"\n    mock_db.query.assert_called_once_with(\"SELECT * FROM users WHERE id=1\")\n\n# 模拟API响应\n@patch('requests.get')\ndef test_api_call(mock_get):\n    mock_get.return_value.status_code = 200\n    mock_get.return_value.json.return_value = {\"message\": \"success\"}\n    \n    response = requests.get(\"https://api.example.com/data\")\n    assert response.status_code == 200\n    assert response.json()[\"message\"] == \"success\""
+      }
+    },
+    {
+      "id": "test-021",
+      "title": "数据库测试与数据验证",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "数据库测试",
+        "数据验证",
+        "SQL",
+        "事务测试"
+      ],
+      "content": "如何进行数据库测试？有哪些数据验证方法？",
+      "answer": "**数据库测试类型：**\n1. **Schema测试**：验证表结构、字段类型、约束\n2. **数据完整性测试**：主键、外键、唯一性约束\n3. **CRUD测试**：增删改查操作验证\n4. **事务测试**：ACID特性验证\n5. **性能测试**：查询优化、索引效果\n6. **迁移测试**：数据库升级、数据迁移\n\n**数据验证方法：**\n- 行数验证：验证操作影响的行数\n- 数据内容验证：验证字段值正确性\n- 状态验证：验证数据状态变化\n- 关联验证：验证外键关联数据\n\n**测试策略：**\n1. 使用测试数据库，避免污染生产数据\n2. 每个测试后回滚事务\n3. 使用Fixture准备测试数据\n4. 验证数据库触发器和存储过程",
+      "code": {
+        "python": "import pytest\nimport sqlite3\nfrom contextlib import contextmanager\n\n@contextmanager\ndef get_db_connection():\n    conn = sqlite3.connect(\":memory:\")\n    conn.row_factory = sqlite3.Row\n    yield conn\n    conn.close()\n\n@pytest.fixture\ndef db():\n    with get_db_connection() as conn:\n        conn.execute(\"CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, email TEXT NOT NULL)\")\n        conn.commit()\n        yield conn\n\nclass TestDatabaseOperations:\n    def test_insert_user(self, db):\n        cursor = db.execute(\"INSERT INTO users (username, email) VALUES (?, ?)\", (\"testuser\", \"test@example.com\"))\n        db.commit()\n        assert cursor.lastrowid == 1\n        result = db.execute(\"SELECT * FROM users WHERE id = ?\", (cursor.lastrowid,)).fetchone()\n        assert result[\"username\"] == \"testuser\"\n    \n    def test_unique_constraint(self, db):\n        db.execute(\"INSERT INTO users (username, email) VALUES (?, ?)\", (\"user1\", \"user1@example.com\"))\n        db.commit()\n        with pytest.raises(sqlite3.IntegrityError):\n            db.execute(\"INSERT INTO users (username, email) VALUES (?, ?)\", (\"user1\", \"user2@example.com\"))\n            db.commit()\n    \n    def test_transaction_rollback(self, db):\n        try:\n            db.execute(\"BEGIN\")\n            db.execute(\"INSERT INTO users (username, email) VALUES (?, ?)\", (\"user2\", \"user2@example.com\"))\n            raise Exception(\"模拟错误\")\n        except:\n            db.rollback()\n        result = db.execute(\"SELECT * FROM users WHERE username = ?\", (\"user2\",)).fetchone()\n        assert result is None"
+      }
+    },
+    {
+      "id": "test-022",
+      "title": "Postman自动化测试与Newman",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Postman",
+        "Newman",
+        "API测试",
+        "自动化",
+        "集合"
+      ],
+      "content": "如何使用Postman进行自动化测试？Newman的作用是什么？",
+      "answer": "**Postman自动化测试：**\n1. **Collection（集合）**：组织API请求\n2. **Tests脚本**：使用JavaScript编写测试断言\n3. **Environment（环境）**：管理不同环境的变量\n4. **Pre-request Script**：请求前执行脚本\n5. **Collection Runner**：批量运行集合\n\n**Newman：**\n- Postman的命令行运行工具\n- 支持CI/CD集成\n- 可生成HTML/JSON报告\n- 支持数据驱动测试\n\n**常用断言：**\n- pm.response.to.have.status(200)\n- pm.response.to.have.jsonBody()\n- pm.expect(jsonData.name).to.eql(\"value\")",
+      "code": {
+        "python": "# Postman Tests脚本示例\n# pm.test(\"Status code is 200\", function () {\n#     pm.response.to.have.status(200);\n# });\n\n# Newman命令行使用\n# npm install -g newman\n# newman run collection.json -e environment.json -r html\n\n# Python调用Newman\nimport subprocess\n\ndef run_newman_collection(collection_path, env_path=None):\n    cmd = [\"newman\", \"run\", collection_path]\n    if env_path:\n        cmd.extend([\"-e\", env_path])\n    cmd.extend([\"-r\", \"cli,json\", \"--reporter-json-export\", \"report.json\"])\n    result = subprocess.run(cmd, capture_output=True, text=True)\n    return result.returncode == 0\n\n# Jenkins集成示例\njenkinsfile = \"\"\"\npipeline {\n    agent any\n    stages {\n        stage(\"API Test\") {\n            steps {\n                sh \"newman run api-tests.json -e prod-env.json -r cli,html\"\n            }\n        }\n    }\n    post {\n        always {\n            publishHTML([reportDir: \"newman\", reportFiles: \"report.html\"])\n        }\n    }\n}\n\"\"\""
+      }
+    },
+    {
+      "id": "test-023",
+      "title": "Mock服务器：json-server与wiremock",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Mock",
+        "json-server",
+        "wiremock",
+        "API Mock",
+        "测试替身"
+      ],
+      "content": "如何使用json-server和wiremock搭建Mock服务器？",
+      "answer": "**Mock服务器作用：**\n1. 模拟后端API，前后端并行开发\n2. 隔离测试，不依赖真实服务\n3. 模拟异常场景（超时、错误）\n4. 控制响应数据，便于测试\n\n**json-server：**\n- 基于JSON文件快速搭建REST API\n- 支持CRUD操作\n- 支持过滤、分页、排序\n- 适合前端开发和简单测试\n\n**WireMock：**\n- 功能强大的HTTP Mock服务器\n- 支持请求匹配、响应模板\n- 支持延迟、故障注入\n- 适合复杂测试场景",
+      "code": {
+        "python": "# json-server使用\n# npm install -g json-server\n# 创建db.json后运行: json-server --watch db.json --port 3000\n\ndb_json_example = \"\"\"\n{\n  \"posts\": [{\"id\": 1, \"title\": \"json-server\"}],\n  \"comments\": [{\"id\": 1, \"body\": \"comment\", \"postId\": 1}]\n}\n\"\"\"\n\n# WireMock使用 (Java)\n# java -jar wiremock-standalone.jar --port 8080\n\nwiremock_mapping = \"\"\"\n{\n  \"request\": {\n    \"method\": \"GET\",\n    \"url\": \"/api/users/1\"\n  },\n  \"response\": {\n    \"status\": 200,\n    \"jsonBody\": {\n      \"id\": 1,\n      \"name\": \"John Doe\"\n    }\n  }\n}\n\"\"\"\n\n# Python中使用Mock服务器\nimport requests\n\ndef test_with_mock_server():\n    # 假设json-server运行在3000端口\n    response = requests.get(\"http://localhost:3000/posts/1\")\n    assert response.status_code == 200\n    assert response.json()[\"id\"] == 1"
+      }
+    },
+    {
+      "id": "test-024",
+      "title": "BDD行为驱动测试：behave与pytest-bdd",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "BDD",
+        "behave",
+        "pytest-bdd",
+        "Gherkin",
+        "行为驱动"
+      ],
+      "content": "什么是BDD测试？如何使用behave和pytest-bdd？",
+      "answer": "**BDD（行为驱动开发）：**\n- 用自然语言描述系统行为\n- 促进业务、开发、测试协作\n- 使用Gherkin语法（Given-When-Then）\n\n**Gherkin关键字：**\n- Feature：功能描述\n- Scenario：测试场景\n- Given：前置条件\n- When：操作\n- Then：预期结果\n- And/But：连接步骤\n\n**behave：**\n- Python原生BDD框架\n- 使用.feature文件描述场景\n- 使用Python实现步骤定义\n\n**pytest-bdd：**\n- pytest的BDD插件\n- 与pytest生态集成\n- 支持fixture和参数化",
+      "code": {
+        "python": "# behave使用示例\n# features/login.feature\nfeature_content = \"\"\"\nFeature: 用户登录\n  Scenario: 成功登录\n    Given 用户已注册账号 \"testuser\" 密码 \"password123\"\n    When 用户使用 \"testuser\" 和 \"password123\" 登录\n    Then 登录成功\n\"\"\"\n\n# features/steps/login_steps.py\nfrom behave import given, when, then\n\nclass UserService:\n    def __init__(self):\n        self.users = {}\n    \n    def register(self, username, password):\n        self.users[username] = password\n    \n    def login(self, username, password):\n        if username in self.users and self.users[username] == password:\n            return {\"success\": True}\n        return {\"success\": False}\n\n@given(\"用户已注册账号 {username} 密码 {password}\")\ndef step_register(context, username, password):\n    if not hasattr(context, \"service\"):\n        context.service = UserService()\n    context.service.register(username, password)\n\n@when(\"用户使用 {username} 和 {password} 登录\")\ndef step_login(context, username, password):\n    context.result = context.service.login(username, password)\n\n@then(\"登录成功\")\ndef step_success(context):\n    assert context.result[\"success\"]\n\n# pytest-bdd使用示例\nfrom pytest_bdd import scenario\n\n@scenario(\"login.feature\", \"成功登录\")\ndef test_login():\n    pass"
+      }
+    },
+    {
+      "id": "test-025",
+      "title": "测试金字塔与测试策略",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "测试金字塔",
+        "测试策略",
+        "单元测试",
+        "集成测试",
+        "E2E测试"
+      ],
+      "content": "什么是测试金字塔？如何制定测试策略？",
+      "answer": "**测试金字塔：**\n- 底层：单元测试（70%）\n  - 快速、独立、低成本\n  - 测试单个函数/类\n- 中层：集成测试（20%）\n  - 测试模块间交互\n  - 数据库、API集成\n- 顶层：E2E测试（10%）\n  - 模拟真实用户场景\n  - 慢、不稳定、高成本\n\n**测试策略制定：**\n1. 根据风险确定测试重点\n2. 平衡测试成本与收益\n3. 自动化优先\n4. 持续集成中运行测试\n\n**反模式：**\n- 测试冰淇淋（过多UI测试）\n- 测试纸杯蛋糕（各层测试数量平均）",
+      "code": {
+        "python": "# 测试金字塔示例\n\"\"\"\n项目结构：\ntests/\n├── unit/              # 单元测试（最多）\n│   ├── test_models.py\n│   ├── test_services.py\n│   └── test_utils.py\n├── integration/       # 集成测试（中等）\n│   ├── test_database.py\n│   ├── test_api.py\n│   └── test_external_services.py\n└── e2e/               # E2E测试（最少）\n    ├── test_user_flow.py\n    └── test_checkout.py\n\n运行策略：\n- 每次提交运行单元测试（< 1分钟）\n- 合并前运行集成测试（< 5分钟）\n- 发布前运行E2E测试（< 30分钟）\n\"\"\""
+      }
+    },
+    {
+      "id": "test-026",
+      "title": "测试驱动开发（TDD）",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "TDD",
+        "测试驱动开发",
+        "红绿重构",
+        "单元测试"
+      ],
+      "content": "什么是TDD？TDD的工作流程是什么？",
+      "answer": "**TDD（测试驱动开发）：**\n先写测试，再写代码，通过测试来驱动设计。\n\n**红绿重构循环：**\n1. **红**：写一个失败的测试\n2. **绿**：写最少代码让测试通过\n3. **重构**：优化代码，保持测试通过\n\n**TDD优势：**\n- 高测试覆盖率\n- 更好的设计（松耦合）\n- 活文档（测试即文档）\n- 更安全地重构\n\n**TDD挑战：**\n- 学习曲线陡峭\n- 初期开发速度较慢\n- 不适合探索性开发\n- UI/UX开发较难TDD",
+      "code": {
+        "python": "# TDD示例：实现一个计算器\n\n# 步骤1：写测试（红）\n# test_calculator.py\ndef test_add():\n    calc = Calculator()\n    assert calc.add(2, 3) == 5\n\ndef test_subtract():\n    calc = Calculator()\n    assert calc.subtract(5, 3) == 2\n\n# 步骤2：实现代码（绿）\n# calculator.py\nclass Calculator:\n    def add(self, a, b):\n        return a + b\n    \n    def subtract(self, a, b):\n        return a - b\n\n# 步骤3：重构\n# 优化代码结构，保持测试通过\nclass Calculator:\n    def add(self, a, b):\n        \"\"\"Add two numbers.\"\"\"\n        return a + b\n    \n    def subtract(self, a, b):\n        \"\"\"Subtract b from a.\"\"\"\n        return a - b\n    \n    def multiply(self, a, b):\n        \"\"\"Multiply two numbers.\"\"\"\n        return a * b\n    \n    def divide(self, a, b):\n        \"\"\"Divide a by b.\"\"\"\n        if b == 0:\n            raise ValueError(\"Cannot divide by zero\")\n        return a / b"
+      }
+    },
+    {
+      "id": "test-027",
+      "title": "性能测试指标与分析",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "性能测试",
+        "响应时间",
+        "吞吐量",
+        "并发",
+        "性能指标"
+      ],
+      "content": "性能测试的关键指标有哪些？如何分析性能瓶颈？",
+      "answer": "**性能测试指标：**\n\n1. **响应时间：**\n   - 平均响应时间\n   - P50/P95/P99分位数\n   - 最大响应时间\n\n2. **吞吐量：**\n   - QPS/TPS（每秒查询/事务数）\n   - RPS（每秒请求数）\n\n3. **并发能力：**\n   - 并发用户数\n   - 连接数\n\n4. **资源利用率：**\n   - CPU使用率\n   - 内存使用\n   - 磁盘IO\n   - 网络带宽\n\n**瓶颈分析：**\n- CPU瓶颈：计算密集型\n- IO瓶颈：数据库、文件、网络\n- 内存瓶颈：缓存、内存泄漏\n- 锁竞争：并发冲突",
+      "code": {
+        "python": "# 性能测试示例\n\"\"\"\n# 使用Locust进行性能测试\nfrom locust import HttpUser, task, between\n\nclass WebsiteUser(HttpUser):\n    wait_time = between(1, 5)\n    \n    @task(3)\n    def view_homepage(self):\n        self.client.get(\"/\")\n    \n    @task(1)\n    def view_product(self):\n        self.client.get(\"/product/1\")\n\n# 运行：locust -f locustfile.py --host=http://example.com\n\"\"\"\n\n# 性能指标收集\nimport time\nimport statistics\n\nclass PerformanceMonitor:\n    def __init__(self):\n        self.response_times = []\n    \n    def record(self, func, *args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        elapsed = time.time() - start\n        self.response_times.append(elapsed)\n        return result\n    \n    def report(self):\n        if not self.response_times:\n            return\n        times = sorted(self.response_times)\n        print(f\"Requests: {len(times)}\")\n        print(f\"Avg: {statistics.mean(times):.3f}s\")\n        print(f\"P50: {times[int(len(times)*0.5)]:.3f}s\")\n        print(f\"P95: {times[int(len(times)*0.95)]:.3f}s\")\n        print(f\"P99: {times[int(len(times)*0.99)]:.3f}s\")\n        print(f\"Max: {max(times):.3f}s\")"
+      }
+    },
+    {
+      "id": "test-028",
+      "title": "测试左移与测试右移",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "测试左移",
+        "测试右移",
+        "DevOps",
+        "持续测试",
+        "生产环境测试"
+      ],
+      "content": "什么是测试左移和测试右移？如何在实践中应用？",
+      "answer": "**测试左移（Shift Left）：**\n- 将测试活动提前到开发早期\n- 在需求阶段就考虑可测试性\n- 开发编写单元测试\n- 代码评审时关注测试\n- 收益：缺陷早发现早修复，成本低\n\n**测试右移（Shift Right）：**\n- 在生产环境进行测试\n- 监控真实用户行为\n- A/B测试、金丝雀发布\n- 混沌工程\n- 收益：验证真实场景，快速反馈\n\n**实践方法：**\n- 左移：TDD、静态分析、代码评审\n- 右移：监控告警、灰度发布、用户反馈",
+      "code": {
+        "python": "# 测试左移实践\n\"\"\"\n1. 代码提交前检查\n- 本地运行单元测试\n- 静态代码分析（pylint, mypy）\n- 代码格式化（black, autopep8）\n\n2. CI/CD流水线\n- 提交触发自动化测试\n- 测试通过才能合并\n- 代码覆盖率门禁\n\"\"\"\n\n# 测试右移实践\n\"\"\"\n1. 生产环境监控\n- 错误率监控\n- 性能指标监控\n- 业务指标监控\n\n2. 灰度发布\n- 金丝雀发布\n- A/B测试\n- 特性开关\n\n3. 混沌工程\n- 随机注入故障\n- 验证系统韧性\n\"\"\"\n\n# 特性开关示例\nclass FeatureFlags:\n    def __init__(self):\n        self.flags = {\n            \"new_checkout_flow\": False,\n            \"recommendation_v2\": True\n        }\n    \n    def is_enabled(self, flag):\n        return self.flags.get(flag, False)\n\n# 使用\nff = FeatureFlags()\nif ff.is_enabled(\"new_checkout_flow\"):\n    process_new_checkout()\nelse:\n    process_old_checkout()"
+      }
+    },
+    {
+      "id": "test-029",
+      "title": "兼容性测试与多环境验证",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "medium",
+      "tags": [
+        "兼容性测试",
+        "浏览器兼容性",
+        "跨平台",
+        "响应式测试",
+        "设备测试"
+      ],
+      "content": "兼容性测试包含哪些类型？如何设计兼容性测试策略？",
+      "answer": "**兼容性测试类型：**\n\n1. **浏览器兼容性：**\n   - Chrome、Firefox、Safari、Edge\n   - 不同版本（最新、上一个、稳定版）\n   - 内核差异（Blink、Gecko、WebKit）\n\n2. **操作系统兼容性：**\n   - Windows、macOS、Linux\n   - 不同版本（Win10/11, macOS 12/13/14）\n\n3. **设备兼容性：**\n   - 手机、平板、桌面\n   - 不同屏幕尺寸和分辨率\n   - 不同浏览器尺寸（响应式）\n\n4. **数据库兼容性：**\n   - MySQL、PostgreSQL、MongoDB\n   - 不同版本\n\n**测试策略：**\n- 优先级矩阵（用户量 × 市场占有率）\n- 云测试平台（BrowserStack、 Sauce Labs）\n- 自动化截图对比\n- 真机测试实验室",
+      "code": {
+        "python": "# 兼容性测试示例\n\n# pytest参数化测试（浏览器）\nimport pytest\n\n@pytest.mark.parametrize(\"browser\", [\n    \"chrome\",\n    \"firefox\", \n    \"safari\",\n    \"edge\"\n])\ndef test_cross_browser(driver, browser):\n    if browser == \"chrome\":\n        options = webdriver.ChromeOptions()\n    elif browser == \"firefox\":\n        options = webdriver.FirefoxOptions()\n    driver = webdriver.Remote(command_executor='http://selenium:4444', \n                              options=options)\n    driver.get(\"https://example.com\")\n    assert driver.title == \"Expected Title\"\n\n# 响应式测试\n@pytest.mark.parametrize(\"viewport\", [\n    (1920, 1080, \"desktop\"),\n    (768, 1024, \"tablet\"),\n    (375, 667, \"mobile\")\n])\ndef test_responsive_design(driver, viewport):\n    width, height, device = viewport\n    driver.set_window_size(width, height)\n    driver.get(\"https://example.com/responsive\")\n    # 验证布局是否正确\n    navbar = driver.find_element(By.CLASS_NAME, \"navbar\")\n    assert navbar.is_displayed()\n\n# 数据库兼容性测试\nimport pytest\nfrom sqlalchemy import create_engine\n\n@pytest.mark.parametrize(\"db\", [\n    \"mysql\",\n    \"postgresql\",\n    \"sqlite\"\n])\ndef test_database_operations(db):\n    if db == \"mysql\":\n        engine = create_engine(\"mysql+pymysql://user:pass@localhost/test\")\n    elif db == \"postgresql\":\n        engine = create_engine(\"postgresql://user:pass@localhost/test\")\n    else:\n        engine = create_engine(\"sqlite:///:memory:\")\n    # 测试CRUD操作\n    with engine.connect() as conn:\n        conn.execute(text(\"SELECT 1\"))"
+      }
+    },
+    {
+      "id": "test-030",
+      "title": "探索性测试与会话测试",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "探索性测试",
+        "会话测试",
+        "自由测试",
+        "缺陷发现",
+        "测试设计"
+      ],
+      "content": "什么是探索性测试？如何进行有效的会话测试？",
+      "answer": "**探索性测试（Exploratory Testing）：**\n- 边学习、边设计、边执行\n- 自由探索发现传统测试未覆盖的缺陷\n- 需要测试人员的领域知识和经验\n- 与脚本化测试互补\n\n**会话测试（Session-Based Testing）：**\n- 结构化的探索性测试方法\n- 固定时间盒（如60分钟）\n- 包含任务、目标和报告\n\n**核心要素：**\n- 漫游测试（旅游 metaphor）\n  - 边界漫游：测试边界值\n  - 便利店漫游：常见路径\n  - 休息漫游：暂停思考\n  - 好人坏人漫游：正反两面\n\n**会话报告内容：**\n- 执行的测试场景\n- 发现的问题\n- 覆盖的功能区域\n- 风险评估",
+      "code": {
+        "python": "# 探索性测试示例\n\n# 会话测试模板\nsession_template = \"\"\"\n=== 会话测试报告 ===\n测试员: [姓名]\n日期: [日期]\n时长: [分钟]\n应用: [应用名称]\n版本: [版本号]\n\n任务: 测试用户登录流程\n\n1. 漫游类型: 便利店漫游\n   路径: 首页 -> 登录页 -> 输入正确凭证 -> 登录成功\n   观察: 登录成功后跳转正常\n\n2. 漫游类型: 边界漫游  \n   测试: 输入超长用户名、特殊字符、SQL注入\n   观察: 超长输入被截断，但特殊字符和注入未被过滤\n   风险: 中 - 可能导致XSS\n\n3. 漫游类型: 坏人漫游\n   测试: 多次错误密码、错误用户名、无网络\n   观察: 错误提示不明确，无法区分用户名不存在还是密码错误\n   风险: 高 - 信息泄露风险\n\n覆盖区域: 登录、密码重置、记住登录\n未覆盖区域: 社交登录、双因素认证\n风险评级: 中高\n建议: 1. 增加XSS过滤 2. 改进错误提示\n\"\"\"\n\n# 探索性测试辅助工具\nclass CharterTracker:\n    def __init__(self):\n        self.sessions = []\n    \n    def start_charter(self, mission):\n        self.current = {\n            \"mission\": mission,\n            \"start_time\": datetime.now(),\n            \"notes\": [],\n            \"bugs\": []\n        }\n    \n    def add_note(self, observation):\n        self.current[\"notes\"].append({\n            \"time\": datetime.now(),\n            \"observation\": observation\n        })\n    \n    def report_bug(self, title, severity, steps):\n        self.current[\"bugs\"].append({\n            \"title\": title,\n            \"severity\": severity,\n            \"steps\": steps\n        })\n    \n    def end_session(self):\n        self.current[\"end_time\"] = datetime.now()\n        self.sessions.append(self.current)\n        return self.generate_report()\n\n# 使用示例\ntracker = CharterTracker()\ntracker.start_charter(\"测试搜索功能\")\ntracker.add_note(\"搜索框支持模糊匹配\")\ntracker.report_bug(\n    \"搜索特殊字符导致500错误\",\n    \"High\",\n    [\"输入test<script>alert(1)</script>\", \"点击搜索\"]\n)\nreport = tracker.end_session()"
+      }
+    },
+    {
+      "id": "test-031",
+      "title": "UI自动化测试：元素定位与等待策略",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "medium",
+      "tags": [
+        "Selenium",
+        "元素定位",
+        "等待策略",
+        "Page Object",
+        "UI自动化"
+      ],
+      "content": "Selenium中如何有效定位元素？不同等待策略的优缺点？",
+      "answer": "**元素定位策略（按优先级）：**\n\n1. **ID > Name > CSS > XPath**\n2. 优先使用稳定的唯一属性\n3. 避免使用索引和绝对XPath\n4. 使用data-testid或语义化属性\n\n**定位方法：**\n- driver.find_element(By.ID, \"id\")\n- By.NAME, By.CLASS_NAME\n- By.CSS_SELECTOR\n- By.XPATH（相对优于绝对）\n- By.LINK_TEXT, By.PARTIAL_LINK_TEXT\n\n**等待策略：**\n\n1. **隐式等待（Implicit）：**\n   - 全局设置，一次生效\n   - 简单但可能导致不必要的等待\n\n2. **显式等待（Explicit）：**\n   - 推荐使用\n   - 等待特定条件\n   - ExpectedConditions\n\n3. **流畅等待（Fluent）：**\n   - 显式等待的增强版\n   - 自定义轮询间隔和忽略异常",
+      "code": {
+        "python": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\nfrom selenium.webdriver.support.ui import Select\nfrom selenium.webdriver.common.action_chains import ActionChains\n\n# ===== 元素定位 =====\n\n# 推荐的定位方式（按优先级）\ndef find_elements(driver):\n    # 1. ID（最快最稳定）\n    element = driver.find_element(By.ID, \"username\")\n    \n    # 2. Name属性\n    element = driver.find_element(By.NAME, \"email\")\n    \n    # 3. CSS Selector（灵活且快）\n    element = driver.find_element(By.CSS_SELECTOR, \".btn.primary\")\n    element = driver.find_element(By.CSS_SELECTOR, \"div#header > ul.nav > li\")\n    \n    # 4. XPath（功能强但慢）\n    # 相对XPath（推荐）\n    element = driver.find_element(By.XPATH, \"//button[contains(text(), 'Submit')]\")\n    element = driver.find_element(By.XPATH, \"//div[@class='card'][2]/button\")\n    \n    # 避免：绝对XPath\n    # element = driver.find_element(By.XPATH, \"/html/body/div[1]/div[2]/form/button\")\n\n# ===== 等待策略 =====\n\n# 隐式等待（全局设置）\ndef test_implicit_wait(driver):\n    driver.implicitly_wait(10)  # 全局等待10秒\n    driver.get(\"https://example.com\")\n\n# 显式等待（推荐）\ndef test_explicit_wait(driver):\n    driver.get(\"https://example.com\")\n    \n    # 等待元素可见\n    element = WebDriverWait(driver, 10).until(\n        EC.visibility_of_element_located((By.ID, \"username\"))\n    )\n    \n    # 等待元素可点击\n    button = WebDriverWait(driver, 10).until(\n        EC.element_to_be_clickable((By.CSS_SELECTOR, \".btn-submit\"))\n    )\n    \n    # 等待文本出现\n    WebDriverWait(driver, 10).until(\n        EC.text_to_be_present_in_element((By.ID, \"status\"), \"Success\")\n    )\n    \n    # 等待元素消失\n    WebDriverWait(driver, 10).until(\n        EC.invisibility_of_element_located((By.CLASS_NAME, \"loading\"))\n    )\n\n# ===== Page Object模式 =====\n\nclass LoginPage:\n    def __init__(self, driver):\n        self.driver = driver\n        self.wait = WebDriverWait(driver, 10)\n    \n    @property\n    def username(self):\n        return self.wait.until(\n            EC.visibility_of_element_located((By.ID, \"username\"))\n        )\n    \n    @property\n    def password(self):\n        return self.wait.until(\n            EC.visibility_of_element_located((By.ID, \"password\"))\n        )\n    \n    @property\n    def submit_btn(self):\n        return self.wait.until(\n            EC.element_to_be_clickable((By.CSS_SELECTOR, \".btn-login\"))\n        )\n    \n    def login(self, username, password):\n        self.username.send_keys(username)\n        self.password.send_keys(password)\n        self.submit_btn.click()\n        from pages.DashboardPage import DashboardPage\n        return DashboardPage(self.driver)"
+      }
+    },
+    {
+      "id": "test-032",
+      "title": "冒烟测试与回归测试",
+      "category": "testing",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "medium",
+      "tags": [
+        "冒烟测试",
+        "回归测试",
+        "测试类型",
+        "软件测试",
+        "质量保障"
+      ],
+      "content": "什么是冒烟测试和回归测试？它们有什么区别和联系？",
+      "answer": "**冒烟测试（Smoke Testing）：**\n- 验证软件基本功能是否正常\n- 在详细测试前进行快速验证\n- 如果冒烟测试失败，停止后续测试\n- 类似硬件测试：通电后是否冒烟\n\n**回归测试（Regression Testing）：**\n- 验证修改是否引入新缺陷\n- 在代码变更后执行\n- 确保原有功能仍然正常\n- 可以是全量或选择性执行\n\n**主要区别：**\n| 特性 | 冒烟测试 | 回归测试 |\n|------|---------|---------|\n| 目的 | 验证基本功能 | 验证修改无影响 |\n| 执行时机 | 构建后 | 代码变更后 |\n| 覆盖范围 | 核心功能 | 受影响功能 |\n| 失败处理 | 停止测试 | 修复后重测 |\n\n**联系：**\n- 冒烟测试是回归测试的子集\n- 都可以自动化\n- 都是质量保障手段",
+      "code": {
+        "python": "# 冒烟测试示例\nsmoke_tests = \"\"\"\n# 冒烟测试检查清单\ndef smoke_test_suite():\n    tests = [\n        # 1. 应用启动\n        test_application_starts(),\n        \n        # 2. 数据库连接\n        test_database_connection(),\n        \n        # 3. 关键页面加载\n        test_login_page_loads(),\n        test_dashboard_loads(),\n        \n        # 4. 核心API可用\n        test_health_check_api(),\n        test_authentication_api(),\n        \n        # 5. 关键业务流程\n        test_user_can_login(),\n        test_user_can_logout(),\n    ]\n    return all(tests)\n\n# CI/CD中的冒烟测试\n# .github/workflows/smoke.yml\n\"\"\"\n\n# 回归测试示例\nregression_tests = \"\"\"\n# 回归测试策略\n\n# 1. 全量回归\ndef full_regression():\n    # 执行所有测试用例\n    run_all_tests()\n\n# 2. 选择性回归\ndef selective_regression(changed_files):\n    # 根据代码变更选择相关测试\n    affected_tests = analyze_impact(changed_files)\n    run_tests(affected_tests)\n\n# 3. 自动化回归套件\nregression_suite = [\n    \"test_user_management.py\",\n    \"test_order_processing.py\",\n    \"test_payment_gateway.py\",\n    \"test_reporting.py\",\n]\n\n# 优先级划分\nhigh_priority = [\"test_critical_path.py\"]\nmedium_priority = [\"test_standard_features.py\"]\nlow_priority = [\"test_edge_cases.py\"]\n\"\"\"\n\nprint(smoke_tests)\nprint(regression_tests)"
+      }
+    },
+    {
+      "id": "test-033",
+      "title": "缺陷管理流程与工具",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "缺陷管理",
+        "Bug管理",
+        "Jira",
+        "缺陷生命周期",
+        "缺陷报告"
+      ],
+      "content": "缺陷管理的流程是什么？如何编写高质量的缺陷报告？",
+      "answer": "**缺陷生命周期：**\n1. 新建（New）\n2. 确认（Confirmed/Assigned）\n3. 修复中（In Progress）\n4. 已修复（Fixed/Resolved）\n5. 验证中（In Verification）\n6. 已关闭（Closed）\n7. 重新打开（Reopened）\n\n**缺陷严重程度：**\n- Critical：系统崩溃、数据丢失\n- Major：主要功能不可用\n- Minor：次要功能问题\n- Trivial：界面问题、错别字\n\n**高质量缺陷报告要素：**\n- 清晰的标题\n- 环境信息\n- 复现步骤\n- 实际结果 vs 预期结果\n- 截图/日志附件",
+      "code": {
+        "python": "# 缺陷报告模板\nprint('''\n# 缺陷报告\n\n## 基本信息\n- 缺陷ID: BUG-2024-001\n- 标题: [模块名] 简短描述\n- 严重程度: Major\n- 优先级: P1\n\n## 环境信息\n- 操作系统: Windows 11\n- 浏览器: Chrome 120.0\n- 应用版本: v2.3.1\n\n## 复现步骤\n1. 登录系统\n2. 进入订单管理页面\n3. 点击导出按钮\n\n## 实际结果\n系统报错：Internal Server Error\n\n## 预期结果\n成功导出Excel文件\n''')"
+      }
+    },
+    {
+      "id": "test-034",
+      "title": "测试度量与质量指标",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "测试度量",
+        "质量指标",
+        "测试报告",
+        "KPI",
+        "质量保障"
+      ],
+      "content": "测试度量有哪些关键指标？如何评估测试质量和效率？",
+      "answer": "**测试执行指标：**\n- 测试用例总数\n- 测试用例执行率\n- 测试通过率\n- 测试失败率\n\n**缺陷相关指标：**\n- 缺陷密度（缺陷数/代码行数）\n- 缺陷发现率\n- 缺陷修复率\n- 缺陷逃逸率\n\n**效率指标：**\n- 测试自动化率\n- 测试执行效率\n- 缺陷修复周期\n\n**质量指标：**\n- 代码覆盖率\n- 需求覆盖率\n- 测试有效性",
+      "code": {
+        "python": "# 测试度量计算\nprint('''\n# 关键指标计算\n\n执行率 = 已执行用例 / 总用例 * 100%\n通过率 = 通过用例 / 已执行用例 * 100%\n缺陷密度 = 缺陷数 / 代码行数(KLOC)\n缺陷逃逸率 = 生产环境缺陷 / 总缺陷 * 100%\n自动化率 = 自动化用例 / 总用例 * 100%\n\n示例：\n总用例: 1000\n已执行: 950\n通过: 900\n缺陷: 50\n代码: 50000行\n\n执行率 = 950/1000 = 95%\n通过率 = 900/950 = 94.7%\n缺陷密度 = 50/50 = 1缺陷/KLOC\n''')"
+      }
+    },
+    {
+      "id": "test-035",
+      "title": "混沌工程与系统韧性测试",
+      "category": "testing",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "混沌工程",
+        "Chaos Engineering",
+        "故障注入",
+        "系统韧性",
+        "容错测试"
+      ],
+      "content": "什么是混沌工程？如何进行故障注入和系统韧性测试？",
+      "answer": "**混沌工程原则：**\n1. 建立稳态假设\n2. 多样化真实世界事件\n3. 生产环境运行\n4. 持续自动化\n5. 最小化爆炸半径\n\n**故障注入类型：**\n- 网络故障：延迟、丢包、分区\n- 服务故障：服务宕机、响应缓慢\n- 资源故障：CPU满载、内存耗尽\n\n**混沌工程工具：**\n- Chaos Monkey：随机终止实例\n- Gremlin：企业级混沌工程平台\n- Chaos Mesh：Kubernetes混沌工程",
+      "code": {
+        "python": "# 混沌工程实践\nprint('''\n# Chaos Mesh故障注入示例\n\n# 网络延迟\napiVersion: chaos-mesh.org/v1alpha1\nkind: NetworkChaos\nmetadata:\n  name: network-delay\nspec:\n  action: delay\n  delay:\n    latency: \"100ms\"\n\n# Pod故障\napiVersion: chaos-mesh.org/v1alpha1\nkind: PodChaos\nmetadata:\n  name: pod-kill\nspec:\n  action: pod-kill\n  mode: fixed-percent\n  value: \"50\"\n\n# Python故障注入装饰器\nimport random\nimport time\n\ndef inject_latency(probability=0.1, max_delay=5):\n    def decorator(func):\n        def wrapper(*args, **kwargs):\n            if random.random() < probability:\n                time.sleep(random.uniform(0, max_delay))\n            return func(*args, **kwargs)\n        return wrapper\n    return decorator\n''')"
+      }
+    },
+    {
+      "id": "test-036",
+      "title": "测试数据管理与脱敏",
+      "category": "testing",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "测试数据",
+        "数据脱敏",
+        "数据生成",
+        "GDPR",
+        "隐私保护"
+      ],
+      "content": "如何管理测试数据？数据脱敏的方法有哪些？",
+      "answer": "**测试数据类型：**\n- 生产数据脱敏\n- 合成数据生成\n- 子集抽样\n- 模糊测试数据\n\n**数据脱敏方法：**\n- 替换：姓名->随机名\n- 遮蔽：身份证号->110***********1234\n- 加密：敏感字段加密存储\n- 泛化：年龄32->30-35年龄段\n\n**脱敏工具：**\n- Faker：生成假数据\n- Mockaroo：在线数据生成\n- Tonic.ai：智能数据脱敏",
+      "code": {
+        "python": "# 测试数据管理\nprint('''\n# Faker生成假数据\nfrom faker import Faker\nimport hashlib\n\nfake = Faker('zh_CN')\n\ndef generate_test_user():\n    return {\n        'name': fake.name(),\n        'email': fake.email(),\n        'phone': fake.phone_number(),\n        'address': fake.address()\n    }\n\n# 数据脱敏函数\ndef mask_phone(phone):\n    if len(phone) == 11:\n        return phone[:3] + '****' + phone[-4:]\n    return phone\n\ndef mask_email(email):\n    if '@' in email:\n        local, domain = email.split('@')\n        return local[0] + '***@' + domain\n    return email\n\n# 使用示例\nuser = generate_test_user()\nprint(f\"Phone: {mask_phone(user['phone'])}\")\nprint(f\"Email: {mask_email(user['email'])}\")\n''')"
+      }
+    }
+  ]
+}

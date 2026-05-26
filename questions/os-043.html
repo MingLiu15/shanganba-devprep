@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCU读复制更新 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="RCU（Read-Copy-Update）：读多写少的同步机制，读者无锁，写者复制更新。  核心思想： 1. 读者：直接读取，不加锁（极快） 2. 写者：复制数据，修改副本，原子替换指针 3. 旧数据：延迟释放，等待所有读者退出  适用场景： - 读多写少（读者占99%+） - Linux内核：路由表、文件系统、进程链...">
+<meta name="keywords" content="RCU读复制更新,操作系统面试题,RCU, 读复制更新, 无锁, 内核, 同步,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-043.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RCU读复制更新 - 操作系统面试题">
+<meta property="og:description" content="RCU（Read-Copy-Update）：读多写少的同步机制，读者无锁，写者复制更新。  核心思想： 1. 读者：直接读取，不加锁（极快） 2. 写者：复制数据，修改副本，原子替换指针 3. 旧数据：延迟释放，等待所有读者退出  适用场景： - 读多写少（读者占99%+） - Linux内核：路由表、文件系统、进程链...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-043.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "RCU读复制更新",
+    "text": "什么是RCU？它适用于什么场景？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "RCU（Read-Copy-Update）：读多写少的同步机制，读者无锁，写者复制更新。  核心思想： 1. 读者：直接读取，不加锁（极快） 2. 写者：复制数据，修改副本，原子替换指针 3. 旧数据：延迟释放，等待所有读者退出  适用场景： - 读多写少（读者占99%+） - Linux内核：路由表、文件系统、进程链表 - 需要极致读性能的场景  三个关键操作： 1. rcu_read_lock/unlock：读者临界区标记 2. synchronize_rcu：等待所有读者退出（宽限期） 3. call_rcu：注册回调，宽限期后释放旧数据  限制： - 只保护指针，不保护数据 - 写者开销大（复制+延迟释放） - 不能阻塞在RCU临界区内"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>RCU读复制更新</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：RCU, 读复制更新, 无锁, 内核, 同步</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是RCU？它适用于什么场景？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">RCU（Read-Copy-Update）：读多写少的同步机制，读者无锁，写者复制更新。</div><br><div class="answer-line">核心思想：</div><div class="answer-line"><strong>1. 读者：直接读取，不加锁（极快）</strong></div><div class="answer-line"><strong>2. 写者：复制数据，修改副本，原子替换指针</strong></div><div class="answer-line"><strong>3. 旧数据：延迟释放，等待所有读者退出</strong></div><br><div class="answer-line">适用场景：</div><div class="answer-line">- 读多写少（读者占99%+）</div><div class="answer-line">- Linux内核：路由表、文件系统、进程链表</div><div class="answer-line">- 需要极致读性能的场景</div><br><div class="answer-line">三个关键操作：</div><div class="answer-line"><strong>1. rcu_read_lock/unlock：读者临界区标记</strong></div><div class="answer-line"><strong>2. synchronize_rcu：等待所有读者退出（宽限期）</strong></div><div class="answer-line"><strong>3. call_rcu：注册回调，宽限期后释放旧数据</strong></div><br><div class="answer-line">限制：</div><div class="answer-line">- 只保护指针，不保护数据</div><div class="answer-line">- 写者开销大（复制+延迟释放）</div><div class="answer-line">- 不能阻塞在RCU临界区内</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// RCU简化概念
+// 实际RCU是Linux内核机制，用户空间可用类似思想
+
+#include &lt;atomic&gt;
+#include &lt;memory&gt;
+
+template&lt;typename T&gt;
+class RCUPtr {
+    std::atomic&lt;T*&gt; ptr;
+    std::atomic&lt;int&gt; readers{0};
+public:
+    T* read_lock() {
+        readers++;
+        return ptr.load();
+    }
+    
+    void read_unlock() {
+        readers--;
+    }
+    
+    void update(T* newPtr) {
+        T* old = ptr.exchange(newPtr);
+        // 等待所有读者退出
+        while (readers &gt; 0) {
+            std::this_thread::yield();
+        }
+        delete old;  // 安全删除
+    }
+};
+
+// Linux内核RCU使用示例（概念）
+// struct my_struct *ptr;
+// 
+// // 读者
+// rcu_read_lock();
+// p = rcu_dereference(ptr);
+// // 使用p...
+// rcu_read_unlock();
+// 
+// // 写者
+// new_p = kmalloc(...);
+// *new_p = *p;
+// new_p-&gt;field = new_value;
+// rcu_assign_pointer(ptr, new_p);
+// synchronize_rcu();  // 等待宽限期
+// kfree(p);</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

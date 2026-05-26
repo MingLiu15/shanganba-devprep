@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>类变量与实例变量的区别 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="类变量：定义在类体中、方法之外，属于类本身，所有实例共享。通过类名或实例名访问。修改类变量会影响所有实例（除非实例已覆盖该属性）。  实例变量：在__init__等方法中通过self.xxx定义，属于具体实例，每个实例独立拥有。只能通过实例名访问。  属性查找顺序（MRO简化版）： 1. 先查找实例的__dict__。...">
+<meta name="keywords" content="类变量与实例变量的区别,Python面试题,面向对象, 类变量, 实例变量,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-011.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类变量与实例变量的区别 - Python面试题">
+<meta property="og:description" content="类变量：定义在类体中、方法之外，属于类本身，所有实例共享。通过类名或实例名访问。修改类变量会影响所有实例（除非实例已覆盖该属性）。  实例变量：在__init__等方法中通过self.xxx定义，属于具体实例，每个实例独立拥有。只能通过实例名访问。  属性查找顺序（MRO简化版）： 1. 先查找实例的__dict__。...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-011.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "类变量与实例变量的区别",
+    "text": "解释Python中类变量和实例变量的区别，以及属性查找顺序。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "类变量：定义在类体中、方法之外，属于类本身，所有实例共享。通过类名或实例名访问。修改类变量会影响所有实例（除非实例已覆盖该属性）。  实例变量：在__init__等方法中通过self.xxx定义，属于具体实例，每个实例独立拥有。只能通过实例名访问。  属性查找顺序（MRO简化版）： 1. 先查找实例的__dict__。 2. 再查找类的__dict__。 3. 再查找基类的__dict__，沿继承链向上查找。  常见陷阱： - 通过实例修改类变量（如obj.count = 5）不会修改类变量，而是创建同名的实例变量。 - 可变类型的类变量（如list、dict）被实例修改时会真正改变类变量。 - 使用类名来修改类变量才是正确做法：ClassName.var = value。  最佳实践： - 类变量用于存储所有实例共享的常量或计数器。 - 实例变量用于存储每个实例独有的数据。 - 避免使用可变类型作为类变量的初始值。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>类变量与实例变量的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：面向对象, 类变量, 实例变量</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中类变量和实例变量的区别，以及属性查找顺序。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">类变量：定义在类体中、方法之外，属于类本身，所有实例共享。通过类名或实例名访问。修改类变量会影响所有实例（除非实例已覆盖该属性）。</div><br><div class="answer-line">实例变量：在__init__等方法中通过self.xxx定义，属于具体实例，每个实例独立拥有。只能通过实例名访问。</div><br><div class="answer-line">属性查找顺序（MRO简化版）：</div><div class="answer-line"><strong>1. 先查找实例的__dict__。</strong></div><div class="answer-line"><strong>2. 再查找类的__dict__。</strong></div><div class="answer-line"><strong>3. 再查找基类的__dict__，沿继承链向上查找。</strong></div><br><div class="answer-line">常见陷阱：</div><div class="answer-line">- 通过实例修改类变量（如obj.count = 5）不会修改类变量，而是创建同名的实例变量。</div><div class="answer-line">- 可变类型的类变量（如list、dict）被实例修改时会真正改变类变量。</div><div class="answer-line">- 使用类名来修改类变量才是正确做法：ClassName.var = value。</div><br><div class="answer-line">最佳实践：</div><div class="answer-line">- 类变量用于存储所有实例共享的常量或计数器。</div><div class="answer-line">- 实例变量用于存储每个实例独有的数据。</div><div class="answer-line">- 避免使用可变类型作为类变量的初始值。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">class Dog:
+    species = &#039;Canine&#039;      # 类变量
+    count = 0               # 类变量
+
+    def __init__(self, name):
+        self.name = name     # 实例变量
+        Dog.count += 1
+
+a = Dog(&#039;Buddy&#039;)
+b = Dog(&#039;Max&#039;)
+print(a.species)   # Canine
+print(b.count)     # 2
+
+# 陷阱：通过实例赋值不会修改类变量
+a.species = &#039;Wolf&#039;
+print(a.species)   # Wolf（实例变量）
+print(b.species)   # Canine（类变量）
+print(Dog.species) # Canine
+
+# 可变类变量的陷阱
+class Bad:
+    items = []       # 可变类变量
+    def add(self, item):
+        self.items.append(item)  # 修改了共享的类变量！
+
+x = Bad(); y = Bad()
+x.add(1)
+print(y.items)  # [1] 被影响了</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

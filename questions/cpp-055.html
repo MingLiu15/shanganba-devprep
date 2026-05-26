@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>属性语法attribute - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="属性语法：为编译器提供额外信息的标注方式。  语法：[[attribute]] 或 [[namespace::attribute]]  常用属性： 1. [[nodiscard]]：返回值不应被忽略 2. [[deprecated]]：标记废弃接口 3. [[maybe_unused]]：变量可能未使用，避免警告 4....">
+<meta name="keywords" content="属性语法attribute,C/C++面试题,attribute, C++11, nodiscard, deprecated, 编译器指令,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-055.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="属性语法attribute - C/C++面试题">
+<meta property="og:description" content="属性语法：为编译器提供额外信息的标注方式。  语法：[[attribute]] 或 [[namespace::attribute]]  常用属性： 1. [[nodiscard]]：返回值不应被忽略 2. [[deprecated]]：标记废弃接口 3. [[maybe_unused]]：变量可能未使用，避免警告 4....">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-055.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "属性语法attribute",
+    "text": "C++11中的属性语法(attribute)是什么？有哪些常用属性？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "属性语法：为编译器提供额外信息的标注方式。  语法：[[attribute]] 或 [[namespace::attribute]]  常用属性： 1. [[nodiscard]]：返回值不应被忽略 2. [[deprecated]]：标记废弃接口 3. [[maybe_unused]]：变量可能未使用，避免警告 4. [[fallthrough]]：switch中故意fallthrough 5. [[noreturn]]：函数不返回  编译器特定属性： - GCC：__attribute__((...)) - MSVC：__declspec(...) - C++11统一为[[...]]语法  应用场景： - API设计：标记废弃函数 - 代码质量：nodiscard防止忽略错误码 - 消除警告：maybe_unused"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>属性语法attribute</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：attribute, C++11, nodiscard, deprecated, 编译器指令</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++11中的属性语法(attribute)是什么？有哪些常用属性？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">属性语法：为编译器提供额外信息的标注方式。</div><br><div class="answer-line">语法：[[attribute]] 或 [[namespace::attribute]]</div><br><div class="answer-line">常用属性：</div><div class="answer-line"><strong>1. [[nodiscard]]：返回值不应被忽略</strong></div><div class="answer-line"><strong>2. [[deprecated]]：标记废弃接口</strong></div><div class="answer-line"><strong>3. [[maybe_unused]]：变量可能未使用，避免警告</strong></div><div class="answer-line"><strong>4. [[fallthrough]]：switch中故意fallthrough</strong></div><div class="answer-line"><strong>5. [[noreturn]]：函数不返回</strong></div><br><div class="answer-line">编译器特定属性：</div><div class="answer-line">- GCC：__attribute__((...))</div><div class="answer-line">- MSVC：__declspec(...)</div><div class="answer-line">- C++11统一为[[...]]语法</div><br><div class="answer-line">应用场景：</div><div class="answer-line">- API设计：标记废弃函数</div><div class="answer-line">- 代码质量：nodiscard防止忽略错误码</div><div class="answer-line">- 消除警告：maybe_unused</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// nodiscard：返回值不应忽略
+[[nodiscard]] int allocateResource() {
+    return getResourceId();
+}
+
+// 如果调用时忽略返回值，编译器警告
+// allocateResource();  // 警告！
+int id = allocateResource();  // OK
+
+// deprecated：标记废弃
+[[deprecated(&quot;Use newFunction() instead&quot;)]]
+void oldFunction() {}
+
+// maybe_unused：可能未使用
+void func([[maybe_unused]] int param) {
+    // 如果param未使用，不报警告
+}
+
+// fallthrough：故意fallthrough
+switch (x) {
+    case 1:
+        doSomething();
+        [[fallthrough]];  // 告诉编译器这是故意的
+    case 2:
+        doOther();
+        break;
+}
+
+// noreturn：函数不返回
+[[noreturn]] void terminate() {
+    throw std::runtime_error(&quot;Terminated&quot;);
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

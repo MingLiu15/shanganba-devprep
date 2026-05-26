@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIL全局解释器锁 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="GIL（Global Interpreter Lock）是CPython实现中的一个互斥锁，确保同一时刻只有一个线程执行Python字节码。  存在原因： - CPython的内存管理（引用计数）不是线程安全的，GIL防止多个线程同时修改引用计数导致内存问题。 - 简化了CPython的实现，使大量C扩展无需考虑线程安...">
+<meta name="keywords" content="GIL全局解释器锁,Python面试题,并发, GIL, 多线程, 性能,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-007.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GIL全局解释器锁 - Python面试题">
+<meta property="og:description" content="GIL（Global Interpreter Lock）是CPython实现中的一个互斥锁，确保同一时刻只有一个线程执行Python字节码。  存在原因： - CPython的内存管理（引用计数）不是线程安全的，GIL防止多个线程同时修改引用计数导致内存问题。 - 简化了CPython的实现，使大量C扩展无需考虑线程安...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-007.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "GIL全局解释器锁",
+    "text": "解释Python GIL（全局解释器锁）的原理、影响及应对方案。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "GIL（Global Interpreter Lock）是CPython实现中的一个互斥锁，确保同一时刻只有一个线程执行Python字节码。  存在原因： - CPython的内存管理（引用计数）不是线程安全的，GIL防止多个线程同时修改引用计数导致内存问题。 - 简化了CPython的实现，使大量C扩展无需考虑线程安全。  影响： - CPU密集型任务无法利用多核：多线程在CPython中无法真正并行执行。 - I/O密集型任务影响较小：I/O操作时会释放GIL，其他线程可以执行。  应对方案： - CPU密集型任务使用multiprocessing模块，每个进程有独立的GIL和Python解释器。 - 使用C扩展（如NumPy）在执行计算时释放GIL。 - 使用concurrent.futures的ProcessPoolExecutor。 - 考虑使用不依赖GIL的实现（如PyPy的某些模式、Jython、IronPython）。 - Python 3.13+引入了实验性的free-threaded模式（PEP 703），可以禁用GIL。  注意：GIL只存在于CPython中，不意味着Python语言本身有这个限制。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>GIL全局解释器锁</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：并发, GIL, 多线程, 性能</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python GIL（全局解释器锁）的原理、影响及应对方案。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">GIL（Global Interpreter Lock）是CPython实现中的一个互斥锁，确保同一时刻只有一个线程执行Python字节码。</div><br><div class="answer-line">存在原因：</div><div class="answer-line">- CPython的内存管理（引用计数）不是线程安全的，GIL防止多个线程同时修改引用计数导致内存问题。</div><div class="answer-line">- 简化了CPython的实现，使大量C扩展无需考虑线程安全。</div><br><div class="answer-line">影响：</div><div class="answer-line">- CPU密集型任务无法利用多核：多线程在CPython中无法真正并行执行。</div><div class="answer-line">- I/O密集型任务影响较小：I/O操作时会释放GIL，其他线程可以执行。</div><br><div class="answer-line">应对方案：</div><div class="answer-line">- CPU密集型任务使用multiprocessing模块，每个进程有独立的GIL和Python解释器。</div><div class="answer-line">- 使用C扩展（如NumPy）在执行计算时释放GIL。</div><div class="answer-line">- 使用concurrent.futures的ProcessPoolExecutor。</div><div class="answer-line">- 考虑使用不依赖GIL的实现（如PyPy的某些模式、Jython、IronPython）。</div><div class="answer-line">- Python 3.13+引入了实验性的free-threaded模式（PEP 703），可以禁用GIL。</div><br><div class="answer-line">注意：GIL只存在于CPython中，不意味着Python语言本身有这个限制。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import threading
+import multiprocessing
+import time
+
+# GIL对CPU密集型任务的影响
+def cpu_bound(n):
+    count = 0
+    for i in range(n):
+        count += i
+    return count
+
+# 多线程（受GIL限制）
+start = time.time()
+threads = [threading.Thread(target=cpu_bound, args=(10**7,)) for _ in range(4)]
+for t in threads: t.start()
+for t in threads: t.join()
+print(f&#039;多线程: {time.time()-start:.2f}s&#039;)  # 并不比单线程快
+
+# 多进程（绕过GIL）
+start = time.time()
+pool = multiprocessing.Pool(4)
+pool.map(cpu_bound, [10**7]*4)
+pool.close()
+print(f&#039;多进程: {time.time()-start:.2f}s&#039;)  # 接近4倍加速</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>map和unordered_map的区别 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="map（红黑树实现）： - 有序：按键的升序排列 - 查找/插入/删除：O(log n) - 需要元素支持&lt;比较运算符 - 迭代器遍历有序 - 内存开销较大（每个节点存储颜色、父子指针）  unordered_map（哈希表实现）： - 无序：不保证元素顺序 - 查找/插入/删除：平均O(1)，最坏O(n)（哈希冲突时...">
+<meta name="keywords" content="map和unordered_map的区别,C/C++面试题,map, unordered_map, 红黑树, 哈希表, STL,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-058.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="map和unordered_map的区别 - C/C++面试题">
+<meta property="og:description" content="map（红黑树实现）： - 有序：按键的升序排列 - 查找/插入/删除：O(log n) - 需要元素支持&lt;比较运算符 - 迭代器遍历有序 - 内存开销较大（每个节点存储颜色、父子指针）  unordered_map（哈希表实现）： - 无序：不保证元素顺序 - 查找/插入/删除：平均O(1)，最坏O(n)（哈希冲突时...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-058.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "map和unordered_map的区别",
+    "text": "比较C++中map和unordered_map的区别，以及各自的适用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "map（红黑树实现）： - 有序：按键的升序排列 - 查找/插入/删除：O(log n) - 需要元素支持&lt;比较运算符 - 迭代器遍历有序 - 内存开销较大（每个节点存储颜色、父子指针）  unordered_map（哈希表实现）： - 无序：不保证元素顺序 - 查找/插入/删除：平均O(1)，最坏O(n)（哈希冲突时） - 需要元素支持==比较和hash函数 - 内存开销较小（桶数组+链表）  选择原则： - 需要有序遍历→map - 只需要查找→unordered_map（更快） - 需要范围查询（lower_bound/upper_bound）→map - 键为自定义类型→map更容易（只需&lt;），unordered_map需要自定义hash  注意： - unordered_map在极端情况下（大量哈希冲突）性能退化 - map的性能稳定，不会退化"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>map和unordered_map的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：map, unordered_map, 红黑树, 哈希表, STL</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>比较C++中map和unordered_map的区别，以及各自的适用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">map（红黑树实现）：</div><div class="answer-line">- 有序：按键的升序排列</div><div class="answer-line">- 查找/插入/删除：O(log n)</div><div class="answer-line">- 需要元素支持&lt;比较运算符</div><div class="answer-line">- 迭代器遍历有序</div><div class="answer-line">- 内存开销较大（每个节点存储颜色、父子指针）</div><br><div class="answer-line">unordered_map（哈希表实现）：</div><div class="answer-line">- 无序：不保证元素顺序</div><div class="answer-line">- 查找/插入/删除：平均O(1)，最坏O(n)（哈希冲突时）</div><div class="answer-line">- 需要元素支持==比较和hash函数</div><div class="answer-line">- 内存开销较小（桶数组+链表）</div><br><div class="answer-line">选择原则：</div><div class="answer-line">- 需要有序遍历→map</div><div class="answer-line">- 只需要查找→unordered_map（更快）</div><div class="answer-line">- 需要范围查询（lower_bound/upper_bound）→map</div><div class="answer-line">- 键为自定义类型→map更容易（只需&lt;），unordered_map需要自定义hash</div><br><div class="answer-line">注意：</div><div class="answer-line">- unordered_map在极端情况下（大量哈希冲突）性能退化</div><div class="answer-line">- map的性能稳定，不会退化</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;map&gt;
+#include &lt;unordered_map&gt;
+
+// map - 有序
+std::map&lt;std::string, int&gt; m;
+m[&quot;banana&quot;] = 3;
+m[&quot;apple&quot;] = 5;
+m[&quot;cherry&quot;] = 2;
+// 遍历顺序: apple, banana, cherry（按key排序）
+for (auto&amp; [k, v] : m) {
+    cout &lt;&lt; k &lt;&lt; &quot;: &quot; &lt;&lt; v &lt;&lt; endl;
+}
+
+// unordered_map - 无序
+std::unordered_map&lt;std::string, int&gt; um;
+um[&quot;banana&quot;] = 3;
+um[&quot;apple&quot;] = 5;
+um[&quot;cherry&quot;] = 2;
+// 遍历顺序不确定
+
+// 性能对比
+// 查找100万次: unordered_map约50ms, map约300ms
+// 插入100万次: unordered_map约80ms, map约400ms</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试用例设计方法：等价类划分 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**等价类划分定义：** 将输入数据划分为若干等价类，每个等价类中的数据对揭露程序错误具有等效作用。只需从每个等价类中选取一个代表进行测试。  **等价类类型：** 1. **有效等价类**：合理的、有意义的输入数据集合 2. **无效等价类**：不合理的、无意义的输入数据集合  **划分原则：** - 如果输入条件规...">
+<meta name="keywords" content="测试用例设计方法：等价类划分,自动化测试面试题,测试设计, 等价类划分, 黑盒测试, 测试用例,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-013.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试用例设计方法：等价类划分 - 自动化测试面试题">
+<meta property="og:description" content="**等价类划分定义：** 将输入数据划分为若干等价类，每个等价类中的数据对揭露程序错误具有等效作用。只需从每个等价类中选取一个代表进行测试。  **等价类类型：** 1. **有效等价类**：合理的、有意义的输入数据集合 2. **无效等价类**：不合理的、无意义的输入数据集合  **划分原则：** - 如果输入条件规...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-013.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "测试用例设计方法：等价类划分",
+    "text": "什么是等价类划分法？如何应用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**等价类划分定义：** 将输入数据划分为若干等价类，每个等价类中的数据对揭露程序错误具有等效作用。只需从每个等价类中选取一个代表进行测试。  **等价类类型：** 1. **有效等价类**：合理的、有意义的输入数据集合 2. **无效等价类**：不合理的、无意义的输入数据集合  **划分原则：** - 如果输入条件规定了取值范围，则划分出一个有效等价类和两个无效等价类 - 如果输入条件规定了必须如何，则划分出一个有效等价类和一个无效等价类 - 如果输入条件是布尔量，则划分出一个有效等价类和一个无效等价类  **示例：用户名输入（6-20位字母数字）** - 有效等价类：6-20位字母数字 - 无效等价类：&lt;6位、&gt;20位、含特殊字符、空值"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>测试用例设计方法：等价类划分</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：测试设计, 等价类划分, 黑盒测试, 测试用例</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是等价类划分法？如何应用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**等价类划分定义：**</div><div class="answer-line">将输入数据划分为若干等价类，每个等价类中的数据对揭露程序错误具有等效作用。只需从每个等价类中选取一个代表进行测试。</div><br><div class="answer-line">**等价类类型：**</div><div class="answer-line"><strong>1. **有效等价类**：合理的、有意义的输入数据集合</strong></div><div class="answer-line"><strong>2. **无效等价类**：不合理的、无意义的输入数据集合</strong></div><br><div class="answer-line">**划分原则：**</div><div class="answer-line">- 如果输入条件规定了取值范围，则划分出一个有效等价类和两个无效等价类</div><div class="answer-line">- 如果输入条件规定了必须如何，则划分出一个有效等价类和一个无效等价类</div><div class="answer-line">- 如果输入条件是布尔量，则划分出一个有效等价类和一个无效等价类</div><br><div class="answer-line">**示例：用户名输入（6-20位字母数字）**</div><div class="answer-line">- 有效等价类：6-20位字母数字</div><div class="answer-line">- 无效等价类：&lt;6位、&gt;20位、含特殊字符、空值</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 等价类划分测试示例
+import pytest
+
+def validate_username(username):
+    &quot;&quot;&quot;验证用户名：6-20位字母数字&quot;&quot;&quot;
+    if not username:
+        raise ValueError(&quot;用户名不能为空&quot;)
+    if not isinstance(username, str):
+        raise TypeError(&quot;用户名必须是字符串&quot;)
+    if len(username) &lt; 6:
+        raise ValueError(&quot;用户名长度不能小于6位&quot;)
+    if len(username) &gt; 20:
+        raise ValueError(&quot;用户名长度不能超过20位&quot;)
+    if not username.isalnum():
+        raise ValueError(&quot;用户名只能包含字母和数字&quot;)
+    return True
+
+# 测试用例
+class TestUsernameValidation:
+    # 有效等价类测试
+    def test_valid_min_length(self):
+        assert validate_username(&quot;abc123&quot;)  # 刚好6位
+    
+    def test_valid_max_length(self):
+        assert validate_username(&quot;a&quot; * 20)  # 刚好20位
+    
+    def test_valid_normal(self):
+        assert validate_username(&quot;testuser123&quot;)  # 正常长度
+    
+    # 无效等价类测试
+    def test_invalid_too_short(self):
+        with pytest.raises(ValueError, match=&quot;小于6位&quot;):
+            validate_username(&quot;abc&quot;)  # &lt;6位
+    
+    def test_invalid_too_long(self):
+        with pytest.raises(ValueError, match=&quot;超过20位&quot;):
+            validate_username(&quot;a&quot; * 21)  # &gt;20位
+    
+    def test_invalid_special_char(self):
+        with pytest.raises(ValueError, match=&quot;字母和数字&quot;):
+            validate_username(&quot;test@123&quot;)  # 含特殊字符
+    
+    def test_invalid_empty(self):
+        with pytest.raises(ValueError, match=&quot;不能为空&quot;):
+            validate_username(&quot;&quot;)  # 空值
+    
+    def test_invalid_none(self):
+        with pytest.raises(ValueError):
+            validate_username(None)  # None值</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

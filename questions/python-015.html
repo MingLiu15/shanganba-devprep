@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>property装饰器与描述符 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="property装饰器：将方法转换为属性访问，实现getter/setter/deleter，在不改变调用方式的前提下添加验证逻辑。  property用法： - @property定义getter方法。 - @attr.setter定义setter方法。 - @attr.deleter定义deleter方法。 - 优...">
+<meta name="keywords" content="property装饰器与描述符,Python面试题,面向对象, property, 描述符, 封装,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-015.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="property装饰器与描述符 - Python面试题">
+<meta property="og:description" content="property装饰器：将方法转换为属性访问，实现getter/setter/deleter，在不改变调用方式的前提下添加验证逻辑。  property用法： - @property定义getter方法。 - @attr.setter定义setter方法。 - @attr.deleter定义deleter方法。 - 优...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-015.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "property装饰器与描述符",
+    "text": "解释Python中property装饰器的用法及描述符协议的原理。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "property装饰器：将方法转换为属性访问，实现getter/setter/deleter，在不改变调用方式的前提下添加验证逻辑。  property用法： - @property定义getter方法。 - @attr.setter定义setter方法。 - @attr.deleter定义deleter方法。 - 优势：保持接口一致性，可以在访问/修改属性时添加逻辑。  描述符协议： - 实现了__get__、__set__、__delete__中至少一个方法的类就是描述符。 - 数据描述符：同时实现__get__和__set__，优先级高于实例属性。 - 非数据描述符：只实现__get__，优先级低于实例属性。 - 描述符是property、classmethod、staticmethod、__slots__的底层实现机制。  描述符的查找顺序（优先级从高到低）： 1. 数据描述符（类属性中定义的描述符）。 2. 实例__dict__。 3. 非数据描述符。  property本质上就是一个数据描述符类。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>property装饰器与描述符</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：面向对象, property, 描述符, 封装</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中property装饰器的用法及描述符协议的原理。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">property装饰器：将方法转换为属性访问，实现getter/setter/deleter，在不改变调用方式的前提下添加验证逻辑。</div><br><div class="answer-line">property用法：</div><div class="answer-line">- @property定义getter方法。</div><div class="answer-line">- @attr.setter定义setter方法。</div><div class="answer-line">- @attr.deleter定义deleter方法。</div><div class="answer-line">- 优势：保持接口一致性，可以在访问/修改属性时添加逻辑。</div><br><div class="answer-line">描述符协议：</div><div class="answer-line">- 实现了__get__、__set__、__delete__中至少一个方法的类就是描述符。</div><div class="answer-line">- 数据描述符：同时实现__get__和__set__，优先级高于实例属性。</div><div class="answer-line">- 非数据描述符：只实现__get__，优先级低于实例属性。</div><div class="answer-line">- 描述符是property、classmethod、staticmethod、__slots__的底层实现机制。</div><br><div class="answer-line">描述符的查找顺序（优先级从高到低）：</div><div class="answer-line"><strong>1. 数据描述符（类属性中定义的描述符）。</strong></div><div class="answer-line"><strong>2. 实例__dict__。</strong></div><div class="answer-line"><strong>3. 非数据描述符。</strong></div><br><div class="answer-line">property本质上就是一个数据描述符类。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># property装饰器
+class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self._score = score
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if not 0 &lt;= value &lt;= 100:
+            raise ValueError(&#039;分数必须在0-100之间&#039;)
+        self._score = value
+
+s = Student(&#039;Tom&#039;, 85)
+print(s.score)    # 85（通过getter）
+s.score = 95     # 通过setter验证
+# s.score = 200   # ValueError
+
+# 自定义描述符
+class Validated:
+    def __init__(self, min_val, max_val):
+        self.min_val, self.max_val = min_val, max_val
+
+    def __set_name__(self, owner, name):
+        self.name = &#039;_&#039; + name
+
+    def __get__(self, obj, objtype=None):
+        return getattr(obj, self.name, None)
+
+    def __set__(self, obj, value):
+        if not self.min_val &lt;= value &lt;= self.max_val:
+            raise ValueError(f&#039;{self.name} 超出范围&#039;)
+        setattr(obj, self.name, value)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

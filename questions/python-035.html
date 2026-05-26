@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python中的鸭子类型 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="鸭子类型（Duck Typing）： - 一种动态类型风格 - &quot;如果它走起来像鸭子，叫起来像鸭子，那它就是鸭子&quot; - 不关注对象类型，只关注对象是否有需要的方法/属性  与静态语言对比： - Java/C++：编译期检查类型，必须继承同一接口 - Python：运行期检查，只要有相同方法即可  Python体现： 1...">
+<meta name="keywords" content="Python中的鸭子类型,Python面试题,鸭子类型, 动态类型, 多态, Pythonic,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-035.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python中的鸭子类型 - Python面试题">
+<meta property="og:description" content="鸭子类型（Duck Typing）： - 一种动态类型风格 - &quot;如果它走起来像鸭子，叫起来像鸭子，那它就是鸭子&quot; - 不关注对象类型，只关注对象是否有需要的方法/属性  与静态语言对比： - Java/C++：编译期检查类型，必须继承同一接口 - Python：运行期检查，只要有相同方法即可  Python体现： 1...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-035.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python中的鸭子类型",
+    "text": "什么是鸭子类型？Python中如何体现？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "鸭子类型（Duck Typing）： - 一种动态类型风格 - &quot;如果它走起来像鸭子，叫起来像鸭子，那它就是鸭子&quot; - 不关注对象类型，只关注对象是否有需要的方法/属性  与静态语言对比： - Java/C++：编译期检查类型，必须继承同一接口 - Python：运行期检查，只要有相同方法即可  Python体现： 1. 无需显式实现接口 2. 依赖注入简单 3. 迭代协议（__iter__/__next__） 4. 上下文管理协议（__enter__/__exit__）  优点： - 代码更灵活、简洁 - 易于扩展  缺点： - 运行时才发现错误 - 需要良好的文档和测试"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python中的鸭子类型</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：鸭子类型, 动态类型, 多态, Pythonic</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是鸭子类型？Python中如何体现？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">鸭子类型（Duck Typing）：</div><div class="answer-line">- 一种动态类型风格</div><div class="answer-line">- &quot;如果它走起来像鸭子，叫起来像鸭子，那它就是鸭子&quot;</div><div class="answer-line">- 不关注对象类型，只关注对象是否有需要的方法/属性</div><br><div class="answer-line">与静态语言对比：</div><div class="answer-line">- Java/C++：编译期检查类型，必须继承同一接口</div><div class="answer-line">- Python：运行期检查，只要有相同方法即可</div><br><div class="answer-line">Python体现：</div><div class="answer-line"><strong>1. 无需显式实现接口</strong></div><div class="answer-line"><strong>2. 依赖注入简单</strong></div><div class="answer-line"><strong>3. 迭代协议（__iter__/__next__）</strong></div><div class="answer-line"><strong>4. 上下文管理协议（__enter__/__exit__）</strong></div><br><div class="answer-line">优点：</div><div class="answer-line">- 代码更灵活、简洁</div><div class="answer-line">- 易于扩展</div><br><div class="answer-line">缺点：</div><div class="answer-line">- 运行时才发现错误</div><div class="answer-line">- 需要良好的文档和测试</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 鸭子类型示例
+class Duck:
+    def quack(self):
+        return &quot;Quack!&quot;
+    def fly(self):
+        return &quot;Flapping wings&quot;
+
+class Person:
+    def quack(self):
+        return &quot;I&#039;m quacking like a duck!&quot;
+    def fly(self):
+        return &quot;I&#039;m flapping my arms!&quot;
+
+def make_it_quack_and_fly(thing):
+    # 不检查类型，只检查是否有方法
+    print(thing.quack())
+    print(thing.fly())
+
+# 两者都可以传入
+duck = Duck()
+person = Person()
+
+make_it_quack_and_fly(duck)    # 正常工作
+make_it_quack_and_fly(person)  # 同样正常工作！
+
+# 迭代协议（鸭子类型经典例子）
+class MyRange:
+    def __init__(self, n):
+        self.n = n
+        self.i = 0
+    
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        if self.i &gt;= self.n:
+            raise StopIteration
+        val = self.i
+        self.i += 1
+        return val
+
+# 不需要继承任何接口，只要有__iter__和__next__就能迭代
+for i in MyRange(5):
+    print(i)  # 0 1 2 3 4</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

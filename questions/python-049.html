@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Celery分布式任务队列 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Celery核心概念：** 1. Broker：消息代理（Redis/RabbitMQ） 2. Worker：任务执行者 3. Task：异步任务函数 4. Result Backend：结果存储 5. Beat：定时任务调度器  **任务类型：** - apply_async()：异步执行 - delay()：简...">
+<meta name="keywords" content="Celery分布式任务队列,Python面试题,Celery, 分布式, 任务队列, 异步任务, 定时任务,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-049.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Celery分布式任务队列 - Python面试题">
+<meta property="og:description" content="**Celery核心概念：** 1. Broker：消息代理（Redis/RabbitMQ） 2. Worker：任务执行者 3. Task：异步任务函数 4. Result Backend：结果存储 5. Beat：定时任务调度器  **任务类型：** - apply_async()：异步执行 - delay()：简...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-049.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Celery分布式任务队列",
+    "text": "Celery是什么？如何配置和使用Celery处理异步任务？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Celery核心概念：** 1. Broker：消息代理（Redis/RabbitMQ） 2. Worker：任务执行者 3. Task：异步任务函数 4. Result Backend：结果存储 5. Beat：定时任务调度器  **任务类型：** - apply_async()：异步执行 - delay()：简化的异步调用 - s()/si()：签名（任务模板）  **任务状态：** PENDING → STARTED → SUCCESS/FAILURE  **常用配置：** - CELERY_BROKER_URL - CELERY_RESULT_BACKEND - CELERY_TASK_SERIALIZER - CELERY_TIMEZONE"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Celery分布式任务队列</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：Celery, 分布式, 任务队列, 异步任务, 定时任务</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Celery是什么？如何配置和使用Celery处理异步任务？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Celery核心概念：**</div><div class="answer-line"><strong>1. Broker：消息代理（Redis/RabbitMQ）</strong></div><div class="answer-line"><strong>2. Worker：任务执行者</strong></div><div class="answer-line"><strong>3. Task：异步任务函数</strong></div><div class="answer-line"><strong>4. Result Backend：结果存储</strong></div><div class="answer-line"><strong>5. Beat：定时任务调度器</strong></div><br><div class="answer-line">**任务类型：**</div><div class="answer-line">- apply_async()：异步执行</div><div class="answer-line">- delay()：简化的异步调用</div><div class="answer-line">- s()/si()：签名（任务模板）</div><br><div class="answer-line">**任务状态：**</div><div class="answer-line">PENDING → STARTED → SUCCESS/FAILURE</div><br><div class="answer-line">**常用配置：**</div><div class="answer-line">- CELERY_BROKER_URL</div><div class="answer-line">- CELERY_RESULT_BACKEND</div><div class="answer-line">- CELERY_TASK_SERIALIZER</div><div class="answer-line">- CELERY_TIMEZONE</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># celery_config.py
+from celery import Celery
+
+app = Celery(&#039;tasks&#039;,
+             broker=&#039;redis://localhost:6379/0&#039;,
+             backend=&#039;redis://localhost:6379/1&#039;)
+
+app.conf.update(
+    task_serializer=&#039;json&#039;,
+    accept_content=[&#039;json&#039;],
+    result_serializer=&#039;json&#039;,
+    timezone=&#039;Asia/Shanghai&#039;,
+    enable_utc=True,
+)
+
+# 定义任务
+@app.task(bind=True)
+def add(self, x, y):
+    &quot;&quot;&quot;简单加法任务&quot;&quot;&quot;
+    return x + y
+
+@app.task(bind=True, max_retries=3)
+def send_email(self, to, subject, body):
+    &quot;&quot;&quot;发送邮件任务&quot;&quot;&quot;
+    try:
+        # 发送邮件逻辑
+        pass
+    except Exception as exc:
+        raise self.retry(exc=exc, countdown=60)
+
+@app.task
+def process_file(file_path):
+    &quot;&quot;&quot;处理文件任务&quot;&quot;&quot;
+    # 处理逻辑
+    return {&#039;status&#039;: &#039;done&#039;, &#039;file&#039;: file_path}
+
+# 定时任务配置
+app.conf.beat_schedule = {
+    &#039;add-every-30-seconds&#039;: {
+        &#039;task&#039;: &#039;tasks.add&#039;,
+        &#039;schedule&#039;: 30.0,
+        &#039;args&#039;: (16, 16)
+    },
+}
+
+# 使用任务
+if __name__ == &#039;__main__&#039;:
+    # 异步调用
+    result = add.delay(4, 5)
+    print(result.id)  # 任务ID
+    print(result.status)  # 状态
+    print(result.get())  # 获取结果（阻塞）
+    
+    # 带参数的异步调用
+    result = add.apply_async(args=[10, 20], countdown=10)  # 10秒后执行</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

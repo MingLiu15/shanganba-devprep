@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信号机制 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="信号是软件中断，用于通知进程异步事件。  常见信号： - SIGINT(2)：Ctrl+C中断 - SIGKILL(9)：强制终止（不能被捕获或忽略） - SIGTERM(15)：请求终止（可被捕获） - SIGSEGV(11)：段错误 - SIGCHLD(17)：子进程状态变化 - SIGSTOP(19)：暂停进程 ...">
+<meta name="keywords" content="信号机制,操作系统面试题,信号, signal, 异步, SIGINT, SIGKILL,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-014.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信号机制 - 操作系统面试题">
+<meta property="og:description" content="信号是软件中断，用于通知进程异步事件。  常见信号： - SIGINT(2)：Ctrl+C中断 - SIGKILL(9)：强制终止（不能被捕获或忽略） - SIGTERM(15)：请求终止（可被捕获） - SIGSEGV(11)：段错误 - SIGCHLD(17)：子进程状态变化 - SIGSTOP(19)：暂停进程 ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-014.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "信号机制",
+    "text": "Linux信号机制的工作原理是什么？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "信号是软件中断，用于通知进程异步事件。  常见信号： - SIGINT(2)：Ctrl+C中断 - SIGKILL(9)：强制终止（不能被捕获或忽略） - SIGTERM(15)：请求终止（可被捕获） - SIGSEGV(11)：段错误 - SIGCHLD(17)：子进程状态变化 - SIGSTOP(19)：暂停进程 - SIGCONT(18)：继续暂停的进程  信号处理方式： 1. 默认处理：终止/暂停/忽略 2. 忽略信号：signal(SIGINT, SIG_IGN) 3. 捕获信号：注册信号处理函数  信号特点： - 不能传递数据（只传递信号编号） - 不能保证实时性 - 同种信号不排队（多次发送只接收一次） - 处理函数中只能调用异步安全函数  不可捕获/忽略的信号：SIGKILL、SIGSTOP"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>信号机制</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：信号, signal, 异步, SIGINT, SIGKILL</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Linux信号机制的工作原理是什么？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">信号是软件中断，用于通知进程异步事件。</div><br><div class="answer-line">常见信号：</div><div class="answer-line">- SIGINT(2)：Ctrl+C中断</div><div class="answer-line">- SIGKILL(9)：强制终止（不能被捕获或忽略）</div><div class="answer-line">- SIGTERM(15)：请求终止（可被捕获）</div><div class="answer-line">- SIGSEGV(11)：段错误</div><div class="answer-line">- SIGCHLD(17)：子进程状态变化</div><div class="answer-line">- SIGSTOP(19)：暂停进程</div><div class="answer-line">- SIGCONT(18)：继续暂停的进程</div><br><div class="answer-line">信号处理方式：</div><div class="answer-line"><strong>1. 默认处理：终止/暂停/忽略</strong></div><div class="answer-line"><strong>2. 忽略信号：signal(SIGINT, SIG_IGN)</strong></div><div class="answer-line"><strong>3. 捕获信号：注册信号处理函数</strong></div><br><div class="answer-line">信号特点：</div><div class="answer-line">- 不能传递数据（只传递信号编号）</div><div class="answer-line">- 不能保证实时性</div><div class="answer-line">- 同种信号不排队（多次发送只接收一次）</div><div class="answer-line">- 处理函数中只能调用异步安全函数</div><br><div class="answer-line">不可捕获/忽略的信号：SIGKILL、SIGSTOP</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;signal.h&gt;
+#include &lt;unistd.h&gt;
+
+// 信号处理函数
+void sigint_handler(int signum) {
+    printf(&quot;收到SIGINT信号\n&quot;);
+}
+
+int main() {
+    // 注册信号处理
+    signal(SIGINT, sigint_handler);
+    
+    // sigaction（更推荐，功能更强）
+    struct sigaction sa;
+    sa.sa_handler = sigint_handler;
+    sigemptyset(&amp;sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &amp;sa, NULL);
+    
+    // 发送信号
+    kill(getpid(), SIGUSR1);
+    raise(SIGUSR1);
+    
+    while(1) pause();  // 等待信号
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

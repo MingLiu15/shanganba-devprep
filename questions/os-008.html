@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户态与内核态 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="用户态： - 普通应用程序运行的状态 - 权限受限，不能直接访问硬件和内核数据 - x86中为特权级3（Ring 3）  内核态： - 操作系统内核运行的状态 - 拥有最高权限，可以访问所有硬件和内存 - x86中为特权级0（Ring 0）  切换方式（用户态→内核态）： 1. 系统调用（syscall）：应用程序主动...">
+<meta name="keywords" content="用户态与内核态,操作系统面试题,用户态, 内核态, 系统调用, 特权级,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-008.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用户态与内核态 - 操作系统面试题">
+<meta property="og:description" content="用户态： - 普通应用程序运行的状态 - 权限受限，不能直接访问硬件和内核数据 - x86中为特权级3（Ring 3）  内核态： - 操作系统内核运行的状态 - 拥有最高权限，可以访问所有硬件和内存 - x86中为特权级0（Ring 0）  切换方式（用户态→内核态）： 1. 系统调用（syscall）：应用程序主动...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-008.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "用户态与内核态",
+    "text": "用户态和内核态有什么区别？如何切换？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "用户态： - 普通应用程序运行的状态 - 权限受限，不能直接访问硬件和内核数据 - x86中为特权级3（Ring 3）  内核态： - 操作系统内核运行的状态 - 拥有最高权限，可以访问所有硬件和内存 - x86中为特权级0（Ring 0）  切换方式（用户态→内核态）： 1. 系统调用（syscall）：应用程序主动请求OS服务 2. 中断（Interrupt）：硬件发出的异步通知 3. 异常（Exception）：程序错误（除零、缺页等）  切换过程： 1. 保存用户态上下文（寄存器、程序计数器等） 2. 切换到内核栈 3. 设置特权级为内核态 4. 执行内核代码 5. 返回时恢复用户态上下文"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>用户态与内核态</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：用户态, 内核态, 系统调用, 特权级</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>用户态和内核态有什么区别？如何切换？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">用户态：</div><div class="answer-line">- 普通应用程序运行的状态</div><div class="answer-line">- 权限受限，不能直接访问硬件和内核数据</div><div class="answer-line">- x86中为特权级3（Ring 3）</div><br><div class="answer-line">内核态：</div><div class="answer-line">- 操作系统内核运行的状态</div><div class="answer-line">- 拥有最高权限，可以访问所有硬件和内存</div><div class="answer-line">- x86中为特权级0（Ring 0）</div><br><div class="answer-line">切换方式（用户态→内核态）：</div><div class="answer-line"><strong>1. 系统调用（syscall）：应用程序主动请求OS服务</strong></div><div class="answer-line"><strong>2. 中断（Interrupt）：硬件发出的异步通知</strong></div><div class="answer-line"><strong>3. 异常（Exception）：程序错误（除零、缺页等）</strong></div><br><div class="answer-line">切换过程：</div><div class="answer-line"><strong>1. 保存用户态上下文（寄存器、程序计数器等）</strong></div><div class="answer-line"><strong>2. 切换到内核栈</strong></div><div class="answer-line"><strong>3. 设置特权级为内核态</strong></div><div class="answer-line"><strong>4. 执行内核代码</strong></div><div class="answer-line"><strong>5. 返回时恢复用户态上下文</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// Linux系统调用示例
+#include &lt;unistd.h&gt;
+#include &lt;sys/syscall.h&gt;
+
+// 使用glibc封装
+int fd = open(&quot;file.txt&quot;, O_RDONLY);
+read(fd, buffer, 1024);
+close(fd);
+
+// 直接使用syscall（底层）
+// syscall(SYS_open, &quot;file.txt&quot;, O_RDONLY);
+// syscall(SYS_read, fd, buffer, 1024);
+
+// 常见系统调用
+// 文件：open/read/write/close
+// 进程：fork/exec/wait/exit
+// 内存：brk/mmap/munmap
+// 通信：pipe/shmget/socket</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

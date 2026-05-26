@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件系统的工作原理 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="文件系统层次结构： 1. 超级块（Superblock）：    - 文件系统的元信息（大小、块大小、空闲块数等）  2. inode（索引节点）：    - 文件的元数据（大小、权限、时间、数据块指针）    - 不包含文件名    - 每个文件对应一个inode  3. 数据块（Data Block）：    - ...">
+<meta name="keywords" content="文件系统的工作原理,操作系统面试题,文件系统, inode, 超级块, 目录,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-009.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件系统的工作原理 - 操作系统面试题">
+<meta property="og:description" content="文件系统层次结构： 1. 超级块（Superblock）：    - 文件系统的元信息（大小、块大小、空闲块数等）  2. inode（索引节点）：    - 文件的元数据（大小、权限、时间、数据块指针）    - 不包含文件名    - 每个文件对应一个inode  3. 数据块（Data Block）：    - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-009.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "文件系统的工作原理",
+    "text": "文件系统是如何组织和管理文件的？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "文件系统层次结构： 1. 超级块（Superblock）：    - 文件系统的元信息（大小、块大小、空闲块数等）  2. inode（索引节点）：    - 文件的元数据（大小、权限、时间、数据块指针）    - 不包含文件名    - 每个文件对应一个inode  3. 数据块（Data Block）：    - 存储文件实际内容  4. 目录项（Directory Entry）：    - 文件名 → inode编号的映射  文件存储方式： - 连续分配：文件占连续磁盘块，访问快但易碎片化 - 链接分配：每个块指向下一个块，适合顺序访问 - 索引分配：inode中存储数据块指针数组（如ext4）  日志文件系统（如ext4）： - 先写日志再修改，崩溃时可以恢复 - 保证文件系统一致性"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>文件系统的工作原理</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：文件系统, inode, 超级块, 目录</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>文件系统是如何组织和管理文件的？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">文件系统层次结构：</div><div class="answer-line"><strong>1. 超级块（Superblock）：</strong></div><div class="answer-line">   - 文件系统的元信息（大小、块大小、空闲块数等）</div><br><div class="answer-line"><strong>2. inode（索引节点）：</strong></div><div class="answer-line">   - 文件的元数据（大小、权限、时间、数据块指针）</div><div class="answer-line">   - 不包含文件名</div><div class="answer-line">   - 每个文件对应一个inode</div><br><div class="answer-line"><strong>3. 数据块（Data Block）：</strong></div><div class="answer-line">   - 存储文件实际内容</div><br><div class="answer-line"><strong>4. 目录项（Directory Entry）：</strong></div><div class="answer-line">   - 文件名 → inode编号的映射</div><br><div class="answer-line">文件存储方式：</div><div class="answer-line">- 连续分配：文件占连续磁盘块，访问快但易碎片化</div><div class="answer-line">- 链接分配：每个块指向下一个块，适合顺序访问</div><div class="answer-line">- 索引分配：inode中存储数据块指针数组（如ext4）</div><br><div class="answer-line">日志文件系统（如ext4）：</div><div class="answer-line">- 先写日志再修改，崩溃时可以恢复</div><div class="answer-line">- 保证文件系统一致性</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// inode结构（简化）
+struct Inode {
+    int mode;           // 文件类型和权限
+    int uid, gid;        // 所有者
+    int size;            // 文件大小
+    time_t atime, mtime, ctime;  // 时间戳
+    int block[15];       // 数据块指针
+    // block[0-11]: 直接块
+    // block[12]: 一级间接块
+    // block[13]: 二级间接块
+    // block[14]: 三级间接块
+};
+
+// 目录项
+struct DirEntry {
+    char name[256];
+    int inode_num;
+};</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

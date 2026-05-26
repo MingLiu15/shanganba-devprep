@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDB常用调试命令 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="GDB是GNU调试器，用于调试C/C++程序。  启动： - gdb ./program：启动调试 - gdb ./program core：调试core dump - gdb attach PID：附加到运行中的进程  断点： - break main/b main：在main函数设断点 - break 20：在第2...">
+<meta name="keywords" content="GDB常用调试命令,C/C++面试题,GDB, 调试, 断点, Linux,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-038.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GDB常用调试命令 - C/C++面试题">
+<meta property="og:description" content="GDB是GNU调试器，用于调试C/C++程序。  启动： - gdb ./program：启动调试 - gdb ./program core：调试core dump - gdb attach PID：附加到运行中的进程  断点： - break main/b main：在main函数设断点 - break 20：在第2...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-038.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "GDB常用调试命令",
+    "text": "列举GDB调试器的常用命令。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "GDB是GNU调试器，用于调试C/C++程序。  启动： - gdb ./program：启动调试 - gdb ./program core：调试core dump - gdb attach PID：附加到运行中的进程  断点： - break main/b main：在main函数设断点 - break 20：在第20行设断点 - break file.cpp:30：在指定文件行号设断点 - info breakpoints：查看断点 - delete 1：删除1号断点  执行： - run/r：运行程序 - continue/c：继续执行 - next/n：单步执行（不进入函数） - step/s：单步执行（进入函数） - finish：运行到当前函数返回  查看： - print/p var：打印变量值 - display var：每次停止时显示变量 - backtrace/bt：查看调用栈 - info locals：查看局部变量 - list/l：显示源代码"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>GDB常用调试命令</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：GDB, 调试, 断点, Linux</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>列举GDB调试器的常用命令。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">GDB是GNU调试器，用于调试C/C++程序。</div><br><div class="answer-line">启动：</div><div class="answer-line">- gdb ./program：启动调试</div><div class="answer-line">- gdb ./program core：调试core dump</div><div class="answer-line">- gdb attach PID：附加到运行中的进程</div><br><div class="answer-line">断点：</div><div class="answer-line">- break main/b main：在main函数设断点</div><div class="answer-line">- break 20：在第20行设断点</div><div class="answer-line">- break file.cpp:30：在指定文件行号设断点</div><div class="answer-line">- info breakpoints：查看断点</div><div class="answer-line">- delete 1：删除1号断点</div><br><div class="answer-line">执行：</div><div class="answer-line">- run/r：运行程序</div><div class="answer-line">- continue/c：继续执行</div><div class="answer-line">- next/n：单步执行（不进入函数）</div><div class="answer-line">- step/s：单步执行（进入函数）</div><div class="answer-line">- finish：运行到当前函数返回</div><br><div class="answer-line">查看：</div><div class="answer-line">- print/p var：打印变量值</div><div class="answer-line">- display var：每次停止时显示变量</div><div class="answer-line">- backtrace/bt：查看调用栈</div><div class="answer-line">- info locals：查看局部变量</div><div class="answer-line">- list/l：显示源代码</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 编译时加-g选项保留调试信息
+g++ -g -o program program.cpp
+
+// GDB会话示例
+$ gdb ./program
+(gdb) break main
+(gdb) run
+(gdb) next
+(gdb) print variable
+(gdb) continue
+(gdb) quit</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

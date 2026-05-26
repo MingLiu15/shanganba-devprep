@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多线程共享数据与线程安全 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="多线程共享数据面临的问题： - 竞态条件（Race Condition）：多个线程同时读写共享数据，导致结果不确定。 - 由于GIL的存在，Python的线程切换可能发生在任何字节码指令之间。 - 即使简单的count += 1操作也不是原子性的（包含读取、计算、写回三步）。  同步原语： 1. Lock（互斥锁）：最...">
+<meta name="keywords" content="多线程共享数据与线程安全,Python面试题,并发, 线程安全, 锁, 同步,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-026.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程共享数据与线程安全 - Python面试题">
+<meta property="og:description" content="多线程共享数据面临的问题： - 竞态条件（Race Condition）：多个线程同时读写共享数据，导致结果不确定。 - 由于GIL的存在，Python的线程切换可能发生在任何字节码指令之间。 - 即使简单的count += 1操作也不是原子性的（包含读取、计算、写回三步）。  同步原语： 1. Lock（互斥锁）：最...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-026.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "多线程共享数据与线程安全",
+    "text": "解释Python多线程中共享数据的问题及线程安全的解决方案。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "多线程共享数据面临的问题： - 竞态条件（Race Condition）：多个线程同时读写共享数据，导致结果不确定。 - 由于GIL的存在，Python的线程切换可能发生在任何字节码指令之间。 - 即使简单的count += 1操作也不是原子性的（包含读取、计算、写回三步）。  同步原语： 1. Lock（互斥锁）：最基本的锁，一次只允许一个线程访问。acquire()获取锁，release()释放锁。推荐使用with语句。  2. RLock（可重入锁）：同一线程可以多次获取锁而不会死锁。适用于递归调用。  3. Semaphore（信号量）：控制同时访问资源的线程数量。  4. Condition（条件变量）：线程间通信，wait()等待条件，notify()/notify_all()通知。  5. Event：简单的线程间信号通知，set()设置信号，wait()等待信号。  6. Barrier：让一组线程等待所有线程到达某个点后再一起继续。  线程安全的数据结构： - queue.Queue：线程安全的FIFO队列。 - queue.LifoQueue：线程安全的LIFO队列。 - queue.PriorityQueue：线程安全的优先队列。 - collections.deque：append和popleft是原子操作，但其他操作不是。  最佳实践：尽量减少共享数据的范围，使用队列进行线程间通信而非共享状态。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>多线程共享数据与线程安全</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：并发, 线程安全, 锁, 同步</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python多线程中共享数据的问题及线程安全的解决方案。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">多线程共享数据面临的问题：</div><div class="answer-line">- 竞态条件（Race Condition）：多个线程同时读写共享数据，导致结果不确定。</div><div class="answer-line">- 由于GIL的存在，Python的线程切换可能发生在任何字节码指令之间。</div><div class="answer-line">- 即使简单的count += 1操作也不是原子性的（包含读取、计算、写回三步）。</div><br><div class="answer-line">同步原语：</div><div class="answer-line"><strong>1. Lock（互斥锁）：最基本的锁，一次只允许一个线程访问。acquire()获取锁，release()释放锁。推荐使用with语句。</strong></div><br><div class="answer-line"><strong>2. RLock（可重入锁）：同一线程可以多次获取锁而不会死锁。适用于递归调用。</strong></div><br><div class="answer-line"><strong>3. Semaphore（信号量）：控制同时访问资源的线程数量。</strong></div><br><div class="answer-line"><strong>4. Condition（条件变量）：线程间通信，wait()等待条件，notify()/notify_all()通知。</strong></div><br><div class="answer-line"><strong>5. Event：简单的线程间信号通知，set()设置信号，wait()等待信号。</strong></div><br><div class="answer-line"><strong>6. Barrier：让一组线程等待所有线程到达某个点后再一起继续。</strong></div><br><div class="answer-line">线程安全的数据结构：</div><div class="answer-line">- queue.Queue：线程安全的FIFO队列。</div><div class="answer-line">- queue.LifoQueue：线程安全的LIFO队列。</div><div class="answer-line">- queue.PriorityQueue：线程安全的优先队列。</div><div class="answer-line">- collections.deque：append和popleft是原子操作，但其他操作不是。</div><br><div class="answer-line">最佳实践：尽量减少共享数据的范围，使用队列进行线程间通信而非共享状态。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import threading
+import queue
+
+# Lock 使用
+lock = threading.Lock()
+counter = 0
+
+def increment():
+    global counter
+    for _ in range(100000):
+        with lock:  # 自动获取和释放
+            counter += 1
+
+threads = [threading.Thread(target=increment) for _ in range(5)]
+for t in threads: t.start()
+for t in threads: t.join()
+print(counter)  # 500000（线程安全）
+
+# 线程安全队列
+q = queue.Queue()
+
+def producer():
+    for i in range(10):
+        q.put(i)
+        print(f&#039;生产: {i}&#039;)
+
+def consumer():
+    while True:
+        item = q.get()
+        print(f&#039;消费: {item}&#039;)
+        q.task_done()
+
+threading.Thread(target=producer).start()
+threading.Thread(target=consumer, daemon=True).start()
+q.join()  # 等待所有任务完成</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

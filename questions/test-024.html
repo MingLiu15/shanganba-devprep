@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BDD行为驱动测试：behave与pytest-bdd - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**BDD（行为驱动开发）：** - 用自然语言描述系统行为 - 促进业务、开发、测试协作 - 使用Gherkin语法（Given-When-Then）  **Gherkin关键字：** - Feature：功能描述 - Scenario：测试场景 - Given：前置条件 - When：操作 - Then：预期结果 ...">
+<meta name="keywords" content="BDD行为驱动测试：behave与pytest-bdd,自动化测试面试题,BDD, behave, pytest-bdd, Gherkin, 行为驱动,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-024.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BDD行为驱动测试：behave与pytest-bdd - 自动化测试面试题">
+<meta property="og:description" content="**BDD（行为驱动开发）：** - 用自然语言描述系统行为 - 促进业务、开发、测试协作 - 使用Gherkin语法（Given-When-Then）  **Gherkin关键字：** - Feature：功能描述 - Scenario：测试场景 - Given：前置条件 - When：操作 - Then：预期结果 ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-024.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "BDD行为驱动测试：behave与pytest-bdd",
+    "text": "什么是BDD测试？如何使用behave和pytest-bdd？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**BDD（行为驱动开发）：** - 用自然语言描述系统行为 - 促进业务、开发、测试协作 - 使用Gherkin语法（Given-When-Then）  **Gherkin关键字：** - Feature：功能描述 - Scenario：测试场景 - Given：前置条件 - When：操作 - Then：预期结果 - And/But：连接步骤  **behave：** - Python原生BDD框架 - 使用.feature文件描述场景 - 使用Python实现步骤定义  **pytest-bdd：** - pytest的BDD插件 - 与pytest生态集成 - 支持fixture和参数化"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>BDD行为驱动测试：behave与pytest-bdd</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：BDD, behave, pytest-bdd, Gherkin, 行为驱动</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是BDD测试？如何使用behave和pytest-bdd？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**BDD（行为驱动开发）：**</div><div class="answer-line">- 用自然语言描述系统行为</div><div class="answer-line">- 促进业务、开发、测试协作</div><div class="answer-line">- 使用Gherkin语法（Given-When-Then）</div><br><div class="answer-line">**Gherkin关键字：**</div><div class="answer-line">- Feature：功能描述</div><div class="answer-line">- Scenario：测试场景</div><div class="answer-line">- Given：前置条件</div><div class="answer-line">- When：操作</div><div class="answer-line">- Then：预期结果</div><div class="answer-line">- And/But：连接步骤</div><br><div class="answer-line">**behave：**</div><div class="answer-line">- Python原生BDD框架</div><div class="answer-line">- 使用.feature文件描述场景</div><div class="answer-line">- 使用Python实现步骤定义</div><br><div class="answer-line">**pytest-bdd：**</div><div class="answer-line">- pytest的BDD插件</div><div class="answer-line">- 与pytest生态集成</div><div class="answer-line">- 支持fixture和参数化</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># behave使用示例
+# features/login.feature
+feature_content = &quot;&quot;&quot;
+Feature: 用户登录
+  Scenario: 成功登录
+    Given 用户已注册账号 &quot;testuser&quot; 密码 &quot;password123&quot;
+    When 用户使用 &quot;testuser&quot; 和 &quot;password123&quot; 登录
+    Then 登录成功
+&quot;&quot;&quot;
+
+# features/steps/login_steps.py
+from behave import given, when, then
+
+class UserService:
+    def __init__(self):
+        self.users = {}
+    
+    def register(self, username, password):
+        self.users[username] = password
+    
+    def login(self, username, password):
+        if username in self.users and self.users[username] == password:
+            return {&quot;success&quot;: True}
+        return {&quot;success&quot;: False}
+
+@given(&quot;用户已注册账号 {username} 密码 {password}&quot;)
+def step_register(context, username, password):
+    if not hasattr(context, &quot;service&quot;):
+        context.service = UserService()
+    context.service.register(username, password)
+
+@when(&quot;用户使用 {username} 和 {password} 登录&quot;)
+def step_login(context, username, password):
+    context.result = context.service.login(username, password)
+
+@then(&quot;登录成功&quot;)
+def step_success(context):
+    assert context.result[&quot;success&quot;]
+
+# pytest-bdd使用示例
+from pytest_bdd import scenario
+
+@scenario(&quot;login.feature&quot;, &quot;成功登录&quot;)
+def test_login():
+    pass</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++11/14 多线程与并发编程 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**C++11多线程组件：** - std::thread：线程类 - std::mutex：互斥锁 - std::lock_guard/std::unique_lock：RAII锁包装 - std::condition_variable：条件变量 - std::atomic：原子操作 - std::future/st...">
+<meta name="keywords" content="C++11/14 多线程与并发编程,C/C++面试题,C++11, 多线程, thread, mutex, atomic, 并发编程, condition_variable,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-085.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11/14 多线程与并发编程 - C/C++面试题">
+<meta property="og:description" content="**C++11多线程组件：** - std::thread：线程类 - std::mutex：互斥锁 - std::lock_guard/std::unique_lock：RAII锁包装 - std::condition_variable：条件变量 - std::atomic：原子操作 - std::future/st...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-085.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++11/14 多线程与并发编程",
+    "text": "C++11的多线程库包含哪些组件？如何使用mutex、condition_variable和atomic？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**C++11多线程组件：** - std::thread：线程类 - std::mutex：互斥锁 - std::lock_guard/std::unique_lock：RAII锁包装 - std::condition_variable：条件变量 - std::atomic：原子操作 - std::future/std::promise/std::async：异步编程  **同步机制：** - 互斥锁：保护共享数据 - 条件变量：线程间通知 - 原子变量：无锁编程  **最佳实践：** - 使用RAII管理锁（lock_guard/unique_lock） - 避免死锁（std::lock同时获取多个锁） - 优先使用原子操作而非锁 - 注意数据竞争（data race）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++11/14 多线程与并发编程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：C++11, 多线程, thread, mutex, atomic, 并发编程, condition_variable</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++11的多线程库包含哪些组件？如何使用mutex、condition_variable和atomic？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**C++11多线程组件：**</div><div class="answer-line">- std::thread：线程类</div><div class="answer-line">- std::mutex：互斥锁</div><div class="answer-line">- std::lock_guard/std::unique_lock：RAII锁包装</div><div class="answer-line">- std::condition_variable：条件变量</div><div class="answer-line">- std::atomic：原子操作</div><div class="answer-line">- std::future/std::promise/std::async：异步编程</div><br><div class="answer-line">**同步机制：**</div><div class="answer-line">- 互斥锁：保护共享数据</div><div class="answer-line">- 条件变量：线程间通知</div><div class="answer-line">- 原子变量：无锁编程</div><br><div class="answer-line">**最佳实践：**</div><div class="answer-line">- 使用RAII管理锁（lock_guard/unique_lock）</div><div class="answer-line">- 避免死锁（std::lock同时获取多个锁）</div><div class="answer-line">- 优先使用原子操作而非锁</div><div class="answer-line">- 注意数据竞争（data race）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;condition_variable&gt;
+#include &lt;atomic&gt;
+#include &lt;future&gt;
+#include &lt;vector&gt;
+
+std::mutex mtx;
+std::condition_variable cv;
+bool ready = false;
+
+// 基本线程函数
+void worker(int id) {
+    std::unique_lock&lt;std::mutex&gt; lock(mtx);
+    cv.wait(lock, []{ return ready; });  // 等待条件
+    
+    std::cout &lt;&lt; &quot;Worker &quot; &lt;&lt; id &lt;&lt; &quot; is processing&quot; &lt;&lt; std::endl;
+}
+
+// 原子变量（无锁计数器）
+std::atomic&lt;int&gt; counter{0};
+
+void increment() {
+    for (int i = 0; i &lt; 1000; ++i) {
+        counter.fetch_add(1, std::memory_order_relaxed);
+    }
+}
+
+// async异步任务
+int compute(int x) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return x * x;
+}
+
+int main() {
+    // 1. 创建线程
+    std::vector&lt;std::thread&gt; threads;
+    for (int i = 0; i &lt; 5; ++i) {
+        threads.emplace_back(worker, i);
+    }
+    
+    // 2. 通知所有线程开始
+    {
+        std::lock_guard&lt;std::mutex&gt; lock(mtx);
+        ready = true;
+    }
+    cv.notify_all();
+    
+    // 3. 等待线程完成
+    for (auto&amp; t : threads) {
+        t.join();
+    }
+    
+    // 4. 原子操作测试
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    std::cout &lt;&lt; &quot;Counter: &quot; &lt;&lt; counter &lt;&lt; std::endl;  // 2000
+    
+    // 5. async异步调用
+    std::future&lt;int&gt; result = std::async(std::launch::async, compute, 5);
+    std::cout &lt;&lt; &quot;Computing...&quot; &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;Result: &quot; &lt;&lt; result.get() &lt;&lt; std::endl;  // 25
+    
+    // 6. 死锁避免
+    std::mutex m1, m2;
+    {
+        std::lock(m1, m2);  // 同时获取多个锁
+        std::lock_guard&lt;std::mutex&gt; lock1(m1, std::adopt_lock);
+        std::lock_guard&lt;std::mutex&gt; lock2(m2, std::adopt_lock);
+        // 安全使用两个锁
+    }
+    
+    return 0;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>树状数组（Fenwick Tree/BIT） - 算法题面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**树状数组定义：** 一种支持单点更新和前缀和查询的数据结构，利用二进制索引实现O(log n)操作。  **核心操作：** - lowbit(x) = x &amp; (-x)：获取最低位的1 - update(i, delta)：在位置i增加delta - query(i)：查询[1, i]的前缀和  **与线段树对比：...">
+<meta name="keywords" content="树状数组（Fenwick Tree/BIT）,算法题面试题,树状数组, Fenwick Tree, BIT, 前缀和, 区间查询,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/algo-067.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树状数组（Fenwick Tree/BIT） - 算法题面试题">
+<meta property="og:description" content="**树状数组定义：** 一种支持单点更新和前缀和查询的数据结构，利用二进制索引实现O(log n)操作。  **核心操作：** - lowbit(x) = x &amp; (-x)：获取最低位的1 - update(i, delta)：在位置i增加delta - query(i)：查询[1, i]的前缀和  **与线段树对比：...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/algo-067.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "树状数组（Fenwick Tree/BIT）",
+    "text": "什么是树状数组？与线段树相比有什么优势和劣势？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**树状数组定义：** 一种支持单点更新和前缀和查询的数据结构，利用二进制索引实现O(log n)操作。  **核心操作：** - lowbit(x) = x &amp; (-x)：获取最低位的1 - update(i, delta)：在位置i增加delta - query(i)：查询[1, i]的前缀和  **与线段树对比：** | 特性 | 树状数组 | 线段树 | |------|---------|--------| | 代码复杂度 | 简单 | 复杂 | | 空间复杂度 | O(n) | O(4n) | | 支持区间更新 | 需配合差分 | 天然支持 | | 支持区间最值 | 困难 | 容易 |  **应用场景：** - 前缀和查询 - 逆序对统计 - 区间求和（配合差分数组） - 动态频率统计"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>树状数组（Fenwick Tree/BIT）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">算法题</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：树状数组, Fenwick Tree, BIT, 前缀和, 区间查询</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是树状数组？与线段树相比有什么优势和劣势？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**树状数组定义：**</div><div class="answer-line">一种支持单点更新和前缀和查询的数据结构，利用二进制索引实现O(log n)操作。</div><br><div class="answer-line">**核心操作：**</div><div class="answer-line">- lowbit(x) = x &amp; (-x)：获取最低位的1</div><div class="answer-line">- update(i, delta)：在位置i增加delta</div><div class="answer-line">- query(i)：查询[1, i]的前缀和</div><br><div class="answer-line">**与线段树对比：**</div><div class="answer-line">| 特性 | 树状数组 | 线段树 |</div><div class="answer-line">|------|---------|--------|</div><div class="answer-line">| 代码复杂度 | 简单 | 复杂 |</div><div class="answer-line">| 空间复杂度 | O(n) | O(4n) |</div><div class="answer-line">| 支持区间更新 | 需配合差分 | 天然支持 |</div><div class="answer-line">| 支持区间最值 | 困难 | 容易 |</div><br><div class="answer-line">**应用场景：**</div><div class="answer-line">- 前缀和查询</div><div class="answer-line">- 逆序对统计</div><div class="answer-line">- 区间求和（配合差分数组）</div><div class="answer-line">- 动态频率统计</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">class FenwickTree:
+    def __init__(self, n):
+        self.n = n
+        self.tree = [0] * (n + 1)
+    
+    def _lowbit(self, x):
+        return x &amp; (-x)
+    
+    def update(self, i, delta):
+        while i &lt;= self.n:
+            self.tree[i] += delta
+            i += self._lowbit(i)
+    
+    def query(self, i):
+        res = 0
+        while i &gt; 0:
+            res += self.tree[i]
+            i -= self._lowbit(i)
+        return res
+    
+    def range_query(self, left, right):
+        return self.query(right) - self.query(left - 1)
+
+# 逆序对统计
+def count_inversions(arr):
+    sorted_arr = sorted(set(arr))
+    rank = {v: i + 1 for i, v in enumerate(sorted_arr)}
+    bit = FenwickTree(len(sorted_arr))
+    inversions = 0
+    for i in range(len(arr) - 1, -1, -1):
+        r = rank[arr[i]]
+        inversions += bit.query(r - 1)
+        bit.update(r, 1)
+    return inversions
+
+arr = [3, 1, 4, 2]
+print(f&quot;逆序对数量: {count_inversions(arr)}&quot;)  # 3</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

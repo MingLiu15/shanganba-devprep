@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python异步编程：asyncio深入 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**asyncio核心概念：** - 协程（Coroutine）：使用async def定义的函数 - 事件循环（Event Loop）：调度协程执行 - await：挂起协程，等待结果 - Task：包装协程，用于并发执行  **关键API：** - asyncio.run()：运行主协程 - asyncio.cre...">
+<meta name="keywords" content="Python异步编程：asyncio深入,Python面试题,asyncio, 异步编程, 协程, await, 事件循环,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-057.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python异步编程：asyncio深入 - Python面试题">
+<meta property="og:description" content="**asyncio核心概念：** - 协程（Coroutine）：使用async def定义的函数 - 事件循环（Event Loop）：调度协程执行 - await：挂起协程，等待结果 - Task：包装协程，用于并发执行  **关键API：** - asyncio.run()：运行主协程 - asyncio.cre...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-057.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python异步编程：asyncio深入",
+    "text": "asyncio的工作原理是什么？async/await如何使用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**asyncio核心概念：** - 协程（Coroutine）：使用async def定义的函数 - 事件循环（Event Loop）：调度协程执行 - await：挂起协程，等待结果 - Task：包装协程，用于并发执行  **关键API：** - asyncio.run()：运行主协程 - asyncio.create_task()：创建任务 - asyncio.gather()：并发执行多个协程 - asyncio.sleep()：非阻塞等待  **并发vs并行：** - asyncio是单线程并发（协程切换） - 适合IO密集型任务 - CPU密集型需使用多进程"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python异步编程：asyncio深入</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：asyncio, 异步编程, 协程, await, 事件循环</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>asyncio的工作原理是什么？async/await如何使用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**asyncio核心概念：**</div><div class="answer-line">- 协程（Coroutine）：使用async def定义的函数</div><div class="answer-line">- 事件循环（Event Loop）：调度协程执行</div><div class="answer-line">- await：挂起协程，等待结果</div><div class="answer-line">- Task：包装协程，用于并发执行</div><br><div class="answer-line">**关键API：**</div><div class="answer-line">- asyncio.run()：运行主协程</div><div class="answer-line">- asyncio.create_task()：创建任务</div><div class="answer-line">- asyncio.gather()：并发执行多个协程</div><div class="answer-line">- asyncio.sleep()：非阻塞等待</div><br><div class="answer-line">**并发vs并行：**</div><div class="answer-line">- asyncio是单线程并发（协程切换）</div><div class="answer-line">- 适合IO密集型任务</div><div class="answer-line">- CPU密集型需使用多进程</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import asyncio
+
+async def fetch_data(url):
+    print(f&quot;Fetching {url}&quot;)
+    await asyncio.sleep(1)  # 模拟IO
+    return f&quot;Data from {url}&quot;
+
+async def main():
+    # 顺序执行
+    result1 = await fetch_data(&quot;url1&quot;)
+    result2 = await fetch_data(&quot;url2&quot;)
+    
+    # 并发执行
+    tasks = [
+        asyncio.create_task(fetch_data(f&quot;url{i}&quot;))
+        for i in range(3)
+    ]
+    results = await asyncio.gather(*tasks)
+    print(results)
+
+# 运行
+asyncio.run(main())
+
+# 与同步代码结合
+async def run_in_thread(func, *args):
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, func, *args)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

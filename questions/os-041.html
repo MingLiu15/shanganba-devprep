@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>协程Coroutine - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="协程（Coroutine）：用户态的轻量级线程，由程序自己调度，而非操作系统。  特点： 1. 协作式调度：主动让出执行权（yield），而非抢占式 2. 切换开销小：不需要进入内核，只需保存/恢复寄存器 3. 高并发：单线程可运行数万协程 4. 无锁编程：同一协程内无并发问题  与线程对比： | 特性 | 线程 | ...">
+<meta name="keywords" content="协程Coroutine,操作系统面试题,协程, Coroutine, 用户态线程, 异步, C++20,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-041.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="协程Coroutine - 操作系统面试题">
+<meta property="og:description" content="协程（Coroutine）：用户态的轻量级线程，由程序自己调度，而非操作系统。  特点： 1. 协作式调度：主动让出执行权（yield），而非抢占式 2. 切换开销小：不需要进入内核，只需保存/恢复寄存器 3. 高并发：单线程可运行数万协程 4. 无锁编程：同一协程内无并发问题  与线程对比： | 特性 | 线程 | ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-041.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "协程Coroutine",
+    "text": "什么是协程？协程与线程有什么区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "协程（Coroutine）：用户态的轻量级线程，由程序自己调度，而非操作系统。  特点： 1. 协作式调度：主动让出执行权（yield），而非抢占式 2. 切换开销小：不需要进入内核，只需保存/恢复寄存器 3. 高并发：单线程可运行数万协程 4. 无锁编程：同一协程内无并发问题  与线程对比： | 特性 | 线程 | 协程 | |------|------|------| | 调度 | 操作系统抢占 | 用户协作 | | 切换开销 | 大（内核态） | 小（用户态） | | 并发数 | 数千 | 数百万 | | 数据共享 | 需要同步 | 单线程无锁 |  应用场景： - 高并发IO（网络服务器） - 异步编程简化 - 生成器/迭代器"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>协程Coroutine</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：协程, Coroutine, 用户态线程, 异步, C++20</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是协程？协程与线程有什么区别？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">协程（Coroutine）：用户态的轻量级线程，由程序自己调度，而非操作系统。</div><br><div class="answer-line">特点：</div><div class="answer-line"><strong>1. 协作式调度：主动让出执行权（yield），而非抢占式</strong></div><div class="answer-line"><strong>2. 切换开销小：不需要进入内核，只需保存/恢复寄存器</strong></div><div class="answer-line"><strong>3. 高并发：单线程可运行数万协程</strong></div><div class="answer-line"><strong>4. 无锁编程：同一协程内无并发问题</strong></div><br><div class="answer-line">与线程对比：</div><div class="answer-line">| 特性 | 线程 | 协程 |</div><div class="answer-line">|------|------|------|</div><div class="answer-line">| 调度 | 操作系统抢占 | 用户协作 |</div><div class="answer-line">| 切换开销 | 大（内核态） | 小（用户态） |</div><div class="answer-line">| 并发数 | 数千 | 数百万 |</div><div class="answer-line">| 数据共享 | 需要同步 | 单线程无锁 |</div><br><div class="answer-line">应用场景：</div><div class="answer-line">- 高并发IO（网络服务器）</div><div class="answer-line">- 异步编程简化</div><div class="answer-line">- 生成器/迭代器</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// C++20协程（简化示例）
+#include &lt;coroutine&gt;
+
+// 生成器协程
+struct Generator {
+    struct promise_type {
+        int current_value;
+        auto get_return_object() { return Generator{this}; }
+        auto initial_suspend() { return std::suspend_always{}; }
+        auto final_suspend() noexcept { return std::suspend_always{}; }
+        void unhandled_exception() {}
+        void return_void() {}
+        auto yield_value(int value) {
+            current_value = value;
+            return std::suspend_always{};
+        }
+    };
+    
+    using Handle = std::coroutine_handle&lt;promise_type&gt;;
+    Handle handle;
+    
+    Generator(promise_type* p) : handle(Handle::from_promise(*p)) {}
+    ~Generator() { if (handle) handle.destroy(); }
+    
+    int next() {
+        handle.resume();
+        return handle.promise().current_value;
+    }
+};
+
+Generator fibonacci() {
+    co_yield 1;
+    co_yield 1;
+    int a = 1, b = 1;
+    while (true) {
+        int c = a + b;
+        co_yield c;
+        a = b;
+        b = c;
+    }
+}
+
+// 使用
+auto gen = fibonacci();
+for (int i = 0; i &lt; 10; i++) {
+    std::cout &lt;&lt; gen.next() &lt;&lt; &quot; &quot;;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

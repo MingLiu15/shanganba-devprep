@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试用例设计方法：边界值分析 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**边界值分析定义：** 经验表明，大量错误发生在输入范围的边界上。边界值分析是对等价类划分的补充，重点测试边界值及其附近值。  **边界值选取原则：** 对于范围[a, b]： - 最小值 a - 略大于最小值 a+ - 正常值（范围内任意值） - 略小于最大值 b- - 最大值 b  **边界值类型：** 1. *...">
+<meta name="keywords" content="测试用例设计方法：边界值分析,自动化测试面试题,测试设计, 边界值, 黑盒测试, 测试用例,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-014.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试用例设计方法：边界值分析 - 自动化测试面试题">
+<meta property="og:description" content="**边界值分析定义：** 经验表明，大量错误发生在输入范围的边界上。边界值分析是对等价类划分的补充，重点测试边界值及其附近值。  **边界值选取原则：** 对于范围[a, b]： - 最小值 a - 略大于最小值 a+ - 正常值（范围内任意值） - 略小于最大值 b- - 最大值 b  **边界值类型：** 1. *...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-014.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "测试用例设计方法：边界值分析",
+    "text": "什么是边界值分析法？如何应用？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**边界值分析定义：** 经验表明，大量错误发生在输入范围的边界上。边界值分析是对等价类划分的补充，重点测试边界值及其附近值。  **边界值选取原则：** 对于范围[a, b]： - 最小值 a - 略大于最小值 a+ - 正常值（范围内任意值） - 略小于最大值 b- - 最大值 b  **边界值类型：** 1. **上点**：边界上的点（a, b） 2. **离点**：离边界最近的点（a-1, b+1） 3. **内点**：范围内的点  **示例：年龄输入（18-60岁）** - 边界值：17, 18, 19, 30, 59, 60, 61"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>测试用例设计方法：边界值分析</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：测试设计, 边界值, 黑盒测试, 测试用例</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是边界值分析法？如何应用？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**边界值分析定义：**</div><div class="answer-line">经验表明，大量错误发生在输入范围的边界上。边界值分析是对等价类划分的补充，重点测试边界值及其附近值。</div><br><div class="answer-line">**边界值选取原则：**</div><div class="answer-line">对于范围[a, b]：</div><div class="answer-line">- 最小值 a</div><div class="answer-line">- 略大于最小值 a+</div><div class="answer-line">- 正常值（范围内任意值）</div><div class="answer-line">- 略小于最大值 b-</div><div class="answer-line">- 最大值 b</div><br><div class="answer-line">**边界值类型：**</div><div class="answer-line"><strong>1. **上点**：边界上的点（a, b）</strong></div><div class="answer-line"><strong>2. **离点**：离边界最近的点（a-1, b+1）</strong></div><div class="answer-line"><strong>3. **内点**：范围内的点</strong></div><br><div class="answer-line">**示例：年龄输入（18-60岁）**</div><div class="answer-line">- 边界值：17, 18, 19, 30, 59, 60, 61</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 边界值分析测试示例
+import pytest
+
+def validate_age(age):
+    &quot;&quot;&quot;验证年龄：18-60岁&quot;&quot;&quot;
+    if not isinstance(age, int):
+        raise TypeError(&quot;年龄必须是整数&quot;)
+    if age &lt; 18:
+        raise ValueError(&quot;年龄不能小于18岁&quot;)
+    if age &gt; 60:
+        raise ValueError(&quot;年龄不能超过60岁&quot;)
+    return True
+
+class TestAgeBoundary:
+    # 边界值测试
+    def test_boundary_below_min(self):
+        &quot;&quot;&quot;下边界-1: 17岁（无效）&quot;&quot;&quot;
+        with pytest.raises(ValueError):
+            validate_age(17)
+    
+    def test_boundary_min(self):
+        &quot;&quot;&quot;下边界: 18岁（有效）&quot;&quot;&quot;
+        assert validate_age(18)
+    
+    def test_boundary_above_min(self):
+        &quot;&quot;&quot;下边界+1: 19岁（有效）&quot;&quot;&quot;
+        assert validate_age(19)
+    
+    def test_normal_value(self):
+        &quot;&quot;&quot;正常值: 30岁（有效）&quot;&quot;&quot;
+        assert validate_age(30)
+    
+    def test_boundary_below_max(self):
+        &quot;&quot;&quot;上边界-1: 59岁（有效）&quot;&quot;&quot;
+        assert validate_age(59)
+    
+    def test_boundary_max(self):
+        &quot;&quot;&quot;上边界: 60岁（有效）&quot;&quot;&quot;
+        assert validate_age(60)
+    
+    def test_boundary_above_max(self):
+        &quot;&quot;&quot;上边界+1: 61岁（无效）&quot;&quot;&quot;
+        with pytest.raises(ValueError):
+            validate_age(61)
+    
+    # 使用pytest.mark.parametrize参数化
+    @pytest.mark.parametrize(&quot;age,expected&quot;, [
+        (17, False),  # 下边界-1
+        (18, True),   # 下边界
+        (60, True),   # 上边界
+        (61, False),  # 上边界+1
+    ])
+    def test_age_boundaries(self, age, expected):
+        if expected:
+            assert validate_age(age)
+        else:
+            with pytest.raises(ValueError):
+                validate_age(age)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

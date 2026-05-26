@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>哲学家就餐问题 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="问题描述： - 5个哲学家围坐圆桌，每两人之间一根筷子 - 每个哲学家需要同时拿到左右两根筷子才能吃饭 - 拿不到就等待  死锁条件： - 每人拿一根筷子后都在等另一根 - 形成循环等待  解决方案： 1. 资源有序分配：给筷子编号，必须先拿小编号    - 破坏循环等待条件  2. 最多允许4人同时拿筷子    - ...">
+<meta name="keywords" content="哲学家就餐问题,操作系统面试题,哲学家就餐, 死锁, 避免死锁, 同步,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-024.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哲学家就餐问题 - 操作系统面试题">
+<meta property="og:description" content="问题描述： - 5个哲学家围坐圆桌，每两人之间一根筷子 - 每个哲学家需要同时拿到左右两根筷子才能吃饭 - 拿不到就等待  死锁条件： - 每人拿一根筷子后都在等另一根 - 形成循环等待  解决方案： 1. 资源有序分配：给筷子编号，必须先拿小编号    - 破坏循环等待条件  2. 最多允许4人同时拿筷子    - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-024.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "哲学家就餐问题",
+    "text": "什么是哲学家就餐问题？如何避免死锁？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "问题描述： - 5个哲学家围坐圆桌，每两人之间一根筷子 - 每个哲学家需要同时拿到左右两根筷子才能吃饭 - 拿不到就等待  死锁条件： - 每人拿一根筷子后都在等另一根 - 形成循环等待  解决方案： 1. 资源有序分配：给筷子编号，必须先拿小编号    - 破坏循环等待条件  2. 最多允许4人同时拿筷子    - 破坏环路（至少一人能拿到两根）  3. 非对称获取：奇数号先拿左边，偶数号先拿右边    - 破坏循环等待  4. 和解方案：尝试拿不到就放下已拿的，随机等待后重试    - 类似CAS重试机制"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>哲学家就餐问题</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：哲学家就餐, 死锁, 避免死锁, 同步</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是哲学家就餐问题？如何避免死锁？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">问题描述：</div><div class="answer-line">- 5个哲学家围坐圆桌，每两人之间一根筷子</div><div class="answer-line">- 每个哲学家需要同时拿到左右两根筷子才能吃饭</div><div class="answer-line">- 拿不到就等待</div><br><div class="answer-line">死锁条件：</div><div class="answer-line">- 每人拿一根筷子后都在等另一根</div><div class="answer-line">- 形成循环等待</div><br><div class="answer-line">解决方案：</div><div class="answer-line"><strong>1. 资源有序分配：给筷子编号，必须先拿小编号</strong></div><div class="answer-line">   - 破坏循环等待条件</div><br><div class="answer-line"><strong>2. 最多允许4人同时拿筷子</strong></div><div class="answer-line">   - 破坏环路（至少一人能拿到两根）</div><br><div class="answer-line"><strong>3. 非对称获取：奇数号先拿左边，偶数号先拿右边</strong></div><div class="answer-line">   - 破坏循环等待</div><br><div class="answer-line"><strong>4. 和解方案：尝试拿不到就放下已拿的，随机等待后重试</strong></div><div class="answer-line">   - 类似CAS重试机制</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 方案1：资源有序分配
+#include &lt;pthread.h&gt;
+
+pthread_mutex_t chopsticks[5];
+
+void* philosopher(void* arg) {
+    int i = *(int*)arg;
+    int left = i;
+    int right = (i + 1) % 5;
+    
+    // 先拿小编号（破坏循环等待）
+    int first = min(left, right);
+    int second = max(left, right);
+    
+    while (true) {
+        think();
+        pthread_mutex_lock(&amp;chopsticks[first]);
+        pthread_mutex_lock(&amp;chopsticks[second]);
+        eat();
+        pthread_mutex_unlock(&amp;chopsticks[second]);
+        pthread_mutex_unlock(&amp;chopsticks[first]);
+    }
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

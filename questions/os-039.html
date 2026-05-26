@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux内核启动流程 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Linux启动流程（x86架构）：  1. BIOS/UEFI阶段：    - 硬件自检（POST）    - 加载BootLoader（从MBR或EFI分区）  2. BootLoader阶段（GRUB）：    - 显示启动菜单    - 加载内核镜像（vmlinuz）和initramfs    - 将控制权交给内...">
+<meta name="keywords" content="Linux内核启动流程,操作系统面试题,Linux启动, BootLoader, GRUB, initramfs, systemd,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-039.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux内核启动流程 - 操作系统面试题">
+<meta property="og:description" content="Linux启动流程（x86架构）：  1. BIOS/UEFI阶段：    - 硬件自检（POST）    - 加载BootLoader（从MBR或EFI分区）  2. BootLoader阶段（GRUB）：    - 显示启动菜单    - 加载内核镜像（vmlinuz）和initramfs    - 将控制权交给内...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-039.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Linux内核启动流程",
+    "text": "简述Linux系统的启动流程。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Linux启动流程（x86架构）：  1. BIOS/UEFI阶段：    - 硬件自检（POST）    - 加载BootLoader（从MBR或EFI分区）  2. BootLoader阶段（GRUB）：    - 显示启动菜单    - 加载内核镜像（vmlinuz）和initramfs    - 将控制权交给内核  3. 内核初始化阶段：    - 解压内核    - 初始化内存管理、调度器、驱动等子系统    - 挂载initramfs作为临时根文件系统    - 执行init程序（通常是systemd或init）  4. init阶段（systemd）：    - 挂载真正的根文件系统    - 启动系统服务    - 进入目标运行级别（multi-user.target或graphical.target）    - 显示登录界面  关键文件： - /boot/vmlinuz：内核镜像 - /boot/initramfs：初始RAM文件系统 - /boot/grub/grub.cfg：GRUB配置 - /sbin/init或/lib/systemd/systemd：第一个用户空间进程"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Linux内核启动流程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：Linux启动, BootLoader, GRUB, initramfs, systemd</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>简述Linux系统的启动流程。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Linux启动流程（x86架构）：</div><br><div class="answer-line"><strong>1. BIOS/UEFI阶段：</strong></div><div class="answer-line">   - 硬件自检（POST）</div><div class="answer-line">   - 加载BootLoader（从MBR或EFI分区）</div><br><div class="answer-line"><strong>2. BootLoader阶段（GRUB）：</strong></div><div class="answer-line">   - 显示启动菜单</div><div class="answer-line">   - 加载内核镜像（vmlinuz）和initramfs</div><div class="answer-line">   - 将控制权交给内核</div><br><div class="answer-line"><strong>3. 内核初始化阶段：</strong></div><div class="answer-line">   - 解压内核</div><div class="answer-line">   - 初始化内存管理、调度器、驱动等子系统</div><div class="answer-line">   - 挂载initramfs作为临时根文件系统</div><div class="answer-line">   - 执行init程序（通常是systemd或init）</div><br><div class="answer-line"><strong>4. init阶段（systemd）：</strong></div><div class="answer-line">   - 挂载真正的根文件系统</div><div class="answer-line">   - 启动系统服务</div><div class="answer-line">   - 进入目标运行级别（multi-user.target或graphical.target）</div><div class="answer-line">   - 显示登录界面</div><br><div class="answer-line">关键文件：</div><div class="answer-line">- /boot/vmlinuz：内核镜像</div><div class="answer-line">- /boot/initramfs：初始RAM文件系统</div><div class="answer-line">- /boot/grub/grub.cfg：GRUB配置</div><div class="answer-line">- /sbin/init或/lib/systemd/systemd：第一个用户空间进程</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 查看启动信息
+// $ dmesg | less
+
+// 查看systemd启动耗时
+// $ systemd-analyze
+// $ systemd-analyze blame  // 各服务启动时间
+
+// 查看运行级别
+// $ systemctl get-default
+
+// 查看内核命令行参数
+// $ cat /proc/cmdline
+
+// 查看initramfs内容
+// $ lsinitramfs /boot/initramfs-$(uname -r).img | less
+
+// 启动流程简化代码示意
+// 1. BIOS加载GRUB
+// 2. GRUB加载内核
+void boot_loader() {
+    load_kernel(&quot;vmlinuz&quot;);
+    load_initramfs(&quot;initramfs.img&quot;);
+    jump_to_kernel();
+}
+
+// 3. 内核初始化
+void kernel_init() {
+    setup_arch();          // 架构相关初始化
+    mm_init();             // 内存管理
+    sched_init();          // 调度器
+    init_IRQ();            // 中断
+    driver_init();         // 驱动
+    mount_root();          // 挂载根文件系统
+    run_init();            // 执行init
+}
+
+// 4. init进程
+void init_process() {
+    mount_real_root();     // 挂载真正根文件系统
+    start_services();      // 启动服务
+    spawn_login();         // 登录界面
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

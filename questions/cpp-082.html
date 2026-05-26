@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++11 初始化列表与委托构造 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**统一初始化（列表初始化）：** - 使用{}进行初始化 - 防止窄化转换（narrowing conversion） - 可用于所有类型（基本类型、类、数组、STL容器） - std::initializer_list支持初始化列表参数  **委托构造函数：** - 一个构造函数调用同类其他构造函数 - 减少代码重...">
+<meta name="keywords" content="C++11 初始化列表与委托构造,C/C++面试题,C++11, 初始化列表, 委托构造, 统一初始化, 现代C++,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-082.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 初始化列表与委托构造 - C/C++面试题">
+<meta property="og:description" content="**统一初始化（列表初始化）：** - 使用{}进行初始化 - 防止窄化转换（narrowing conversion） - 可用于所有类型（基本类型、类、数组、STL容器） - std::initializer_list支持初始化列表参数  **委托构造函数：** - 一个构造函数调用同类其他构造函数 - 减少代码重...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-082.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++11 初始化列表与委托构造",
+    "text": "C++11的列表初始化、委托构造函数和继承构造函数是什么？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**统一初始化（列表初始化）：** - 使用{}进行初始化 - 防止窄化转换（narrowing conversion） - 可用于所有类型（基本类型、类、数组、STL容器） - std::initializer_list支持初始化列表参数  **委托构造函数：** - 一个构造函数调用同类其他构造函数 - 减少代码重复 - 委托构造函数体在目标构造函数之后执行  **继承构造函数（C++11）：** - using Base::Base; - 子类继承基类的构造函数 - 避免重复编写转发构造函数"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++11 初始化列表与委托构造</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：C++11, 初始化列表, 委托构造, 统一初始化, 现代C++</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++11的列表初始化、委托构造函数和继承构造函数是什么？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**统一初始化（列表初始化）：**</div><div class="answer-line">- 使用{}进行初始化</div><div class="answer-line">- 防止窄化转换（narrowing conversion）</div><div class="answer-line">- 可用于所有类型（基本类型、类、数组、STL容器）</div><div class="answer-line">- std::initializer_list支持初始化列表参数</div><br><div class="answer-line">**委托构造函数：**</div><div class="answer-line">- 一个构造函数调用同类其他构造函数</div><div class="answer-line">- 减少代码重复</div><div class="answer-line">- 委托构造函数体在目标构造函数之后执行</div><br><div class="answer-line">**继承构造函数（C++11）：**</div><div class="answer-line">- using Base::Base;</div><div class="answer-line">- 子类继承基类的构造函数</div><div class="answer-line">- 避免重复编写转发构造函数</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;initializer_list&gt;
+
+class MyClass {
+    int x, y, z;
+public:
+    // 目标构造函数
+    MyClass(int a, int b, int c) : x(a), y(b), z(c) {
+        std::cout &lt;&lt; &quot;Target Constructor&quot; &lt;&lt; std::endl;
+    }
+    
+    // 委托构造函数
+    MyClass() : MyClass(0, 0, 0) {
+        std::cout &lt;&lt; &quot;Delegating Constructor&quot; &lt;&lt; std::endl;
+    }
+    
+    MyClass(int a) : MyClass(a, 0, 0) {
+        std::cout &lt;&lt; &quot;Single arg delegating&quot; &lt;&lt; std::endl;
+    }
+};
+
+// 继承构造函数
+class Base {
+public:
+    Base(int x) { std::cout &lt;&lt; &quot;Base(int)&quot; &lt;&lt; std::endl; }
+    Base(int x, int y) { std::cout &lt;&lt; &quot;Base(int, int)&quot; &lt;&lt; std::endl; }
+    Base(const std::string&amp; s) { std::cout &lt;&lt; &quot;Base(string)&quot; &lt;&lt; std::endl; }
+};
+
+class Derived : public Base {
+public:
+    // 继承基类所有构造函数
+    using Base::Base;
+    
+    // 可以添加自己的构造函数
+    Derived(double d) : Base(static_cast&lt;int&gt;(d)) {
+        std::cout &lt;&lt; &quot;Derived(double)&quot; &lt;&lt; std::endl;
+    }
+};
+
+// initializer_list示例
+class MyVector {
+    std::vector&lt;int&gt; data;
+public:
+    MyVector(std::initializer_list&lt;int&gt; list) : data(list) {
+        std::cout &lt;&lt; &quot;Initialized with &quot; &lt;&lt; list.size() &lt;&lt; &quot; elements&quot; &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    // 统一初始化
+    int a{42};           // 直接初始化
+    int b = {42};        // 拷贝初始化
+    
+    // 防止窄化转换
+    // int c{3.14};      // 编译错误：double到int是窄化
+    
+    // 数组初始化
+    int arr[]{1, 2, 3, 4, 5};
+    
+    // STL容器
+    std::vector&lt;int&gt; vec{1, 2, 3, 4, 5};
+    
+    // 自定义类
+    MyVector mv{1, 2, 3, 4, 5};
+    
+    // 委托构造
+    MyClass obj1;           // 调用委托构造
+    MyClass obj2(10);       // 调用单参数委托构造
+    MyClass obj3(1, 2, 3);  // 直接调用目标构造
+    
+    // 继承构造
+    Derived d1(42);         // 使用继承的Base(int)
+    Derived d2(1, 2);       // 使用继承的Base(int, int)
+    Derived d3(&quot;hello&quot;);    // 使用继承的Base(string)
+    Derived d4(3.14);       // 使用Derived(double)
+    
+    return 0;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

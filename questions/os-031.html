@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Capabilities - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Capabilities是Linux对传统root权限的细粒度拆分，将超级用户权限分解为多个独立的权限单元。  传统问题： - root用户拥有所有权限，风险集中 - 普通程序需要root权限时，获得全部权限  Capabilities解决方式： - 将root权限拆分为多个capability - 程序只需所需的最小...">
+<meta name="keywords" content="Linux Capabilities,操作系统面试题,Capabilities, 权限, 安全, 容器, 特权,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-031.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux Capabilities - 操作系统面试题">
+<meta property="og:description" content="Capabilities是Linux对传统root权限的细粒度拆分，将超级用户权限分解为多个独立的权限单元。  传统问题： - root用户拥有所有权限，风险集中 - 普通程序需要root权限时，获得全部权限  Capabilities解决方式： - 将root权限拆分为多个capability - 程序只需所需的最小...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-031.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Linux Capabilities",
+    "text": "什么是Linux Capabilities？它如何提升系统安全性？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Capabilities是Linux对传统root权限的细粒度拆分，将超级用户权限分解为多个独立的权限单元。  传统问题： - root用户拥有所有权限，风险集中 - 普通程序需要root权限时，获得全部权限  Capabilities解决方式： - 将root权限拆分为多个capability - 程序只需所需的最小权限  常见Capabilities： - CAP_CHOWN：修改文件所有者 - CAP_KILL：发送信号给任意进程 - CAP_NET_BIND_SERVICE：绑定特权端口（&lt;1024） - CAP_NET_ADMIN：网络管理操作 - CAP_SYS_ADMIN：系统管理（相当于大部分root权限） - CAP_SYS_PTRACE：ptrace系统调用 - CAP_SETUID：修改进程UID  容器安全应用： - 容器内进程默认丢弃大部分capabilities - 只保留必要的capabilities（如CAP_NET_BIND_SERVICE） - 即使容器内是root，权限也受限  查看和设置： - capsh：查看当前capabilities - setcap：给可执行文件添加capabilities - Docker --cap-add/--cap-drop"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Linux Capabilities</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：Capabilities, 权限, 安全, 容器, 特权</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是Linux Capabilities？它如何提升系统安全性？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Capabilities是Linux对传统root权限的细粒度拆分，将超级用户权限分解为多个独立的权限单元。</div><br><div class="answer-line">传统问题：</div><div class="answer-line">- root用户拥有所有权限，风险集中</div><div class="answer-line">- 普通程序需要root权限时，获得全部权限</div><br><div class="answer-line">Capabilities解决方式：</div><div class="answer-line">- 将root权限拆分为多个capability</div><div class="answer-line">- 程序只需所需的最小权限</div><br><div class="answer-line">常见Capabilities：</div><div class="answer-line">- CAP_CHOWN：修改文件所有者</div><div class="answer-line">- CAP_KILL：发送信号给任意进程</div><div class="answer-line">- CAP_NET_BIND_SERVICE：绑定特权端口（&lt;1024）</div><div class="answer-line">- CAP_NET_ADMIN：网络管理操作</div><div class="answer-line">- CAP_SYS_ADMIN：系统管理（相当于大部分root权限）</div><div class="answer-line">- CAP_SYS_PTRACE：ptrace系统调用</div><div class="answer-line">- CAP_SETUID：修改进程UID</div><br><div class="answer-line">容器安全应用：</div><div class="answer-line">- 容器内进程默认丢弃大部分capabilities</div><div class="answer-line">- 只保留必要的capabilities（如CAP_NET_BIND_SERVICE）</div><div class="answer-line">- 即使容器内是root，权限也受限</div><br><div class="answer-line">查看和设置：</div><div class="answer-line">- capsh：查看当前capabilities</div><div class="answer-line">- setcap：给可执行文件添加capabilities</div><div class="answer-line">- Docker --cap-add/--cap-drop</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 查看进程的capabilities
+// $ cat /proc/&lt;pid&gt;/status | grep Cap
+// CapInh: 继承的capabilities
+// CapPrm: 允许的capabilities
+// CapEff: 有效的capabilities
+// CapBnd: 边界capabilities
+
+// 给程序添加capabilities
+// $ sudo setcap cap_net_bind_service=+ep /path/to/program
+
+// Docker使用capabilities
+// $ docker run --cap-drop=ALL --cap-add=NET_BIND_SERVICE nginx
+
+// C语言操作capabilities
+#include &lt;sys/capability.h&gt;
+
+// 获取当前capabilities
+cap_t caps = cap_get_proc();
+cap_value_t cap_list[1] = {CAP_NET_BIND_SERVICE};
+cap_set_flag(caps, CAP_EFFECTIVE, 1, cap_list, CAP_SET);
+cap_set_proc(caps);
+
+// 查看文件capabilities
+// $ getcap /usr/bin/ping
+// /usr/bin/ping = cap_net_raw+ep</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

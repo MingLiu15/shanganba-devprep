@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内存分配方式 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="连续内存分配： 1. 首次适应（First Fit）：从头找第一个够大的空闲块 2. 最佳适应（Best Fit）：找最小的够大的空闲块 3. 最差适应（Worst Fit）：找最大的空闲块  碎片问题： - 外部碎片：空闲块太小无法分配（可通过紧凑解决） - 内部碎片：分配的块比需要的大（分区大小固定时）  Linu...">
+<meta name="keywords" content="内存分配方式,操作系统面试题,内存分配, 伙伴系统, slab, malloc, 堆,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-011.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存分配方式 - 操作系统面试题">
+<meta property="og:description" content="连续内存分配： 1. 首次适应（First Fit）：从头找第一个够大的空闲块 2. 最佳适应（Best Fit）：找最小的够大的空闲块 3. 最差适应（Worst Fit）：找最大的空闲块  碎片问题： - 外部碎片：空闲块太小无法分配（可通过紧凑解决） - 内部碎片：分配的块比需要的大（分区大小固定时）  Linu...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-011.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "内存分配方式",
+    "text": "操作系统如何管理内存分配？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "连续内存分配： 1. 首次适应（First Fit）：从头找第一个够大的空闲块 2. 最佳适应（Best Fit）：找最小的够大的空闲块 3. 最差适应（Worst Fit）：找最大的空闲块  碎片问题： - 外部碎片：空闲块太小无法分配（可通过紧凑解决） - 内部碎片：分配的块比需要的大（分区大小固定时）  Linux内存管理： 1. 伙伴系统（Buddy System）：    - 以2的幂次方分配物理页    - 合并相邻空闲页，减少外部碎片  2. Slab分配器：    - 针对内核小对象（如task_struct、inode）    - 避免频繁分配/释放的开销    - 对象缓存复用  3. 用户空间（glibc malloc）：    - brk：分配小内存，调整堆顶    - mmap：分配大内存（&gt;128KB），映射新区域    - ptmalloc：维护空闲链表（fastbin, smallbin, largebin）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>内存分配方式</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：内存分配, 伙伴系统, slab, malloc, 堆</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>操作系统如何管理内存分配？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">连续内存分配：</div><div class="answer-line"><strong>1. 首次适应（First Fit）：从头找第一个够大的空闲块</strong></div><div class="answer-line"><strong>2. 最佳适应（Best Fit）：找最小的够大的空闲块</strong></div><div class="answer-line"><strong>3. 最差适应（Worst Fit）：找最大的空闲块</strong></div><br><div class="answer-line">碎片问题：</div><div class="answer-line">- 外部碎片：空闲块太小无法分配（可通过紧凑解决）</div><div class="answer-line">- 内部碎片：分配的块比需要的大（分区大小固定时）</div><br><div class="answer-line">Linux内存管理：</div><div class="answer-line"><strong>1. 伙伴系统（Buddy System）：</strong></div><div class="answer-line">   - 以2的幂次方分配物理页</div><div class="answer-line">   - 合并相邻空闲页，减少外部碎片</div><br><div class="answer-line"><strong>2. Slab分配器：</strong></div><div class="answer-line">   - 针对内核小对象（如task_struct、inode）</div><div class="answer-line">   - 避免频繁分配/释放的开销</div><div class="answer-line">   - 对象缓存复用</div><br><div class="answer-line"><strong>3. 用户空间（glibc malloc）：</strong></div><div class="answer-line">   - brk：分配小内存，调整堆顶</div><div class="answer-line">   - mmap：分配大内存（&gt;128KB），映射新区域</div><div class="answer-line">   - ptmalloc：维护空闲链表（fastbin, smallbin, largebin）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 伙伴系统（简化）
+// 物理页以2^n分配
+// 请求4页 → 找8页块 → 分裂为两个4页
+// 释放4页 → 检查伙伴是否也空闲 → 合并为8页
+
+// malloc内部实现
+void* my_malloc(size_t size) {
+    if (size &gt; 128 * 1024)
+        return mmap(NULL, size, PROT_READ|PROT_WRITE,
+                     MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    else
+        return sbrk(size);  // 或brk调整堆顶
+}
+
+// 内存对齐
+// malloc返回的地址保证8/16字节对齐</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

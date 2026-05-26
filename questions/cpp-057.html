@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++20 Concepts - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Concepts：模板参数的约束条件，编译期类型检查。  解决的问题： 1. 模板错误信息晦涩难懂（SFINAE的替代） 2. 模板参数要求不明确 3. 编译期类型检查  标准Concepts： - std::integral：整型 - std::floating_point：浮点型 - std::copyable：可...">
+<meta name="keywords" content="C++20 Concepts,C/C++面试题,Concepts, C++20, 模板约束, 概念, 类型约束,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-057.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++20 Concepts - C/C++面试题">
+<meta property="og:description" content="Concepts：模板参数的约束条件，编译期类型检查。  解决的问题： 1. 模板错误信息晦涩难懂（SFINAE的替代） 2. 模板参数要求不明确 3. 编译期类型检查  标准Concepts： - std::integral：整型 - std::floating_point：浮点型 - std::copyable：可...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-057.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++20 Concepts",
+    "text": "什么是C++20 Concepts？它解决了什么问题？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Concepts：模板参数的约束条件，编译期类型检查。  解决的问题： 1. 模板错误信息晦涩难懂（SFINAE的替代） 2. 模板参数要求不明确 3. 编译期类型检查  标准Concepts： - std::integral：整型 - std::floating_point：浮点型 - std::copyable：可复制 - std::default_initializable：可默认构造 - std::random_access_iterator：随机访问迭代器  自定义Concepts： - 使用requires表达式定义约束 - 可以组合（&amp;&amp;, ||）  优势： - 错误信息清晰 - 代码可读性高 - 支持重载解析"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++20 Concepts</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：Concepts, C++20, 模板约束, 概念, 类型约束</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是C++20 Concepts？它解决了什么问题？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Concepts：模板参数的约束条件，编译期类型检查。</div><br><div class="answer-line">解决的问题：</div><div class="answer-line"><strong>1. 模板错误信息晦涩难懂（SFINAE的替代）</strong></div><div class="answer-line"><strong>2. 模板参数要求不明确</strong></div><div class="answer-line"><strong>3. 编译期类型检查</strong></div><br><div class="answer-line">标准Concepts：</div><div class="answer-line">- std::integral：整型</div><div class="answer-line">- std::floating_point：浮点型</div><div class="answer-line">- std::copyable：可复制</div><div class="answer-line">- std::default_initializable：可默认构造</div><div class="answer-line">- std::random_access_iterator：随机访问迭代器</div><br><div class="answer-line">自定义Concepts：</div><div class="answer-line">- 使用requires表达式定义约束</div><div class="answer-line">- 可以组合（&amp;&amp;, ||）</div><br><div class="answer-line">优势：</div><div class="answer-line">- 错误信息清晰</div><div class="answer-line">- 代码可读性高</div><div class="answer-line">- 支持重载解析</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;concepts&gt;
+
+// 使用标准Concept
+template&lt;std::integral T&gt;
+T add(T a, T b) {
+    return a + b;
+}
+
+// 自定义Concept
+template&lt;typename T&gt;
+concept Addable = requires(T a, T b) {
+    { a + b } -&gt; std::convertible_to&lt;T&gt;;
+};
+
+template&lt;typename T&gt;
+concept HasSize = requires(T t) {
+    { t.size() } -&gt; std::integral;
+};
+
+// 组合Concepts
+template&lt;typename T&gt;
+concept Container = HasSize&lt;T&gt; &amp;&amp; requires(T t) {
+    { t.begin() } -&gt; std::input_or_output_iterator;
+    { t.end() } -&gt; std::input_or_output_iterator;
+};
+
+// 使用Concept
+template&lt;Container C&gt;
+void printSize(const C&amp; container) {
+    std::cout &lt;&lt; container.size();
+}
+
+// requires子句
+template&lt;typename T&gt;
+    requires std::copyable&lt;T&gt; &amp;&amp; std::equality_comparable&lt;T&gt;
+void process(T value) {
+    // ...
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

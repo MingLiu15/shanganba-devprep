@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python性能优化技巧 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**性能分析工具：** 1. cProfile：内置性能分析器 2. line_profiler：逐行分析 3. memory_profiler：内存分析 4. timeit：代码计时  **优化策略：** 1. 算法优化：选择合适的数据结构和算法 2. 内置函数：使用map/filter代替循环 3. 列表推导：比普...">
+<meta name="keywords" content="Python性能优化技巧,Python面试题,性能优化, cProfile, Cython, 时间复杂度, 内存优化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-050.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python性能优化技巧 - Python面试题">
+<meta property="og:description" content="**性能分析工具：** 1. cProfile：内置性能分析器 2. line_profiler：逐行分析 3. memory_profiler：内存分析 4. timeit：代码计时  **优化策略：** 1. 算法优化：选择合适的数据结构和算法 2. 内置函数：使用map/filter代替循环 3. 列表推导：比普...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-050.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python性能优化技巧",
+    "text": "Python性能优化的常用方法有哪些？如何使用性能分析工具？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**性能分析工具：** 1. cProfile：内置性能分析器 2. line_profiler：逐行分析 3. memory_profiler：内存分析 4. timeit：代码计时  **优化策略：** 1. 算法优化：选择合适的数据结构和算法 2. 内置函数：使用map/filter代替循环 3. 列表推导：比普通循环快 4. 生成器：节省内存 5. 局部变量：访问比全局变量快 6. 字典查找：O(1)比列表O(n)快  **高级优化：** 1. NumPy：数值计算 2. Cython：编译为C 3. Numba：JIT编译 4. 多进程：利用多核"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python性能优化技巧</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：性能优化, cProfile, Cython, 时间复杂度, 内存优化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Python性能优化的常用方法有哪些？如何使用性能分析工具？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**性能分析工具：**</div><div class="answer-line"><strong>1. cProfile：内置性能分析器</strong></div><div class="answer-line"><strong>2. line_profiler：逐行分析</strong></div><div class="answer-line"><strong>3. memory_profiler：内存分析</strong></div><div class="answer-line"><strong>4. timeit：代码计时</strong></div><br><div class="answer-line">**优化策略：**</div><div class="answer-line"><strong>1. 算法优化：选择合适的数据结构和算法</strong></div><div class="answer-line"><strong>2. 内置函数：使用map/filter代替循环</strong></div><div class="answer-line"><strong>3. 列表推导：比普通循环快</strong></div><div class="answer-line"><strong>4. 生成器：节省内存</strong></div><div class="answer-line"><strong>5. 局部变量：访问比全局变量快</strong></div><div class="answer-line"><strong>6. 字典查找：O(1)比列表O(n)快</strong></div><br><div class="answer-line">**高级优化：**</div><div class="answer-line"><strong>1. NumPy：数值计算</strong></div><div class="answer-line"><strong>2. Cython：编译为C</strong></div><div class="answer-line"><strong>3. Numba：JIT编译</strong></div><div class="answer-line"><strong>4. 多进程：利用多核</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 性能分析
+import cProfile
+import pstats
+from io import StringIO
+
+def slow_function():
+    total = 0
+    for i in range(100000):
+        total += i
+    return total
+
+# 使用cProfile
+pr = cProfile.Profile()
+pr.enable()
+slow_function()
+pr.disable()
+
+s = StringIO()
+ps = pstats.Stats(pr, stream=s).sort_stats(&#039;cumulative&#039;)
+ps.print_stats(10)
+print(s.getvalue())
+
+# 优化示例
+# 1. 使用内置函数
+# 慢
+total = 0
+for x in range(1000):
+    total += x
+# 快
+total = sum(range(1000))
+
+# 2. 列表推导 vs 循环
+# 慢
+squares = []
+for x in range(1000):
+    squares.append(x ** 2)
+# 快
+squares = [x ** 2 for x in range(1000)]
+
+# 3. 字典查找 vs 列表查找
+# 慢 (O(n))
+items = [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;, &#039;d&#039;, &#039;e&#039;]
+if &#039;c&#039; in items: pass
+# 快 (O(1))
+items_set = set(items)
+if &#039;c&#039; in items_set: pass
+
+# 4. 使用生成器节省内存
+# 内存占用大
+big_list = [x ** 2 for x in range(1000000)]
+# 内存友好
+big_gen = (x ** 2 for x in range(1000000))
+
+# 5. timeit计时
+import timeit
+timeit.timeit(&#039;sum(range(1000))&#039;, number=10000)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

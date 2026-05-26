@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>is与==的区别 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="==（相等比较）：比较两个对象的值是否相等，调用对象的__eq__()方法。判断的是值层面的等价性。  is（身份比较）：比较两个对象的内存地址是否相同，即是否是同一个对象。判断的是身份层面的同一性。  关键区别： - ==比较值，is比较地址（id()）。 - a == b 为True不代表 a is b 为True...">
+<meta name="keywords" content="is与==的区别,Python面试题,基础语法, 比较运算, 对象模型,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-009.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="is与==的区别 - Python面试题">
+<meta property="og:description" content="==（相等比较）：比较两个对象的值是否相等，调用对象的__eq__()方法。判断的是值层面的等价性。  is（身份比较）：比较两个对象的内存地址是否相同，即是否是同一个对象。判断的是身份层面的同一性。  关键区别： - ==比较值，is比较地址（id()）。 - a == b 为True不代表 a is b 为True...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-009.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "is与==的区别",
+    "text": "解释Python中is和==运算符的区别，以及各自的适用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "==（相等比较）：比较两个对象的值是否相等，调用对象的__eq__()方法。判断的是值层面的等价性。  is（身份比较）：比较两个对象的内存地址是否相同，即是否是同一个对象。判断的是身份层面的同一性。  关键区别： - ==比较值，is比较地址（id()）。 - a == b 为True不代表 a is b 为True（不同对象可以有相同的值）。 - a is b 为True则 a == b 一定为True（同一对象值必然相同）。  适用场景： - 比较值是否相等用==：如字符串内容、数字大小、列表元素。 - 判断是否是同一对象用is：如与None比较（推荐用is None而非==None）、单例判断。  Python小整数缓存：CPython对-5到256的整数进行了缓存，相同值的小整数is比较为True。字符串也有类似的intern机制，但不可依赖。  注意：浮点数比较推荐使用math.isclose()而非==，因为浮点精度问题。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>is与==的区别</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：基础语法, 比较运算, 对象模型</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中is和==运算符的区别，以及各自的适用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">==（相等比较）：比较两个对象的值是否相等，调用对象的__eq__()方法。判断的是值层面的等价性。</div><br><div class="answer-line">is（身份比较）：比较两个对象的内存地址是否相同，即是否是同一个对象。判断的是身份层面的同一性。</div><br><div class="answer-line">关键区别：</div><div class="answer-line">- ==比较值，is比较地址（id()）。</div><div class="answer-line">- a == b 为True不代表 a is b 为True（不同对象可以有相同的值）。</div><div class="answer-line">- a is b 为True则 a == b 一定为True（同一对象值必然相同）。</div><br><div class="answer-line">适用场景：</div><div class="answer-line">- 比较值是否相等用==：如字符串内容、数字大小、列表元素。</div><div class="answer-line">- 判断是否是同一对象用is：如与None比较（推荐用is None而非==None）、单例判断。</div><br><div class="answer-line">Python小整数缓存：CPython对-5到256的整数进行了缓存，相同值的小整数is比较为True。字符串也有类似的intern机制，但不可依赖。</div><br><div class="answer-line">注意：浮点数比较推荐使用math.isclose()而非==，因为浮点精度问题。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># == vs is
+a = [1, 2, 3]
+b = [1, 2, 3]
+print(a == b)  # True，值相等
+print(a is b)  # False，不同对象
+
+# 小整数缓存
+c = 256
+d = 256
+print(c is d)  # True，在缓存范围内
+
+e = 257
+f = 257
+print(e is f)  # False，超出缓存范围
+
+# None比较
+x = None
+print(x is None)    # True（推荐写法）
+print(x == None)    # True（不推荐）
+
+# 字符串intern
+s1 = &#039;hello&#039;
+s2 = &#039;hello&#039;
+print(s1 is s2)  # True（短字符串会被intern）</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

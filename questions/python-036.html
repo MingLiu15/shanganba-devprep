@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python的import机制 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python导入机制：  1. 查找模块：    - 按sys.path顺序查找    - 当前目录 -&gt; PYTHONPATH -&gt; 标准库 -&gt; 第三方包  2. 加载模块：    - 找到模块文件（.py/.pyc/.so/包目录）    - 编译为字节码（如有必要）    - 执行模块顶层代码    - 将模块...">
+<meta name="keywords" content="Python的import机制,Python面试题,import, 模块导入, sys.path, 循环导入, 导入机制,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-036.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python的import机制 - Python面试题">
+<meta property="og:description" content="Python导入机制：  1. 查找模块：    - 按sys.path顺序查找    - 当前目录 -&gt; PYTHONPATH -&gt; 标准库 -&gt; 第三方包  2. 加载模块：    - 找到模块文件（.py/.pyc/.so/包目录）    - 编译为字节码（如有必要）    - 执行模块顶层代码    - 将模块...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-036.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python的import机制",
+    "text": "解释Python的模块导入机制及循环导入问题。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python导入机制：  1. 查找模块：    - 按sys.path顺序查找    - 当前目录 -&gt; PYTHONPATH -&gt; 标准库 -&gt; 第三方包  2. 加载模块：    - 找到模块文件（.py/.pyc/.so/包目录）    - 编译为字节码（如有必要）    - 执行模块顶层代码    - 将模块对象存入sys.modules缓存  3. 创建命名空间：    - 在import语句所在命名空间创建引用  循环导入问题： - A导入B，B又导入A - 导致部分模块未完全初始化  解决方案： 1. 重构代码，消除循环依赖 2. 延迟导入（在函数内部导入） 3. 使用importlib动态导入"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python的import机制</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：import, 模块导入, sys.path, 循环导入, 导入机制</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python的模块导入机制及循环导入问题。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python导入机制：</div><br><div class="answer-line"><strong>1. 查找模块：</strong></div><div class="answer-line">   - 按sys.path顺序查找</div><div class="answer-line">   - 当前目录 -&gt; PYTHONPATH -&gt; 标准库 -&gt; 第三方包</div><br><div class="answer-line"><strong>2. 加载模块：</strong></div><div class="answer-line">   - 找到模块文件（.py/.pyc/.so/包目录）</div><div class="answer-line">   - 编译为字节码（如有必要）</div><div class="answer-line">   - 执行模块顶层代码</div><div class="answer-line">   - 将模块对象存入sys.modules缓存</div><br><div class="answer-line"><strong>3. 创建命名空间：</strong></div><div class="answer-line">   - 在import语句所在命名空间创建引用</div><br><div class="answer-line">循环导入问题：</div><div class="answer-line">- A导入B，B又导入A</div><div class="answer-line">- 导致部分模块未完全初始化</div><br><div class="answer-line">解决方案：</div><div class="answer-line"><strong>1. 重构代码，消除循环依赖</strong></div><div class="answer-line"><strong>2. 延迟导入（在函数内部导入）</strong></div><div class="answer-line"><strong>3. 使用importlib动态导入</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 查看模块搜索路径
+import sys
+print(sys.path)
+
+# 查看已缓存的模块
+print(&#039;os&#039; in sys.modules)  # True
+
+# 循环导入示例及解决方案
+
+# 问题代码（a.py和b.py互相导入）：
+# a.py:
+#   import b
+#   def func_a(): return b.func_b()
+# b.py:
+#   import a
+#   def func_b(): return a.func_a()
+
+# 解决方案1：延迟导入
+# a.py:
+def func_a():
+    import b  # 延迟导入
+    return b.func_b()
+
+# 解决方案2：合并模块或重构
+# 将公共部分提取到c.py
+
+# 解决方案3：使用importlib动态导入
+import importlib
+
+def dynamic_import(module_name):
+    return importlib.import_module(module_name)
+
+# 重新加载模块（开发时有用）
+import importlib
+import mymodule
+importlib.reload(mymodule)
+
+# 条件导入
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+# 相对导入（包内使用）
+# from . import module_a      # 同级目录
+# from .. import module_b     # 上级目录
+# from .subpackage import c   # 子包</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

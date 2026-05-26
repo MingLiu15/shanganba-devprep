@@ -1,0 +1,971 @@
+{
+  "questions": [
+    {
+      "id": "os-002",
+      "title": "进程调度算法",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "调度",
+        "FCFS",
+        "SJF",
+        "RR",
+        "优先级"
+      ],
+      "content": "常见的进程调度算法有哪些？各有什么优缺点？",
+      "answer": "1. 先来先服务（FCFS）：\n   - 按到达顺序执行，非抢占式\n   - 优点：简单公平\n   - 缺点：短作业等待时间长，平均等待时间长\n\n2. 短作业优先（SJF）：\n   - 选择执行时间最短的进程\n   - 优点：平均等待时间最短\n   - 缺点：长作业可能饥饿，难以预知执行时间\n\n3. 时间片轮转（RR）：\n   - 每个进程分配固定时间片，用完切换\n   - 优点：响应时间快，适合分时系统\n   - 缺点：时间片太大退化为FCFS，太小切换开销大\n\n4. 优先级调度：\n   - 按优先级选择进程\n   - 优点：灵活\n   - 缺点：低优先级进程可能饥饿\n\n5. 多级反馈队列：\n   - 多个队列，优先级递减，时间片递增\n   - 综合以上算法优点，现代操作系统常用",
+      "code": {
+        "cpp": "// 时间片轮转模拟\nstruct Process {\n    int pid, burst_time, remaining_time;\n};\n\nvoid roundRobin(Process p[], int n, int quantum) {\n    queue<int> ready;\n    for (int i = 0; i < n; i++) ready.push(i);\n    \n    while (!ready.empty()) {\n        int idx = ready.front(); ready.pop();\n        int exec = min(quantum, p[idx].remaining_time);\n        p[idx].remaining_time -= exec;\n        if (p[idx].remaining_time > 0)\n            ready.push(idx);  // 未完成，放回队尾\n    }\n}"
+      }
+    },
+    {
+      "id": "os-003",
+      "title": "进程间通信方式",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "IPC",
+        "管道",
+        "共享内存",
+        "消息队列",
+        "信号量"
+      ],
+      "content": "列举进程间通信（IPC）的方式及其特点。",
+      "answer": "1. 管道（Pipe）：\n   - 半双工，单向数据流\n   - 匿名管道：用于亲缘关系进程\n   - 命名管道（FIFO）：可用于无亲缘关系进程\n\n2. 消息队列：\n   - 消息格式化，有类型\n   - 内核维护，进程退出后消息仍在\n   - 可以按类型选择性接收\n\n3. 共享内存：\n   - 最快的IPC方式\n   - 需要同步机制（信号量、互斥锁）\n   - 两个进程映射同一块物理内存\n\n4. 信号量：\n   - 用于进程间同步\n   - 控制对共享资源的访问\n\n5. 信号（Signal）：\n   - 异步通知机制\n   - 只能传递信号编号，不能传数据\n\n6. 套接字（Socket）：\n   - 可用于不同主机间通信\n   - 最通用但开销最大",
+      "code": {
+        "cpp": "// 匿名管道\nint fd[2];\npipe(fd);\npid_t pid = fork();\nif (pid == 0) {\n    close(fd[1]);\n    char buf[128];\n    read(fd[0], buf, sizeof(buf));\n} else {\n    close(fd[0]);\n    write(fd[1], \"hello\", 5);\n    wait(NULL);\n}\n\n// 共享内存\nint shmid = shmget(IPC_PRIVATE, 1024, IPC_CREAT|0666);\nchar* addr = (char*)shmat(shmid, NULL, 0);\nstrcpy(addr, \"shared\");\nshmdt(addr);"
+      }
+    },
+    {
+      "id": "os-004",
+      "title": "死锁的产生条件与避免",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "死锁",
+        "互斥",
+        "循环等待",
+        "银行家算法"
+      ],
+      "content": "死锁产生的必要条件是什么？如何预防和避免？",
+      "answer": "死锁四个必要条件（同时满足）：\n1. 互斥：资源一次只能被一个进程使用\n2. 占有且等待：持有资源同时等待其他资源\n3. 不可抢占：资源不能被强制剥夺\n4. 循环等待：存在进程等待环路\n\n预防（破坏必要条件）：\n1. 破坏互斥：某些资源可以共享（如只读文件）\n2. 破坏占有等待：一次性申请所有资源\n3. 破坏不可抢占：允许抢占资源\n4. 破坏循环等待：按顺序编号，按序申请\n\n避免（运行时判断）：\n- 银行家算法：在分配前检查分配后是否安全\n- 需要知道每个进程的最大资源需求\n\n检测与恢复：\n- 资源分配图检测环路\n- 恢复：终止进程、抢占资源",
+      "code": {
+        "cpp": "// 银行家算法核心逻辑\nbool isSafe(int available[], int max[][N], \n            int alloc[][N], int need[][N]) {\n    bool finish[N] = {false};\n    int work[N];\n    memcpy(work, available, sizeof(work));\n    \n    int count = 0;\n    while (count < N) {\n        bool found = false;\n        for (int i = 0; i < N; i++) {\n            if (!finish[i] && canSatisfy(need[i], work)) {\n                for (int j = 0; j < N; j++)\n                    work[j] += alloc[i][j];\n                finish[i] = true;\n                count++;\n                found = true;\n            }\n        }\n        if (!found) return false;  // 不安全\n    }\n    return true;  // 安全"
+      }
+    },
+    {
+      "id": "os-005",
+      "title": "虚拟内存的工作原理",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "虚拟内存",
+        "页表",
+        "MMU",
+        "地址空间"
+      ],
+      "content": "什么是虚拟内存？它是如何工作的？",
+      "answer": "虚拟内存：为每个进程提供独立的、连续的虚拟地址空间，通过页表映射到物理内存。\n\n工作原理：\n1. CPU发出虚拟地址\n2. MMU（内存管理单元）通过页表将虚拟地址转换为物理地址\n3. 如果页面在物理内存中，直接访问\n4. 如果不在（缺页），从磁盘加载到物理内存\n\n页表结构：\n- 多级页表：节省内存（如4级页表）\n- TLB（快表）：缓存最近使用的页表项，加速地址转换\n\n页面置换算法：\n- FIFO：先进先出，可能产生Belady异常\n- LRU：最近最少使用，性能好但开销大\n- LFU：最不经常使用\n- Clock：LRU的近似实现\n\n优点：\n- 内存隔离，进程间互不影响\n- 可以使用比物理内存更大的地址空间\n- 实现内存共享（共享库）",
+      "code": {
+        "cpp": "// 虚拟地址结构（假设4KB页面，32位地址）\n// [虚拟页号(20位)] [页内偏移(12位)]\n\n// 页表项结构\nstruct PageTableEntry {\n    unsigned int frame_num : 20;  // 物理页框号\n    unsigned int present   : 1;   // 是否在内存\n    unsigned int modified  : 1;   // 是否修改（脏页）\n    unsigned int referenced: 1;   // 是否被访问\n    unsigned int protection: 3;   // 读写执行权限\n};\n\n// 地址转换\nuint32_t translate(PageTableEntry* pageTable, \n                   uint32_t virtualAddr) {\n    int page = virtualAddr >> 12;        // 高20位\n    int offset = virtualAddr & 0xFFF;    // 低12位\n    if (pageTable[page].present)\n        return (pageTable[page].frame_num << 12) | offset;\n    else\n        trigger_page_fault(page);  // 缺页中断\n}"
+      }
+    },
+    {
+      "id": "os-006",
+      "title": "页面置换算法",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "页面置换",
+        "LRU",
+        "FIFO",
+        "OPT",
+        "缺页中断"
+      ],
+      "content": "常见的页面置换算法有哪些？",
+      "answer": "1. OPT（最优置换）：\n   - 淘汰将来最长时间不使用的页面\n   - 理论最优，无法实现，用于比较基准\n\n2. FIFO（先进先出）：\n   - 淘汰最早进入内存的页面\n   - 实现简单，但可能产生Belady异常（增加物理帧反而缺页增多）\n\n3. LRU（最近最少使用）：\n   - 淘汰最近最长时间未使用的页面\n   - 性能接近OPT，但实现开销大\n   - 可用计数器或栈实现\n\n4. LFU（最不经常使用）：\n   - 淘汰访问次数最少的页面\n   - 可能忽略最近访问情况\n\n5. Clock（时钟算法）：\n   - LRU的近似，使用访问位和修改位\n   - 页面组织为循环链表，指针扫描\n   - 实现简单，性能较好\n\n实际系统中常用LRU近似算法（如Clock的改进版）。",
+      "code": {
+        "cpp": "// LRU页面置换（双向链表+哈希表）\nclass LRUCache {\n    list<int> lru_list;  // 最近使用的在前面\n    unordered_map<int, list<int>::iterator> map;\n    int capacity;\npublic:\n    void access(int page) {\n        if (map.count(page)) {\n            lru_list.erase(map[page]);  // 移到前面\n        } else if (lru_list.size() >= capacity) {\n            int victim = lru_list.back();\n            lru_list.pop_back();\n            map.erase(victim);  // 淘汰\n        }\n        lru_list.push_front(page);\n        map[page] = lru_list.begin();\n    }\n};"
+      }
+    },
+    {
+      "id": "os-007",
+      "title": "进程状态及其转换",
+      "category": "os",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "进程状态",
+        "就绪",
+        "运行",
+        "阻塞"
+      ],
+      "content": "进程有哪些状态？它们之间如何转换？",
+      "answer": "进程三种基本状态：\n\n1. 就绪态（Ready）：\n   - 已获得除CPU外的所有资源\n   - 等待被调度器选中\n   - 可能有多个进程在就绪队列\n\n2. 运行态（Running）：\n   - 正在CPU上执行\n   - 单核系统中同一时刻只有一个进程运行\n\n3. 阻塞态（Blocked/Waiting）：\n   - 等待某个事件（I/O完成、信号量等）\n   - 即使CPU空闲也不能运行\n\n状态转换：\n- 就绪 → 运行：调度器选中（分配CPU）\n- 运行 → 就绪：时间片用完 / 被高优先级抢占\n- 运行 → 阻塞：请求I/O / 等待信号量\n- 阻塞 → 就绪：I/O完成 / 获得信号量\n- 运行 → 终止：进程完成或被终止\n\n其他状态：\n- 新建态（New）：正在创建\n- 终止态（Terminated）：正在回收资源",
+      "code": {
+        "cpp": "// 进程状态枚举\nenum ProcessState {\n    NEW,\n    READY,\n    RUNNING,\n    BLOCKED,\n    TERMINATED\n};\n\n// 状态转换\nvoid schedule() {\n    if (running && running->time_slice == 0)\n        running->state = READY;  // 运行→就绪\n    \n    Process* next = readyQueue.pop();\n    if (next) {\n        next->state = RUNNING;  // 就绪→运行\n        running = next;\n    }\n}"
+      }
+    },
+    {
+      "id": "os-008",
+      "title": "用户态与内核态",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "用户态",
+        "内核态",
+        "系统调用",
+        "特权级"
+      ],
+      "content": "用户态和内核态有什么区别？如何切换？",
+      "answer": "用户态：\n- 普通应用程序运行的状态\n- 权限受限，不能直接访问硬件和内核数据\n- x86中为特权级3（Ring 3）\n\n内核态：\n- 操作系统内核运行的状态\n- 拥有最高权限，可以访问所有硬件和内存\n- x86中为特权级0（Ring 0）\n\n切换方式（用户态→内核态）：\n1. 系统调用（syscall）：应用程序主动请求OS服务\n2. 中断（Interrupt）：硬件发出的异步通知\n3. 异常（Exception）：程序错误（除零、缺页等）\n\n切换过程：\n1. 保存用户态上下文（寄存器、程序计数器等）\n2. 切换到内核栈\n3. 设置特权级为内核态\n4. 执行内核代码\n5. 返回时恢复用户态上下文",
+      "code": {
+        "cpp": "// Linux系统调用示例\n#include <unistd.h>\n#include <sys/syscall.h>\n\n// 使用glibc封装\nint fd = open(\"file.txt\", O_RDONLY);\nread(fd, buffer, 1024);\nclose(fd);\n\n// 直接使用syscall（底层）\n// syscall(SYS_open, \"file.txt\", O_RDONLY);\n// syscall(SYS_read, fd, buffer, 1024);\n\n// 常见系统调用\n// 文件：open/read/write/close\n// 进程：fork/exec/wait/exit\n// 内存：brk/mmap/munmap\n// 通信：pipe/shmget/socket"
+      }
+    },
+    {
+      "id": "os-009",
+      "title": "文件系统的工作原理",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "文件系统",
+        "inode",
+        "超级块",
+        "目录"
+      ],
+      "content": "文件系统是如何组织和管理文件的？",
+      "answer": "文件系统层次结构：\n1. 超级块（Superblock）：\n   - 文件系统的元信息（大小、块大小、空闲块数等）\n\n2. inode（索引节点）：\n   - 文件的元数据（大小、权限、时间、数据块指针）\n   - 不包含文件名\n   - 每个文件对应一个inode\n\n3. 数据块（Data Block）：\n   - 存储文件实际内容\n\n4. 目录项（Directory Entry）：\n   - 文件名 → inode编号的映射\n\n文件存储方式：\n- 连续分配：文件占连续磁盘块，访问快但易碎片化\n- 链接分配：每个块指向下一个块，适合顺序访问\n- 索引分配：inode中存储数据块指针数组（如ext4）\n\n日志文件系统（如ext4）：\n- 先写日志再修改，崩溃时可以恢复\n- 保证文件系统一致性",
+      "code": {
+        "cpp": "// inode结构（简化）\nstruct Inode {\n    int mode;           // 文件类型和权限\n    int uid, gid;        // 所有者\n    int size;            // 文件大小\n    time_t atime, mtime, ctime;  // 时间戳\n    int block[15];       // 数据块指针\n    // block[0-11]: 直接块\n    // block[12]: 一级间接块\n    // block[13]: 二级间接块\n    // block[14]: 三级间接块\n};\n\n// 目录项\nstruct DirEntry {\n    char name[256];\n    int inode_num;\n};"
+      }
+    },
+    {
+      "id": "os-010",
+      "title": "硬链接与软链接的区别",
+      "category": "os",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "硬链接",
+        "软链接",
+        "符号链接",
+        "inode",
+        "Linux"
+      ],
+      "content": "硬链接和软链接（符号链接）有什么区别？",
+      "answer": "硬链接（Hard Link）：\n- 指向同一个inode的不同文件名\n- 删除原文件不影响硬链接（inode引用计数减1，为0时才真正删除）\n- 不能跨文件系统\n- 不能链接目录\n- 创建：ln source target\n\n软链接/符号链接（Symbolic Link）：\n- 是一个独立的文件，存储目标文件的路径\n- 类似于Windows的快捷方式\n- 删除原文件后软链接失效（悬空链接）\n- 可以跨文件系统\n- 可以链接目录\n- 创建：ln -s source target\n\n区别总结：\n1. inode：硬链接共享inode，软链接有独立inode\n2. 删除原文件：硬链接不受影响，软链接失效\n3. 跨文件系统：硬链接不行，软链接可以\n4. 链接目录：硬链接不行，软链接可以",
+      "code": {
+        "cpp": "// 创建链接\n// 硬链接\n// $ ln file.txt hardlink.txt\n\n// 软链接\n// $ ln -s file.txt softlink.txt\n\n// 查看inode\n// $ ls -li\n// 1234567 -rw-r--r-- 2 user file.txt\n// 1234567 -rw-r--r-- 2 user hardlink.txt  // 同一inode\n// 7654321 lrwxrwxrwx 1 user softlink.txt -> file.txt\n\n// 查看链接数\n// $ stat file.txt\n// Link: 2  (硬链接数)\n\n// C语言创建链接\n#include <unistd.h>\nlink(\"file.txt\", \"hardlink.txt\");     // 硬链接\nsymlink(\"file.txt\", \"softlink.txt\");  // 软链接"
+      }
+    },
+    {
+      "id": "os-011",
+      "title": "内存分配方式",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "内存分配",
+        "伙伴系统",
+        "slab",
+        "malloc",
+        "堆"
+      ],
+      "content": "操作系统如何管理内存分配？",
+      "answer": "连续内存分配：\n1. 首次适应（First Fit）：从头找第一个够大的空闲块\n2. 最佳适应（Best Fit）：找最小的够大的空闲块\n3. 最差适应（Worst Fit）：找最大的空闲块\n\n碎片问题：\n- 外部碎片：空闲块太小无法分配（可通过紧凑解决）\n- 内部碎片：分配的块比需要的大（分区大小固定时）\n\nLinux内存管理：\n1. 伙伴系统（Buddy System）：\n   - 以2的幂次方分配物理页\n   - 合并相邻空闲页，减少外部碎片\n\n2. Slab分配器：\n   - 针对内核小对象（如task_struct、inode）\n   - 避免频繁分配/释放的开销\n   - 对象缓存复用\n\n3. 用户空间（glibc malloc）：\n   - brk：分配小内存，调整堆顶\n   - mmap：分配大内存（>128KB），映射新区域\n   - ptmalloc：维护空闲链表（fastbin, smallbin, largebin）",
+      "code": {
+        "cpp": "// 伙伴系统（简化）\n// 物理页以2^n分配\n// 请求4页 → 找8页块 → 分裂为两个4页\n// 释放4页 → 检查伙伴是否也空闲 → 合并为8页\n\n// malloc内部实现\nvoid* my_malloc(size_t size) {\n    if (size > 128 * 1024)\n        return mmap(NULL, size, PROT_READ|PROT_WRITE,\n                     MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);\n    else\n        return sbrk(size);  // 或brk调整堆顶\n}\n\n// 内存对齐\n// malloc返回的地址保证8/16字节对齐"
+      }
+    },
+    {
+      "id": "os-012",
+      "title": "管道与消息队列",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "管道",
+        "消息队列",
+        "IPC",
+        "同步"
+      ],
+      "content": "管道和消息队列有什么区别？",
+      "answer": "管道（Pipe）：\n- 面向字节流，无消息边界\n- 半双工（单向），大小受限（通常64KB）\n- 读取后数据就消失了\n- 适合父子进程间的简单数据流\n\n命名管道（FIFO）：\n- 在文件系统中存在路径名\n- 无亲缘关系的进程也能通信\n- 数据读后消失\n\n消息队列（Message Queue）：\n- 面向消息，有类型和边界\n- 可以按类型选择性读取\n- 内核维护，进程退出后消息仍在\n- 支持优先级\n- 大小受系统限制（msgmax）\n\n区别：\n1. 数据格式：管道是字节流，消息队列有结构\n2. 生命周期：管道随进程消失，消息队列持久化\n3. 读取方式：管道先进先出，消息队列可按类型\n4. 适用场景：管道适合简单数据流，消息队列适合结构化通信",
+      "code": {
+        "cpp": "// 管道\nint fd[2];\npipe(fd);\npid_t pid = fork();\nif (pid == 0) { close(fd[1]); read(fd[0], buf, 128); }\nelse { close(fd[0]); write(fd[1], \"hello\", 5); }\n\n// 消息队列\n#include <sys/msg.h>\nstruct msgbuf {\n    long mtype;    // 消息类型\n    char mtext[100]; // 消息内容\n};\n\nint msqid = msgget(IPC_PRIVATE, 0666 | IPC_CREAT);\nstruct msgbuf msg = {1, \"hello\"};\nmsgsnd(msqid, &msg, sizeof(msg.mtext), 0);\nmsgrcv(msqid, &msg, sizeof(msg.mtext), 1, 0);"
+      }
+    },
+    {
+      "id": "os-013",
+      "title": "共享内存的原理",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "共享内存",
+        "mmap",
+        "IPC",
+        "同步"
+      ],
+      "content": "共享内存是如何实现的？为什么是最快的IPC方式？",
+      "answer": "原理：\n- 将同一块物理内存映射到多个进程的虚拟地址空间\n- 进程直接读写内存，无需内核介入数据传输\n\n实现方式：\n1. System V共享内存：shmget/shmat/shmdt/shmctl\n2. POSIX共享内存：shm_open/mmap/munmap/shm_unlink\n3. mmap映射文件：将文件映射到内存\n\n为什么最快：\n- 其他IPC（管道、消息队列）需要数据在用户空间和内核空间之间拷贝\n- 共享内存直接在用户空间读写，零拷贝\n- 仅在建立映射时需要内核介入\n\n必须配合同步机制：\n- 信号量\n- 互斥锁\n- 因为没有内核参与的传输，无法自动同步",
+      "code": {
+        "cpp": "// System V共享内存\n#include <sys/shm.h>\n#include <sys/sem.h>\n\nint shmid = shmget(IPC_PRIVATE, 1024, IPC_CREAT|0666);\nchar* addr = (char*)shmat(shmid, NULL, 0);\n\n// 使用信号量同步\nint semid = semget(IPC_PRIVATE, 1, IPC_CREAT|0666);\n// P操作（等待）\nstruct sembuf p = {0, -1, 0};\nsemop(semid, &p, 1);\n\n// 读写共享内存\nstrcpy(addr, \"data from process A\");\n\n// V操作（释放）\nstruct sembuf v = {0, 1, 0};\nsemop(semid, &v, 1);\n\nshmdt(addr);  // 取消映射\nshmctl(shmid, IPC_RMID, NULL);  // 删除"
+      }
+    },
+    {
+      "id": "os-014",
+      "title": "信号机制",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "信号",
+        "signal",
+        "异步",
+        "SIGINT",
+        "SIGKILL"
+      ],
+      "content": "Linux信号机制的工作原理是什么？",
+      "answer": "信号是软件中断，用于通知进程异步事件。\n\n常见信号：\n- SIGINT(2)：Ctrl+C中断\n- SIGKILL(9)：强制终止（不能被捕获或忽略）\n- SIGTERM(15)：请求终止（可被捕获）\n- SIGSEGV(11)：段错误\n- SIGCHLD(17)：子进程状态变化\n- SIGSTOP(19)：暂停进程\n- SIGCONT(18)：继续暂停的进程\n\n信号处理方式：\n1. 默认处理：终止/暂停/忽略\n2. 忽略信号：signal(SIGINT, SIG_IGN)\n3. 捕获信号：注册信号处理函数\n\n信号特点：\n- 不能传递数据（只传递信号编号）\n- 不能保证实时性\n- 同种信号不排队（多次发送只接收一次）\n- 处理函数中只能调用异步安全函数\n\n不可捕获/忽略的信号：SIGKILL、SIGSTOP",
+      "code": {
+        "cpp": "#include <signal.h>\n#include <unistd.h>\n\n// 信号处理函数\nvoid sigint_handler(int signum) {\n    printf(\"收到SIGINT信号\\n\");\n}\n\nint main() {\n    // 注册信号处理\n    signal(SIGINT, sigint_handler);\n    \n    // sigaction（更推荐，功能更强）\n    struct sigaction sa;\n    sa.sa_handler = sigint_handler;\n    sigemptyset(&sa.sa_mask);\n    sa.sa_flags = 0;\n    sigaction(SIGINT, &sa, NULL);\n    \n    // 发送信号\n    kill(getpid(), SIGUSR1);\n    raise(SIGUSR1);\n    \n    while(1) pause();  // 等待信号\n}"
+      }
+    },
+    {
+      "id": "os-015",
+      "title": "磁盘调度算法",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "low",
+      "importance": "low",
+      "tags": [
+        "磁盘调度",
+        "SCAN",
+        "C-SCAN",
+        "寻道",
+        "I/O"
+      ],
+      "content": "常见的磁盘调度算法有哪些？",
+      "answer": "磁盘访问时间 = 寻道时间 + 旋转延迟 + 传输时间\n寻道时间是最大的因素。\n\n1. FCFS（先来先服务）：\n   - 按请求顺序处理\n   - 简单但效率低，磁头移动距离大\n\n2. SSTF（最短寻道时间优先）：\n   - 选择离当前磁头最近的请求\n   - 可能导致远处请求饥饿\n\n3. SCAN（电梯算法）：\n   - 磁头沿一个方向移动到边界，再反向\n   - 类似电梯运行\n   - 对刚经过的位置不公平\n\n4. C-SCAN（循环扫描）：\n   - 只在一个方向处理请求，到边界后快速回到起点\n   - 比SCAN更公平\n\n5. LOOK/C-LOOK：\n   - 不必到边界，到最远的请求就反向\n   - SCAN和C-SCAN的优化版本",
+      "code": {
+        "cpp": "// SCAN电梯算法\nvoid scan(int requests[], int n, int head, bool direction) {\n    sort(requests, requests + n);\n    int distance = 0;\n    \n    if (direction) {  // 向大号方向\n        for (int i = 0; i < n; i++) {\n            if (requests[i] >= head) {\n                distance += abs(requests[i] - head);\n                head = requests[i];\n            }\n        }\n        distance += abs(head - 199);  // 到边界\n        head = 199;\n        for (int i = n-1; i >= 0; i--) {\n            if (requests[i] < 199) {\n                distance += abs(head - requests[i]);\n                head = requests[i];\n            }\n        }\n    }\n    cout << \"总寻道距离: \" << distance << endl;\n}"
+      }
+    },
+    {
+      "id": "os-016",
+      "title": "中断与异常",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "中断",
+        "异常",
+        "陷阱",
+        "故障",
+        "终止"
+      ],
+      "content": "中断和异常有什么区别？各有哪些类型？",
+      "answer": "中断（Interrupt）：\n- 来自CPU外部的异步事件\n- 硬件中断：I/O完成、时钟、键盘等\n- 可屏蔽中断（INTR）：可通过中断控制器屏蔽\n- 不可屏蔽中断（NMI）：紧急硬件故障\n\n异常（Exception）：\n- CPU执行指令时产生的同步事件\n- 分为三类：\n  1. 故障（Fault）：可恢复，重新执行指令\n     - 缺页中断\n  2. 陷阱（Trap）：有意为之，执行后继续下一条\n     - 系统调用（int 0x80 / syscall）\n  3. 终止（Abort）：不可恢复，终止程序\n     - 硬件错误、非法指令\n\n中断处理流程：\n1. 保存现场（寄存器、PC等）\n2. 确定中断源（查询中断向量表）\n3. 执行中断处理程序\n4. 恢复现场，返回被中断的程序",
+      "code": {
+        "cpp": "// 中断向量表（x86 IDT）\nstruct IDTEntry {\n    uint16_t offset_low;    // 处理函数地址低16位\n    uint16_t selector;      // 代码段选择子\n    uint8_t  reserved;\n    uint8_t  type_attr;     // 类型属性\n    uint16_t offset_mid;    // 中间16位\n    uint32_t offset_high;   // 高32位\n    uint32_t reserved2;\n};\n\n// 常见中断/异常向量号\n// 0: 除零错误（Fault）\n// 13: GPF通用保护（Fault）\n// 14: 缺页中断（Fault）\n// 0x80: 系统调用（Trap）\n// 0x21-0x2F: 硬件中断"
+      }
+    },
+    {
+      "id": "os-017",
+      "title": "僵尸进程与孤儿进程",
+      "category": "os",
+      "difficulty": "easy",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "僵尸进程",
+        "孤儿进程",
+        "wait",
+        "init"
+      ],
+      "content": "什么是僵尸进程和孤儿进程？如何处理？",
+      "answer": "僵尸进程（Zombie）：\n- 子进程终止后，父进程未调用wait/waitpid回收其退出状态\n- 子进程的PCB（进程控制块）仍保留在内核中\n- 占用PID和少量内存，无法被kill\n- 大量僵尸进程会耗尽PID资源\n\n处理方法：\n- 父进程调用wait()/waitpid()回收\n- 杀死父进程，僵尸进程被init进程接管并回收\n\n孤儿进程（Orphan）：\n- 父进程先于子进程终止\n- 子进程被init进程（PID=1）收养\n- init进程会自动调用wait回收\n- 孤儿进程无害\n\n预防僵尸进程：\n1. 父进程调用wait/waitpid\n2. 使用信号处理：SIGCHLD信号处理中调用wait\n3. 两次fork：创建子进程再创建孙子进程，子进程退出，孙子进程成为孤儿",
+      "code": {
+        "cpp": "#include <sys/wait.h>\n\n// 方法1：父进程wait\npid_t pid = fork();\nif (pid == 0) { exit(0); }\nelse { wait(NULL); }  // 回收子进程\n\n// 方法2：SIGCHLD信号处理\nvoid sigchld_handler(int sig) {\n    while (waitpid(-1, NULL, WNOHANG) > 0);\n}\nsignal(SIGCHLD, sigchld_handler);\n\n// 方法3：两次fork避免僵尸\nif (fork() == 0) {\n    if (fork() == 0) {\n        // 孙子进程，成为孤儿被init收养\n        do_work();\n        exit(0);\n    }\n    exit(0);  // 子进程立即退出\n}\nwait(NULL);  // 回收子进程"
+      }
+    },
+    {
+      "id": "os-018",
+      "title": "IO多路复用",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "select",
+        "poll",
+        "epoll",
+        "IO多路复用",
+        "高并发"
+      ],
+      "content": "什么是IO多路复用？select、poll、epoll的区别？",
+      "answer": "IO多路复用：一个线程同时监视多个文件描述符，等待一个或多个IO事件就绪。\n\n适用场景：高并发连接，每个连接大部分时间空闲。\n\nselect：\n- 使用fd_set位图，最大1024个fd\n- 每次调用拷贝fd_set到内核\n- 返回后遍历所有fd\n- 时间复杂度O(n)\n\npoll：\n- 使用pollfd数组，无数量限制\n- 仍需拷贝和遍历\n- 时间复杂度O(n)\n\nepoll（Linux最优）：\n- epoll_create创建实例\n- epoll_ctl添加/修改/删除fd（红黑树存储）\n- epoll_wait只返回就绪的fd\n- 时间复杂度O(就绪fd数)\n- 支持LT（水平触发）和ET（边缘触发）\n- 内核中维护就绪链表，无需每次遍历",
+      "code": {
+        "cpp": "// epoll服务端\nint epfd = epoll_create1(0);\nstruct epoll_event ev;\nev.events = EPOLLIN;\nev.data.fd = listen_fd;\nepoll_ctl(epfd, EPOLL_CTL_ADD, listen_fd, &ev);\n\nstruct epoll_event events[1024];\nwhile (true) {\n    int n = epoll_wait(epfd, events, 1024, -1);\n    for (int i = 0; i < n; i++) {\n        if (events[i].data.fd == listen_fd) {\n            int conn = accept(listen_fd, NULL, NULL);\n            ev.events = EPOLLIN | EPOLLET;\n            ev.data.fd = conn;\n            epoll_ctl(epfd, EPOLL_CTL_ADD, conn, &ev);\n        } else {\n            handle(events[i].data.fd);\n        }\n    }\n}"
+      }
+    },
+    {
+      "id": "os-019",
+      "title": "同步与互斥",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "同步",
+        "互斥",
+        "信号量",
+        "互斥锁",
+        "临界区"
+      ],
+      "content": "同步和互斥有什么区别？如何实现？",
+      "answer": "互斥（Mutual Exclusion）：\n- 多个进程不能同时进入临界区\n- 保证同一时刻只有一个进程访问共享资源\n- 关系：竞争关系\n\n同步（Synchronization）：\n- 进程按一定顺序执行\n- 保证事件的先后顺序\n- 关系：协作关系\n\n实现机制：\n1. 互斥锁（Mutex）：保护临界区，同一时刻只有一个持有者\n2. 信号量（Semaphore）：\n   - 二值信号量：实现互斥\n   - 计数信号量：实现同步（如生产者-消费者）\n3. 条件变量（Condition Variable）：等待某个条件成立\n\n经典问题：\n- 生产者-消费者：用信号量同步\n- 读者-写者：读写锁\n- 哲学家就餐：避免死锁",
+      "code": {
+        "cpp": "// 信号量实现生产者-消费者\nsem_t empty, full, mutex;\nsem_init(&empty, 0, N);  // 空槽位\nsem_init(&full, 0, 0);   // 已有产品\nsem_init(&mutex, 0, 1);  // 互斥\n\nvoid producer() {\n    sem_wait(&empty);   // 等待空槽\n    sem_wait(&mutex);   // 加锁\n    buffer[in++] = item;\n    sem_post(&mutex);   // 解锁\n    sem_post(&full);    // 通知消费者\n}\n\nvoid consumer() {\n    sem_wait(&full);    // 等待产品\n    sem_wait(&mutex);\n    item = buffer[out++];\n    sem_post(&mutex);\n    sem_post(&empty);   // 通知生产者\n}"
+      }
+    },
+    {
+      "id": "os-020",
+      "title": "用户线程与内核线程",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "用户线程",
+        "内核线程",
+        "线程模型",
+        "1:1",
+        "N:1",
+        "M:N"
+      ],
+      "content": "用户线程和内核线程有什么区别？线程模型有哪些？",
+      "answer": "用户线程：\n- 在用户空间管理，OS不可见\n- 切换不需要内核介入，速度快\n- 一个线程阻塞可能导致整个进程阻塞\n- 不能利用多核（取决于实现）\n\n内核线程：\n- 由OS内核管理\n- 切换需要内核介入，开销大\n- 一个线程阻塞不影响其他线程\n- 可以利用多核并行\n\n三种线程模型：\n1. 一对一（1:1）：\n   - 每个用户线程对应一个内核线程\n   - Linux pthreads采用此模型\n   - 优点：真正并行，阻塞不影响其他线程\n   - 缺点：创建开销大，数量受限\n\n2. 多对一（N:1）：\n   - 多个用户线程映射到一个内核线程\n   - 优点：创建切换快\n   - 缺点：不能并行，一个阻塞全部阻塞\n\n3. 多对多（M:N）：\n   - M个用户线程映射到N个内核线程\n   - 综合以上优点\n   - 实现复杂（如Go的goroutine）",
+      "code": {
+        "cpp": "// Linux pthread（1:1模型）\n#include <pthread.h>\n\nvoid* thread_func(void* arg) {\n    printf(\"线程ID: %lu\\n\", pthread_self());\n    return NULL;\n}\n\nint main() {\n    pthread_t tid;\n    pthread_create(&tid, NULL, thread_func, NULL);\n    pthread_join(tid, NULL);\n}\n\n// Go goroutine（M:N模型）\n// go func() {\n//     fmt.Println(\"goroutine\")\n// }()"
+      }
+    },
+    {
+      "id": "os-021",
+      "title": "分页与分段",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "分页",
+        "分段",
+        "虚拟内存",
+        "内存管理"
+      ],
+      "content": "分页和分段有什么区别？",
+      "answer": "分页（Paging）：\n- 将物理内存划分为固定大小的页框（通常4KB）\n- 将逻辑地址空间划分为相同大小的页面\n- 通过页表进行地址映射\n- 优点：无外部碎片，内存利用率高\n- 缺点：内部碎片（最后一页可能不满），页表占用内存\n\n分段（Segmentation）：\n- 按程序逻辑将地址空间划分为多个段（代码段、数据段、栈段）\n- 每段有段号和段内偏移\n- 通过段表进行地址映射\n- 优点：符合程序逻辑，便于共享和保护\n- 缺点：外部碎片（段间空闲区域）\n\n段页式：\n- 先分段再分页，结合两者优点\n- 每段内部按页管理\n- 现代操作系统常用方式\n\n区别总结：\n1. 分页大小固定，分段大小可变\n2. 分页无外部碎片有内部碎片，分段相反\n3. 分页对程序员透明，分段可见",
+      "code": {
+        "cpp": "// 分页地址结构（32位，4KB页面）\n// 虚拟地址: [页号(20位)] [页内偏移(12位)]\n// 物理地址: [页框号(20位)] [页内偏移(12位)]\n\n// 分段地址结构\n// 虚拟地址: [段号(16位)] [段内偏移(16位)]\n\n// 段页式地址结构\n// 虚拟地址: [段号] [页号] [页内偏移]\n\n// Linux查看页面大小\n// $ getconf PAGE_SIZE\n// 4096\n\n// 查看进程内存映射\n// $ cat /proc/self/maps"
+      }
+    },
+    {
+      "id": "os-022",
+      "title": "系统调用",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "系统调用",
+        "syscall",
+        "用户态",
+        "内核态",
+        "API"
+      ],
+      "content": "什么是系统调用？常见系统调用有哪些？",
+      "answer": "系统调用是操作系统提供给用户程序的接口，是用户态进入内核态的唯一方式。\n\n工作流程：\n1. 用户程序调用库函数（如printf）\n2. 库函数封装系统调用（如write）\n3. 触发软中断（int 0x80 / syscall指令）\n4. CPU切换到内核态，查中断向量表\n5. 执行对应的内核函数\n6. 返回用户态\n\n常见系统调用分类：\n1. 进程控制：fork/exec/wait/exit/clone\n2. 文件操作：open/read/write/close/lseek/stat\n3. 设备操作：ioctl/read/write\n4. 通信：pipe/shmget/socket\n5. 信息：getpid/getuid/gettimeofday\n\n系统调用与库函数的区别：\n- 库函数在用户空间执行，系统调用进入内核\n- 库函数可能调用多个系统调用\n- 系统调用开销大（上下文切换）",
+      "code": {
+        "cpp": "// 使用glibc库函数（内部调用系统调用）\n#include <unistd.h>\n#include <fcntl.h>\n\nint fd = open(\"file.txt\", O_RDONLY);\nchar buf[128];\nssize_t n = read(fd, buf, sizeof(buf));\nwrite(STDOUT_FILENO, buf, n);\nclose(fd);\n\n// 直接使用syscall（不推荐，仅了解）\n// syscall(SYS_open, \"file.txt\", O_RDONLY);\n// syscall(SYS_read, fd, buf, 128);\n\n// 查看系统调用\n// $ strace ./program\n// $ strace -c ./program  // 统计系统调用次数"
+      }
+    },
+    {
+      "id": "os-023",
+      "title": "读者-写者问题",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "读者写者",
+        "同步",
+        "读写锁",
+        "并发"
+      ],
+      "content": "什么是读者-写者问题？如何实现？",
+      "answer": "问题描述：\n- 多个读者可以同时读\n- 写者必须独占访问（读写互斥、写写互斥）\n\n两种策略：\n1. 读者优先：\n   - 只要有读者在读，新读者可以直接进入\n   - 写者可能饥饿（一直有新读者到来）\n\n2. 写者优先：\n   - 有写者等待时，新读者必须等待\n   - 读者可能饥饿\n\n实现要点：\n- 互斥锁：保护共享变量\n- 读计数器：记录当前读者数量\n- 信号量：控制写者访问\n\n实际应用：\n- 数据库读写锁\n- 配置文件读写\n- 缓存系统",
+      "code": {
+        "cpp": "// 读者优先实现\n#include <pthread.h>\n\nint read_count = 0;\npthread_mutex_t count_mutex = PTHREAD_MUTEX_INITIALIZER;\npthread_mutex_t rw_mutex = PTHREAD_MUTEX_INITIALIZER;\n\nvoid reader() {\n    pthread_mutex_lock(&count_mutex);\n    read_count++;\n    if (read_count == 1)\n        pthread_mutex_lock(&rw_mutex);  // 第一个读者加锁\n    pthread_mutex_unlock(&count_mutex);\n    \n    // 读取数据...\n    \n    pthread_mutex_lock(&count_mutex);\n    read_count--;\n    if (read_count == 0)\n        pthread_mutex_unlock(&rw_mutex);  // 最后一个读者解锁\n    pthread_mutex_unlock(&count_mutex);\n}\n\nvoid writer() {\n    pthread_mutex_lock(&rw_mutex);  // 写者独占\n    // 写入数据...\n    pthread_mutex_unlock(&rw_mutex);\n}"
+      }
+    },
+    {
+      "id": "os-024",
+      "title": "哲学家就餐问题",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "哲学家就餐",
+        "死锁",
+        "避免死锁",
+        "同步"
+      ],
+      "content": "什么是哲学家就餐问题？如何避免死锁？",
+      "answer": "问题描述：\n- 5个哲学家围坐圆桌，每两人之间一根筷子\n- 每个哲学家需要同时拿到左右两根筷子才能吃饭\n- 拿不到就等待\n\n死锁条件：\n- 每人拿一根筷子后都在等另一根\n- 形成循环等待\n\n解决方案：\n1. 资源有序分配：给筷子编号，必须先拿小编号\n   - 破坏循环等待条件\n\n2. 最多允许4人同时拿筷子\n   - 破坏环路（至少一人能拿到两根）\n\n3. 非对称获取：奇数号先拿左边，偶数号先拿右边\n   - 破坏循环等待\n\n4. 和解方案：尝试拿不到就放下已拿的，随机等待后重试\n   - 类似CAS重试机制",
+      "code": {
+        "cpp": "// 方案1：资源有序分配\n#include <pthread.h>\n\npthread_mutex_t chopsticks[5];\n\nvoid* philosopher(void* arg) {\n    int i = *(int*)arg;\n    int left = i;\n    int right = (i + 1) % 5;\n    \n    // 先拿小编号（破坏循环等待）\n    int first = min(left, right);\n    int second = max(left, right);\n    \n    while (true) {\n        think();\n        pthread_mutex_lock(&chopsticks[first]);\n        pthread_mutex_lock(&chopsticks[second]);\n        eat();\n        pthread_mutex_unlock(&chopsticks[second]);\n        pthread_mutex_unlock(&chopsticks[first]);\n    }\n}"
+      }
+    },
+    {
+      "id": "os-025",
+      "title": "DMA（直接内存访问）",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "low",
+      "importance": "low",
+      "tags": [
+        "DMA",
+        "IO",
+        "中断",
+        "性能优化"
+      ],
+      "content": "什么是DMA？它有什么作用？",
+      "answer": "DMA（Direct Memory Access）：\n- 允许外设直接与内存交换数据，不经过CPU\n- 由DMA控制器（DMAC）完成数据传输\n\n工作流程：\n1. CPU向DMA控制器发送传输请求\n2. DMA控制器向总线仲裁器申请总线控制权\n3. 获得总线控制权后，DMA直接读写内存\n4. 传输完成后，DMA向CPU发送中断通知\n\n优点：\n1. 解放CPU：CPU在DMA传输期间可以执行其他任务\n2. 速度快：DMA是硬件传输，比CPU逐字节传输快\n3. 减少中断次数：整块数据传输完才中断一次\n\n应用场景：\n- 磁盘读写\n- 网络数据收发\n- 显存数据传输\n- 音频数据播放\n\n与中断驱动IO对比：\n- 中断驱动：每个字节/字都中断CPU，开销大\n- DMA：整块数据传输完才中断，开销小",
+      "code": {
+        "cpp": "// DMA传输流程\n// 1. CPU配置DMA控制器\n//    - 源地址（外设寄存器）\n//    - 目标地址（内存）\n//    - 传输字节数\n//    - 传输方向（读/写）\n\n// 2. DMA控制器接管总线\n//    - CPU释放总线控制权\n//    - DMA直接在设备和内存间传输数据\n\n// 3. 传输完成\n//    - DMA释放总线\n//    - 向CPU发送中断\n\n// Linux查看DMA\n// $ dmesg | grep -i dma\n// $ cat /proc/dma"
+      }
+    },
+    {
+      "id": "os-026",
+      "title": "交换空间与内存扩展",
+      "category": "os",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "Swap",
+        "虚拟内存",
+        "内存管理",
+        "OOM"
+      ],
+      "content": "什么是交换空间（Swap）？操作系统如何管理内存不足的情况？",
+      "answer": "交换空间（Swap）：\n- 磁盘上用于扩展物理内存的区域\n- Linux中为swap分区或swap文件\n- 将不活跃的内存页换出到磁盘，需要时换入\n\n页面置换时机：\n1. 物理内存不足时，内核换出冷门页面\n2. 通过LRU等算法选择被换出的页面\n\nOOM（Out of Memory）：\n- 物理内存和交换空间都耗尽\n- Linux的OOM Killer会选择进程杀死\n- 选择策略：分数越高越容易被杀（考虑内存占用、优先级等）\n\nLinux内存管理：\n- swappiness：控制换出倾向（0-100）\n- overcommit_memory：是否允许超量分配\n- cgroups：限制容器/进程的内存使用\n\n查看内存和swap：\n- free -h：查看内存和swap使用\n- /proc/meminfo：详细内存信息\n- swapon -s：查看swap设备",
+      "code": {
+        "cpp": "// 查看内存使用\n// $ free -h\n//               total   used   free  shared  buff/cache  available\n// Mem:           7.8G   3.2G   1.5G   256M   3.0G       4.1G\n// Swap:          2.0G   128M   1.9G\n\n// 查看swap\n// $ swapon --show\n\n// 创建swap文件\n// $ fallocate -l 2G /swapfile\n// $ chmod 600 /swapfile\n// $ mkswap /swapfile\n// $ swapon /swapfile\n\n// 调整swappiness（降低换出倾向）\n// $ sysctl vm.swappiness=10\n\n// 查看OOM分数\n// $ cat /proc/<pid>/oom_score"
+      }
+    },
+    {
+      "id": "os-027",
+      "title": "Linux Namespace（命名空间）",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Namespace",
+        "容器",
+        "隔离",
+        "Linux内核",
+        "Docker"
+      ],
+      "content": "什么是Linux Namespace？它如何实现资源隔离？",
+      "answer": "Namespace是Linux内核提供的一种资源隔离机制，是容器技术（如Docker）的基础。\n\n七大Namespace类型：\n1. PID Namespace：隔离进程ID\n   - 容器内PID从1开始，与宿主机隔离\n   - 容器内只能看到自己的进程\n\n2. Mount Namespace：隔离文件系统挂载点\n   - 容器有自己的根文件系统\n   - 挂载操作不影响宿主机\n\n3. Network Namespace：隔离网络资源\n   - 独立的网络接口、IP地址、路由表\n   - 容器间网络隔离\n\n4. UTS Namespace：隔离主机名和域名\n   - 容器可以有自己的hostname\n\n5. IPC Namespace：隔离进程间通信\n   - 隔离共享内存、消息队列、信号量\n\n6. User Namespace：隔离用户和组ID\n   - 容器内root映射到宿主机普通用户\n   - 提升安全性\n\n7. Cgroup Namespace：隔离cgroup视图\n   - 容器内只能看到自己的cgroup\n\n使用方式：\n- clone()系统调用：创建新进程时指定namespace\n- unshare()：当前进程进入新的namespace\n- setns()：将进程加入已存在的namespace",
+      "code": {
+        "cpp": "// 使用unshare创建新的namespace\n#define _GNU_SOURCE\n#include <sched.h>\n#include <unistd.h>\n\nint main() {\n    // 创建新的PID、Network、Mount namespace\n    unshare(CLONE_NEWPID | CLONE_NEWNET | CLONE_NEWNS);\n    \n    // 在新namespace中执行shell\n    char* args[] = {\"/bin/bash\", NULL};\n    execvp(args[0], args);\n}\n\n// 命令行操作\n// $ sudo unshare --pid --net --mount --fork /bin/bash\n// $ echo $$  // 显示PID为1\n\n// 查看进程的namespace\n// $ ls -la /proc/<pid>/ns/"
+      }
+    },
+    {
+      "id": "os-028",
+      "title": "Linux Cgroups（控制组）",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "Cgroups",
+        "资源限制",
+        "容器",
+        "Linux内核",
+        "资源管理"
+      ],
+      "content": "什么是Linux Cgroups？它如何限制资源使用？",
+      "answer": "Cgroups（Control Groups）是Linux内核提供的资源限制和管理机制，用于限制进程组的资源使用。\n\n主要子系统（Controller）：\n1. cpu：限制CPU使用率\n   - cpu.shares：CPU时间片分配权重\n   - cpu.cfs_quota_us/cpu.cfs_period_us：硬限制CPU使用率\n\n2. memory：限制内存使用\n   - memory.limit_in_bytes：内存上限\n   - memory.swappiness：swap使用倾向\n\n3. blkio：限制块设备IO\n   - blkio.throttle.read_bps_device：读速度限制\n   - blkio.throttle.write_bps_device：写速度限制\n\n4. pids：限制进程数量\n   - pids.max：最大进程数\n\n5. net_cls/net_prio：网络流量控制\n\n6. devices：设备访问控制\n   - 允许/禁止访问特定设备\n\n7. freezer：暂停/恢复进程组\n\n使用方式：\n- 手动操作/sys/fs/cgroup目录\n- 使用systemd\n- Docker等容器工具自动配置",
+      "code": {
+        "cpp": "// 手动创建cgroup并限制资源\n// 1. 创建cgroup\n// $ sudo mkdir /sys/fs/cgroup/memory/mygroup\n\n// 2. 设置内存限制（100MB）\n// $ echo 104857600 | sudo tee /sys/fs/cgroup/memory/mygroup/memory.limit_in_bytes\n\n// 3. 将进程加入cgroup\n// $ echo <pid> | sudo tee /sys/fs/cgroup/memory/mygroup/cgroup.procs\n\n// C语言操作cgroup\n#include <stdio.h>\n\nvoid set_memory_limit(pid_t pid, long long limit) {\n    FILE* f = fopen(\"/sys/fs/cgroup/memory/mygroup/cgroup.procs\", \"w\");\n    fprintf(f, \"%d\", pid);\n    fclose(f);\n    \n    f = fopen(\"/sys/fs/cgroup/memory/mygroup/memory.limit_in_bytes\", \"w\");\n    fprintf(f, \"%lld\", limit);\n    fclose(f);\n}\n\n// Docker默认cgroup路径\n// /sys/fs/cgroup/memory/docker/<container_id>/"
+      }
+    },
+    {
+      "id": "os-029",
+      "title": "UnionFS（联合文件系统）",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "UnionFS",
+        "OverlayFS",
+        "容器",
+        "文件系统",
+        "Docker"
+      ],
+      "content": "什么是UnionFS？它在容器技术中有什么作用？",
+      "answer": "UnionFS（联合文件系统）是一种分层、轻量级的文件系统，可以将多个目录（层）合并挂载到一个统一的视图。\n\n核心概念：\n1. 分层结构：\n   - 底层（Lower Layer）：只读层，通常是基础镜像\n   - 顶层（Upper Layer）：可写层，容器运行时修改\n   - 工作目录（Workdir）：OverlayFS内部使用\n   - 合并视图（Merged）：统一呈现所有层的内容\n\n2. 写时复制（Copy-on-Write）：\n   - 读取：从上到下查找文件\n   - 修改：将文件从只读层复制到可写层再修改\n   - 删除：在可写层创建whiteout标记\n\n常见实现：\n- AUFS：早期Docker使用\n- OverlayFS：现代Linux默认，性能更好\n- OverlayFS2：OverlayFS的改进版\n\n容器中的应用：\n- 镜像层共享：多个容器共享基础镜像层\n- 容器隔离：每个容器有独立的可写层\n- 快速启动：无需复制整个镜像",
+      "code": {
+        "cpp": "// OverlayFS挂载示例\n// $ sudo mount -t overlay overlay \\\n//     -o lowerdir=/lower,upperdir=/upper,workdir=/work \\\n//     /merged\n\n// 目录结构说明\n// /lower:    只读层（基础镜像）\n// /upper:    可写层（容器修改）\n// /work:     工作目录（OverlayFS内部使用）\n// /merged:   合并后的视图\n\n// 查看Docker容器文件系统\n// $ docker inspect <container_id> | grep -A 5 GraphDriver\n\n// C语言使用mount系统调用\n#include <sys/mount.h>\n\nmount(\"overlay\", \"/merged\", \"overlay\", 0,\n      \"lowerdir=/lower,upperdir=/upper,workdir=/work\");\n\n// 查看镜像层\n// $ ls /var/lib/docker/overlay2/"
+      }
+    },
+    {
+      "id": "os-030",
+      "title": "容器的实现原理",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "容器",
+        "Docker",
+        "Namespace",
+        "Cgroups",
+        "容器技术"
+      ],
+      "content": "容器（如Docker）是如何实现的？它的核心技术有哪些？",
+      "answer": "容器是一种轻量级的虚拟化技术，与虚拟机不同，容器共享宿主机内核，通过操作系统级隔离实现资源隔离。\n\n核心技术：\n1. Namespace（隔离）：\n   - PID、Mount、Network、UTS、IPC、User、Cgroup Namespace\n   - 实现进程、网络、文件系统等资源的隔离\n\n2. Cgroups（限制）：\n   - 限制CPU、内存、IO、网络等资源使用\n   - 防止单个容器耗尽宿主机资源\n\n3. UnionFS（文件系统）：\n   - OverlayFS/AUFS实现分层镜像\n   - 写时复制机制，高效存储\n\n4. 容器运行时：\n   - runc：底层容器运行时，创建和运行容器\n   - containerd：管理容器生命周期\n\n容器 vs 虚拟机：\n- 容器：共享内核，启动快（秒级），资源占用少\n- 虚拟机：独立内核，启动慢（分钟级），资源占用多\n\n容器启动流程：\n1. 创建Namespace实现隔离\n2. 配置Cgroups限制资源\n3. 挂载UnionFS根文件系统\n4. 执行容器init进程",
+      "code": {
+        "cpp": "// 容器启动的核心系统调用流程\n// 1. clone创建新进程并指定namespace\nint pid = clone(child_func, child_stack,\n                CLONE_NEWPID | CLONE_NEWNET | CLONE_NEWNS |\n                CLONE_NEWUTS | CLONE_NEWIPC, NULL);\n\n// 2. 配置cgroups\n// 写入 /sys/fs/cgroup/<controller>/mycontainer/\n\n// 3. pivot_root切换根文件系统\n// pivot_root(new_root, put_old);\n\n// 4. 执行容器入口程序\nexecve(\"/bin/sh\", args, env);\n\n// 手动模拟容器启动\n// $ unshare --pid --net --mount --uts --ipc --fork --mount-proc /bin/bash\n// $ echo '1000000' > /sys/fs/cgroup/memory/mycontainer/memory.limit_in_bytes\n// $ echo $$ > /sys/fs/cgroup/memory/mycontainer/cgroup.procs"
+      }
+    },
+    {
+      "id": "os-031",
+      "title": "Linux Capabilities",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "Capabilities",
+        "权限",
+        "安全",
+        "容器",
+        "特权"
+      ],
+      "content": "什么是Linux Capabilities？它如何提升系统安全性？",
+      "answer": "Capabilities是Linux对传统root权限的细粒度拆分，将超级用户权限分解为多个独立的权限单元。\n\n传统问题：\n- root用户拥有所有权限，风险集中\n- 普通程序需要root权限时，获得全部权限\n\nCapabilities解决方式：\n- 将root权限拆分为多个capability\n- 程序只需所需的最小权限\n\n常见Capabilities：\n- CAP_CHOWN：修改文件所有者\n- CAP_KILL：发送信号给任意进程\n- CAP_NET_BIND_SERVICE：绑定特权端口（<1024）\n- CAP_NET_ADMIN：网络管理操作\n- CAP_SYS_ADMIN：系统管理（相当于大部分root权限）\n- CAP_SYS_PTRACE：ptrace系统调用\n- CAP_SETUID：修改进程UID\n\n容器安全应用：\n- 容器内进程默认丢弃大部分capabilities\n- 只保留必要的capabilities（如CAP_NET_BIND_SERVICE）\n- 即使容器内是root，权限也受限\n\n查看和设置：\n- capsh：查看当前capabilities\n- setcap：给可执行文件添加capabilities\n- Docker --cap-add/--cap-drop",
+      "code": {
+        "cpp": "// 查看进程的capabilities\n// $ cat /proc/<pid>/status | grep Cap\n// CapInh: 继承的capabilities\n// CapPrm: 允许的capabilities\n// CapEff: 有效的capabilities\n// CapBnd: 边界capabilities\n\n// 给程序添加capabilities\n// $ sudo setcap cap_net_bind_service=+ep /path/to/program\n\n// Docker使用capabilities\n// $ docker run --cap-drop=ALL --cap-add=NET_BIND_SERVICE nginx\n\n// C语言操作capabilities\n#include <sys/capability.h>\n\n// 获取当前capabilities\ncap_t caps = cap_get_proc();\ncap_value_t cap_list[1] = {CAP_NET_BIND_SERVICE};\ncap_set_flag(caps, CAP_EFFECTIVE, 1, cap_list, CAP_SET);\ncap_set_proc(caps);\n\n// 查看文件capabilities\n// $ getcap /usr/bin/ping\n// /usr/bin/ping = cap_net_raw+ep"
+      }
+    },
+    {
+      "id": "os-032",
+      "title": "Seccomp（安全计算模式）",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "Seccomp",
+        "安全",
+        "系统调用过滤",
+        "容器",
+        "沙箱"
+      ],
+      "content": "什么是Seccomp？它如何增强系统安全性？",
+      "answer": "Seccomp（Secure Computing Mode）是Linux内核的安全机制，用于限制进程可以使用的系统调用，实现系统调用级别的沙箱。\n\n两种模式：\n1. strict模式：\n   - 只允许read/write/exit/sigreturn四个系统调用\n   - 其他系统调用触发SIGKILL\n\n2. filter模式（Seccomp-BPF）：\n- 使用BPF（Berkeley Packet Filter）规则过滤系统调用\n   - 可以自定义允许/拒绝的系统调用\n   - 支持条件判断（如根据参数值过滤）\n\n容器安全应用：\n- Docker默认启用seccomp，禁用约44个危险系统调用\n- 如mount、umount2、reboot等\n- 可以自定义seccomp profile\n\n常见被限制的系统调用：\n- mount/umount：防止挂载恶意文件系统\n- reboot：防止重启宿主机\n- open_by_handle_at：防止容器逃逸\n- ptrace：防止调试其他进程\n\n绕过检测：\n- 检查是否启用：prctl(PR_GET_SECCOMP)\n- 默认模式返回2表示使用seccomp filter",
+      "code": {
+        "cpp": "// Seccomp-BPF示例\n#include <seccomp.h>\n#include <sys/syscall.h>\n\nint main() {\n    scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_ALLOW);  // 默认允许\n    \n    // 拒绝mount系统调用\n    seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(mount), 0);\n    \n    // 拒绝reboot\n    seccomp_rule_add(ctx, SCMP_ACT_ERRNO(EPERM), SCMP_SYS(reboot), 0);\n    \n    // 只允许open读取（O_RDONLY）\n    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 1,\n                     SCMP_A1(SCMP_CMP_EQ, O_RDONLY));\n    \n    seccomp_load(ctx);  // 加载规则\n    \n    // 此后进程受seccomp限制\n    mount(...);  // 会被杀死\n}\n\n// Docker使用自定义seccomp profile\n// $ docker run --security-opt seccomp=myprofile.json nginx\n\n// 查看进程的seccomp状态\n// $ grep Seccomp /proc/<pid>/status\n// Seccomp: 2  (0:disabled, 1:strict, 2:filter)"
+      }
+    },
+    {
+      "id": "os-033",
+      "title": "生产者-消费者问题",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "生产者消费者",
+        "同步",
+        "信号量",
+        "经典问题",
+        "并发"
+      ],
+      "content": "什么是生产者-消费者问题？如何用信号量实现？",
+      "answer": "问题描述：\n- 生产者向缓冲区放入产品\n- 消费者从缓冲区取出产品\n- 缓冲区满时生产者等待，缓冲区空时消费者等待\n\n需要三个信号量：\n1. mutex：互斥访问缓冲区（初始值1）\n2. empty：空槽位数量（初始值N）\n3. full：已有产品数量（初始值0）\n\n生产者流程：\n1. P(empty)：等待空槽位\n2. P(mutex)：获取互斥锁\n3. 放入产品\n4. V(mutex)：释放互斥锁\n5. V(full)：通知消费者\n\n消费者流程：\n1. P(full)：等待产品\n2. P(mutex)：获取互斥锁\n3. 取出产品\n4. V(mutex)：释放互斥锁\n5. V(empty)：通知生产者\n\n注意：P(empty)和P(mutex)的顺序不能颠倒，否则可能死锁。",
+      "code": {
+        "cpp": "#include <semaphore.h>\n#include <pthread.h>\n\n#define N 10\nint buffer[N];\nint in = 0, out = 0;\n\nsem_t empty, full, mutex;\n// 初始化\nsem_init(&empty, 0, N);  // N个空槽\nsem_init(&full, 0, 0);   // 0个产品\nsem_init(&mutex, 0, 1);  // 互斥\n\nvoid* producer(void* arg) {\n    int item;\n    while (true) {\n        item = produce();        // 生产\n        sem_wait(&empty);        // 等待空槽\n        sem_wait(&mutex);        // 加锁\n        buffer[in] = item;\n        in = (in + 1) % N;\n        sem_post(&mutex);        // 解锁\n        sem_post(&full);         // 通知消费者\n    }\n}\n\nvoid* consumer(void* arg) {\n    int item;\n    while (true) {\n        sem_wait(&full);         // 等待产品\n        sem_wait(&mutex);        // 加锁\n        item = buffer[out];\n        out = (out + 1) % N;\n        sem_post(&mutex);        // 解锁\n        sem_post(&empty);        // 通知生产者\n        consume(item);           // 消费\n    }\n}"
+      }
+    },
+    {
+      "id": "os-034",
+      "title": "零拷贝技术",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "零拷贝",
+        "sendfile",
+        "mmap",
+        "DMA",
+        "IO优化"
+      ],
+      "content": "什么是零拷贝技术？常见的实现方式有哪些？",
+      "answer": "零拷贝：减少或消除数据在内核空间和用户空间之间的拷贝次数，提高IO性能。\n\n传统IO流程（4次拷贝）：\n1. 磁盘→内核缓冲区（DMA拷贝）\n2. 内核缓冲区→用户缓冲区（CPU拷贝）\n3. 用户缓冲区→Socket缓冲区（CPU拷贝）\n4. Socket缓冲区→网卡（DMA拷贝）\n\n零拷贝技术：\n\n1. mmap + write：\n   - 将文件映射到用户空间内存\n   - 减少一次CPU拷贝（共3次拷贝）\n   - 仍需CPU参与从内核到Socket缓冲区\n\n2. sendfile：\n   - 在内核空间直接将数据从文件缓冲区传输到Socket\n   - 减少到2次拷贝（DMA+DMA）\n   - 带有scatter/gather的sendfile只需2次拷贝+1次描述符传递\n\n3. splice：\n   - 在两个文件描述符之间移动数据\n   - 零拷贝，至少一个必须是管道\n\n应用场景：\n- 静态文件服务器（Nginx）\n- Kafka消息传输\n- 文件上传下载",
+      "code": {
+        "cpp": "// 传统方式：read + write（4次拷贝）\nchar buf[8192];\nint fd = open(\"file.txt\", O_RDONLY);\nwhile ((n = read(fd, buf, sizeof(buf))) > 0) {\n    write(socket_fd, buf, n);  // 用户空间中转\n}\n\n// mmap方式（3次拷贝）\nvoid* addr = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);\nwrite(socket_fd, addr, file_size);\nmunmap(addr, file_size);\n\n// sendfile方式（2次拷贝，零拷贝）\noff_t offset = 0;\nsendfile(socket_fd, fd, &offset, file_size);\n\n// splice方式\nint pipefd[2];\npipe(pipefd);\nsplice(fd, &offset, pipefd[1], NULL, file_size, SPLICE_F_MOVE);\nsplice(pipefd[0], NULL, socket_fd, NULL, file_size, SPLICE_F_MOVE);\n\n// Nginx配置零拷贝\n// sendfile on;"
+      }
+    },
+    {
+      "id": "os-035",
+      "title": "Linux文件权限模型",
+      "category": "os",
+      "difficulty": "easy",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "文件权限",
+        "rwx",
+        "ugo",
+        "suid",
+        "sticky",
+        "Linux"
+      ],
+      "content": "Linux文件权限模型是如何工作的？",
+      "answer": "权限分为三组（ugo）：\n- u（user）：文件所有者\n- g（group）：文件所属组\n- o（others）：其他用户\n\n每组三个权限（rwx）：\n- r（read）：读取（4）\n- w（write）：写入（2）\n- x（execute）：执行（1）\n\n常见权限：\n- 755：rwxr-xr-x（所有者全权限，其他读和执行）\n- 644：rw-r--r--（所有者读写，其他只读）\n- 700：rwx------（仅所有者全权限）\n\n特殊权限：\n- SUID（4xxx）：执行时以文件所有者身份运行（如/usr/bin/passwd）\n- SGID（2xxx）：执行时以文件所属组身份运行；目录下新建文件继承组\n- Sticky（1xxx）：目录下文件只有所有者和root能删除（如/tmp）\n\n查看权限：\n- ls -la：显示权限、所有者、组\n- stat：详细信息\n\n修改权限：\n- chmod 755 file\n- chown user:group file\n- umask：设置默认权限掩码",
+      "code": {
+        "cpp": "// 查看权限\n// $ ls -la\n// -rwxr-xr-x 1 user group 4096 Jan 1 file\n// ||||||||||\n// |||||||||其他: r-x\n// |||||||组: r-x\n// |||||所有者: rwx\n// ||||类型: -（普通文件）\n\n// 特殊权限\n// $ ls -la /usr/bin/passwd\n// -rwsr-xr-x 1 root root ... passwd\n//  ^\n//  SUID位（s替代x）\n\n// $ ls -la /tmp\n// drwxrwxrwt 10 root root ... tmp\n//          ^\n//          Sticky位（t替代x）\n\n// 修改权限\n// chmod 755 file.sh\n// chmod u+x file.sh       // 给所有者加执行权限\n// chmod g-w file.sh       // 去掉组写权限\n// chown user:group file   // 修改所有者和组\n\n// umask\n// umask 0022  // 新文件默认权限 0644 (0666-0022)\n// umask 0002  // 新文件默认权限 0664"
+      }
+    },
+    {
+      "id": "os-036",
+      "title": "软中断与硬中断",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "软中断",
+        "硬中断",
+        "中断上半部",
+        "中断下半部",
+        "tasklet"
+      ],
+      "content": "什么是软中断和硬中断？Linux中断处理为什么要分上下半部？",
+      "answer": "硬中断（硬件中断）：\n- 由外部硬件设备触发（网卡、磁盘、时钟等）\n- 异步发生，随时可能到来\n- 通过中断控制器通知CPU\n- 执行中断处理程序（ISR）\n\n软中断：\n- 由软件触发（内核主动发起）\n- 用于执行硬中断的后续处理（下半部）\n- 在开中断状态下执行，可被新的硬中断抢占\n\n为什么要分上下半部：\n- 硬中断处理必须尽可能快（否则阻塞其他中断）\n- 耗时操作放到下半部执行\n\n上半部（硬中断）：\n- 关中断执行，不可被抢占\n- 只做最紧急的工作：保存状态、应答硬件、调度下半部\n\n下半部机制：\n1. 软中断（softirq）：\n   - 静态定义，编译时确定\n   - 网络收发（NET_RX/NET_TX）、定时器等\n\n2. tasklet：\n   - 基于软中断实现，更易使用\n   - 同一CPU上串行执行\n\n3. 工作队列（workqueue）：\n   - 在进程上下文执行，可以休眠\n   - 适合耗时较长的操作",
+      "code": {
+        "cpp": "// 硬中断处理流程\n// 1. 硬件发出中断信号\n// 2. CPU保存现场，关中断\n// 3. 执行上半部（ISR）\n//    - 确认中断、读取数据到缓冲区\n//    - 调度下半部处理\n// 4. 恢复现场，开中断\n// 5. 下半部稍后执行\n//    - 解析数据、处理协议栈\n\n// tasklet示例（内核代码）\n#include <linux/interrupt.h>\n\nvoid my_tasklet_func(unsigned long data);\n\nDECLARE_TASKLET(my_tasklet, my_tasklet_func, 0);\n\n// 在硬中断中调度tasklet\nvoid my_isr(int irq, void *dev_id) {\n    // 上半部：快速处理\n    tasklet_schedule(&my_tasklet);  // 调度下半部\n}\n\n// 下半部处理函数\nvoid my_tasklet_func(unsigned long data) {\n    // 耗时处理\n}\n\n// 查看软中断\n// $ cat /proc/softirqs\n//                    CPU0   CPU1\n// NET_RX:          12345  67890\n// TIMER:            54321  98765"
+      }
+    },
+    {
+      "id": "os-037",
+      "title": "内存映射mmap",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "mmap",
+        "内存映射",
+        "文件IO",
+        "共享内存",
+        "零拷贝"
+      ],
+      "content": "什么是mmap？它有什么优势和应用场景？",
+      "answer": "mmap（Memory Map）：将文件或其他对象映射到进程的虚拟地址空间，实现文件IO的内存化访问。\n\n工作原理：\n1. 建立文件到内存的映射关系\n2. 访问内存即读写文件（由OS自动同步）\n3. 支持私有映射（写时复制）和共享映射\n\n优势：\n1. 减少数据拷贝：用户空间直接访问文件，无需read/write系统调用\n2. 减少内存占用：多个进程共享同一物理页\n3. 随机访问：可直接访问文件任意位置\n4. 简化编程：像访问内存一样访问文件\n\n应用场景：\n1. 大文件处理（数据库、日志）\n2. 进程间共享内存\n3. 动态链接库加载\n4. 零拷贝传输（配合sendfile）\n\n注意事项：\n- 文件大小变化可能导致SIGBUS\n- 需要手动同步（msync）保证数据落盘\n- 不适合小文件（开销大）",
+      "code": {
+        "cpp": "#include <sys/mman.h>\n#include <sys/stat.h>\n#include <fcntl.h>\n#include <unistd.h>\n\n// 读取文件\nvoid readFile(const char* filename) {\n    int fd = open(filename, O_RDONLY);\n    struct stat sb;\n    fstat(fd, &sb);\n    \n    // 映射文件到内存\n    char* addr = (char*)mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);\n    \n    // 像访问数组一样访问文件\n    for (size_t i = 0; i < sb.st_size; i++) {\n        putchar(addr[i]);\n    }\n    \n    munmap(addr, sb.st_size);\n    close(fd);\n}\n\n// 进程间共享内存\nvoid sharedMemory() {\n    int fd = shm_open(\"/myshm\", O_CREAT | O_RDWR, 0666);\n    ftruncate(fd, 4096);\n    \n    char* addr = (char*)mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);\n    \n    // 进程A写入\n    strcpy(addr, \"Hello from Process A\");\n    \n    // 进程B可以直接读取\n    // printf(\"%s\\n\", addr);\n    \n    munmap(addr, 4096);\n    shm_unlink(\"/myshm\");\n}\n\n// 查看进程的内存映射\n// $ cat /proc/<pid>/maps"
+      }
+    },
+    {
+      "id": "os-038",
+      "title": "TLB与地址转换加速",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "TLB",
+        "快表",
+        "地址转换",
+        "MMU",
+        "虚拟内存"
+      ],
+      "content": "什么是TLB？它是如何加速虚拟地址转换的？",
+      "answer": "TLB（Translation Lookaside Buffer，转换检测缓冲区）：\n- CPU内部的专用缓存，存储最近使用的页表项\n- 加速虚拟地址到物理地址的转换\n\n地址转换过程：\n1. CPU发出虚拟地址\n2. 查询TLB（硬件并行查询，极快）\n3. TLB命中：直接得到物理地址\n4. TLB未命中：查询页表，更新TLB，然后重试\n\nTLB结构：\n- 全相联或组相联缓存\n- 条目包含：虚拟页号、物理页框号、权限位、有效位\n- 通常64-4096项\n\nTLB未命中处理：\n- 硬件处理（x86）：自动遍历页表，更新TLB\n- 软件处理（MIPS）：触发异常，由OS处理\n\n优化技术：\n1. 大页（Huge Pages）：减少TLB压力\n2. TLB预取：预测并加载即将使用的页表项\n3. 进程切换时刷新TLB（或使用ASID避免刷新）",
+      "code": {
+        "cpp": "// TLB工作原理示意\n// 虚拟地址: [VPN(虚拟页号)] [Offset(页内偏移)]\n// 物理地址: [PFN(物理页框号)] [Offset]\n\n// TLB查找（硬件实现）\nstruct TLBEntry {\n    uint64_t vpn;      // 虚拟页号\n    uint64_t pfn;      // 物理页框号\n    bool valid;        // 有效位\n    bool dirty;        // 脏位\n    int protection;    // 权限\n};\n\n// TLB命中时，地址转换只需几个时钟周期\n// TLB未命中时，需要访问内存中的页表（数十到数百周期）\n\n// Linux查看TLB信息\n// $ perf stat -e dTLB-loads,dTLB-load-misses,iTLB-loads,iTLB-load-misses ./program\n\n// 使用大页减少TLB压力\n// $ echo 1024 > /proc/sys/vm/nr_hugepages\n// $ hugetlbfs挂载后使用mmap(MAP_HUGETLB)\n\n// 查看进程的页表大小\n// $ cat /proc/<pid>/status | grep VmPTE"
+      }
+    },
+    {
+      "id": "os-039",
+      "title": "Linux内核启动流程",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "low",
+      "importance": "low",
+      "tags": [
+        "Linux启动",
+        "BootLoader",
+        "GRUB",
+        "initramfs",
+        "systemd"
+      ],
+      "content": "简述Linux系统的启动流程。",
+      "answer": "Linux启动流程（x86架构）：\n\n1. BIOS/UEFI阶段：\n   - 硬件自检（POST）\n   - 加载BootLoader（从MBR或EFI分区）\n\n2. BootLoader阶段（GRUB）：\n   - 显示启动菜单\n   - 加载内核镜像（vmlinuz）和initramfs\n   - 将控制权交给内核\n\n3. 内核初始化阶段：\n   - 解压内核\n   - 初始化内存管理、调度器、驱动等子系统\n   - 挂载initramfs作为临时根文件系统\n   - 执行init程序（通常是systemd或init）\n\n4. init阶段（systemd）：\n   - 挂载真正的根文件系统\n   - 启动系统服务\n   - 进入目标运行级别（multi-user.target或graphical.target）\n   - 显示登录界面\n\n关键文件：\n- /boot/vmlinuz：内核镜像\n- /boot/initramfs：初始RAM文件系统\n- /boot/grub/grub.cfg：GRUB配置\n- /sbin/init或/lib/systemd/systemd：第一个用户空间进程",
+      "code": {
+        "cpp": "// 查看启动信息\n// $ dmesg | less\n\n// 查看systemd启动耗时\n// $ systemd-analyze\n// $ systemd-analyze blame  // 各服务启动时间\n\n// 查看运行级别\n// $ systemctl get-default\n\n// 查看内核命令行参数\n// $ cat /proc/cmdline\n\n// 查看initramfs内容\n// $ lsinitramfs /boot/initramfs-$(uname -r).img | less\n\n// 启动流程简化代码示意\n// 1. BIOS加载GRUB\n// 2. GRUB加载内核\nvoid boot_loader() {\n    load_kernel(\"vmlinuz\");\n    load_initramfs(\"initramfs.img\");\n    jump_to_kernel();\n}\n\n// 3. 内核初始化\nvoid kernel_init() {\n    setup_arch();          // 架构相关初始化\n    mm_init();             // 内存管理\n    sched_init();          // 调度器\n    init_IRQ();            // 中断\n    driver_init();         // 驱动\n    mount_root();          // 挂载根文件系统\n    run_init();            // 执行init\n}\n\n// 4. init进程\nvoid init_process() {\n    mount_real_root();     // 挂载真正根文件系统\n    start_services();      // 启动服务\n    spawn_login();         // 登录界面\n}"
+      }
+    },
+    {
+      "id": "os-040",
+      "title": "线程池的实现原理",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "线程池",
+        "并发",
+        "任务队列",
+        "性能优化"
+      ],
+      "content": "什么是线程池？为什么要使用线程池？",
+      "answer": "线程池：预先创建一组线程，复用执行多个任务，避免频繁创建销毁线程的开销。\n\n为什么要用：\n1. 减少线程创建/销毁开销\n2. 控制并发线程数量\n3. 提高响应速度（任务到达立即执行）\n4. 便于线程管理\n\n核心组件：\n1. 工作线程：执行任务的线程\n2. 任务队列：存放待执行的任务\n3. 管理者：维护线程池状态\n\n工作流程：\n1. 提交任务到任务队列\n2. 空闲线程从队列取任务执行\n3. 线程执行完任务后继续等待新任务\n4. 队列满时根据策略处理（拒绝/等待）",
+      "code": {
+        "cpp": "// C++线程池简化实现\nclass ThreadPool {\n    std::vector<std::thread> workers;\n    std::queue<std::function<void()>> tasks;\n    std::mutex queueMutex;\n    std::condition_variable condition;\n    bool stop = false;\npublic:\n    ThreadPool(size_t threads) {\n        for (size_t i = 0; i < threads; ++i) {\n            workers.emplace_back([this] {\n                while (true) {\n                    std::function<void()> task;\n                    {\n                        std::unique_lock<std::mutex> lock(queueMutex);\n                        condition.wait(lock, [this] {\n                            return stop || !tasks.empty();\n                        });\n                        if (stop && tasks.empty()) return;\n                        task = std::move(tasks.front());\n                        tasks.pop();\n                    }\n                    task();\n                }\n            });\n        }\n    }\n    \n    template<class F>\n    void enqueue(F&& f) {\n        {\n            std::unique_lock<std::mutex> lock(queueMutex);\n            tasks.emplace(std::forward<F>(f));\n        }\n        condition.notify_one();\n    }\n    \n    ~ThreadPool() {\n        {\n            std::unique_lock<std::mutex> lock(queueMutex);\n            stop = true;\n        }\n        condition.notify_all();\n        for (auto& worker : workers) worker.join();\n    }\n};"
+      }
+    },
+    {
+      "id": "os-041",
+      "title": "协程Coroutine",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "协程",
+        "Coroutine",
+        "用户态线程",
+        "异步",
+        "C++20"
+      ],
+      "content": "什么是协程？协程与线程有什么区别？",
+      "answer": "协程（Coroutine）：用户态的轻量级线程，由程序自己调度，而非操作系统。\n\n特点：\n1. 协作式调度：主动让出执行权（yield），而非抢占式\n2. 切换开销小：不需要进入内核，只需保存/恢复寄存器\n3. 高并发：单线程可运行数万协程\n4. 无锁编程：同一协程内无并发问题\n\n与线程对比：\n| 特性 | 线程 | 协程 |\n|------|------|------|\n| 调度 | 操作系统抢占 | 用户协作 |\n| 切换开销 | 大（内核态） | 小（用户态） |\n| 并发数 | 数千 | 数百万 |\n| 数据共享 | 需要同步 | 单线程无锁 |\n\n应用场景：\n- 高并发IO（网络服务器）\n- 异步编程简化\n- 生成器/迭代器",
+      "code": {
+        "cpp": "// C++20协程（简化示例）\n#include <coroutine>\n\n// 生成器协程\nstruct Generator {\n    struct promise_type {\n        int current_value;\n        auto get_return_object() { return Generator{this}; }\n        auto initial_suspend() { return std::suspend_always{}; }\n        auto final_suspend() noexcept { return std::suspend_always{}; }\n        void unhandled_exception() {}\n        void return_void() {}\n        auto yield_value(int value) {\n            current_value = value;\n            return std::suspend_always{};\n        }\n    };\n    \n    using Handle = std::coroutine_handle<promise_type>;\n    Handle handle;\n    \n    Generator(promise_type* p) : handle(Handle::from_promise(*p)) {}\n    ~Generator() { if (handle) handle.destroy(); }\n    \n    int next() {\n        handle.resume();\n        return handle.promise().current_value;\n    }\n};\n\nGenerator fibonacci() {\n    co_yield 1;\n    co_yield 1;\n    int a = 1, b = 1;\n    while (true) {\n        int c = a + b;\n        co_yield c;\n        a = b;\n        b = c;\n    }\n}\n\n// 使用\nauto gen = fibonacci();\nfor (int i = 0; i < 10; i++) {\n    std::cout << gen.next() << \" \";\n}"
+      }
+    },
+    {
+      "id": "os-042",
+      "title": "fork的写时复制COW",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "fork",
+        "COW",
+        "写时复制",
+        "进程创建",
+        "内存优化"
+      ],
+      "content": "解释fork的写时复制(Copy-On-Write)机制。",
+      "answer": "写时复制(COW)：fork创建子进程时，不立即复制父进程内存，而是共享同一物理内存，直到某一方修改时才复制。\n\n工作流程：\n1. fork时：父子进程页表指向相同物理页，标记为只读\n2. 读操作：直接共享，无需复制\n3. 写操作：触发缺页中断，复制该页，然后修改\n\n优点：\n1. 加速fork：无需复制整个地址空间\n2. 节省内存：共享只读数据\n3. 减少IO：不触及磁盘\n\n应用场景：\n- 进程创建\n- 内存映射文件\n- 虚拟化（KVM/QEMU）\n- 容器镜像层\n\n注意：\n- 大量写操作会导致频繁复制，反而降低性能\n- 与exec配合时，COW避免了不必要的复制",
+      "code": {
+        "cpp": "// COW示意（概念性）\n// fork前：父进程有数据页\n// fork后：父子共享同一物理页（只读标记）\n\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main() {\n    int data = 100;  // 父子进程共享此页\n    \n    pid_t pid = fork();\n    \n    if (pid == 0) {\n        // 子进程：此时data与父进程共享物理内存\n        printf(\"Child before modify: %d\\n\", data);\n        \n        // 写操作触发COW，复制该页\n        data = 200;\n        printf(\"Child after modify: %d\\n\", data);\n    } else {\n        wait(NULL);\n        // 父进程的data不受影响\n        printf(\"Parent: %d\\n\", data);  // 输出100\n    }\n}\n\n// 查看COW统计（Linux）\n// $ grep cow /proc/vmstat\n// pswpin  - 页面换入\n// pswpout - 页面换出\n\n// mmap的MAP_PRIVATE也使用COW\nvoid* addr = mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);\n// 对addr的写操作会触发COW"
+      }
+    },
+    {
+      "id": "os-043",
+      "title": "RCU读复制更新",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "low",
+      "importance": "medium",
+      "tags": [
+        "RCU",
+        "读复制更新",
+        "无锁",
+        "内核",
+        "同步"
+      ],
+      "content": "什么是RCU？它适用于什么场景？",
+      "answer": "RCU（Read-Copy-Update）：读多写少的同步机制，读者无锁，写者复制更新。\n\n核心思想：\n1. 读者：直接读取，不加锁（极快）\n2. 写者：复制数据，修改副本，原子替换指针\n3. 旧数据：延迟释放，等待所有读者退出\n\n适用场景：\n- 读多写少（读者占99%+）\n- Linux内核：路由表、文件系统、进程链表\n- 需要极致读性能的场景\n\n三个关键操作：\n1. rcu_read_lock/unlock：读者临界区标记\n2. synchronize_rcu：等待所有读者退出（宽限期）\n3. call_rcu：注册回调，宽限期后释放旧数据\n\n限制：\n- 只保护指针，不保护数据\n- 写者开销大（复制+延迟释放）\n- 不能阻塞在RCU临界区内",
+      "code": {
+        "cpp": "// RCU简化概念\n// 实际RCU是Linux内核机制，用户空间可用类似思想\n\n#include <atomic>\n#include <memory>\n\ntemplate<typename T>\nclass RCUPtr {\n    std::atomic<T*> ptr;\n    std::atomic<int> readers{0};\npublic:\n    T* read_lock() {\n        readers++;\n        return ptr.load();\n    }\n    \n    void read_unlock() {\n        readers--;\n    }\n    \n    void update(T* newPtr) {\n        T* old = ptr.exchange(newPtr);\n        // 等待所有读者退出\n        while (readers > 0) {\n            std::this_thread::yield();\n        }\n        delete old;  // 安全删除\n    }\n};\n\n// Linux内核RCU使用示例（概念）\n// struct my_struct *ptr;\n// \n// // 读者\n// rcu_read_lock();\n// p = rcu_dereference(ptr);\n// // 使用p...\n// rcu_read_unlock();\n// \n// // 写者\n// new_p = kmalloc(...);\n// *new_p = *p;\n// new_p->field = new_value;\n// rcu_assign_pointer(ptr, new_p);\n// synchronize_rcu();  // 等待宽限期\n// kfree(p);"
+      }
+    },
+    {
+      "id": "os-044",
+      "title": "NUMA架构",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "low",
+      "importance": "low",
+      "tags": [
+        "NUMA",
+        "非统一内存访问",
+        "多处理器",
+        "内存架构"
+      ],
+      "content": "什么是NUMA架构？与SMP有什么区别？",
+      "answer": "NUMA（Non-Uniform Memory Access）：非统一内存访问架构。\n\n特点：\n- 每个CPU有本地内存，访问更快\n- 访问其他CPU的内存需要通过互联（慢）\n- 适合大规模多核系统（几十核以上）\n\n与SMP对比：\n| 特性 | SMP | NUMA |\n|------|-----|------|\n| 内存访问 | 统一延迟 | 本地快，远程慢 |\n| 扩展性 | 差（<32核） | 好（数百核） |\n| 复杂度 | 简单 | 复杂 |\n\nNUMA优化：\n1. 内存分配：在本地节点分配（numactl）\n2. 线程绑定：将线程绑定到特定CPU\n3. 数据局部性：减少跨节点访问\n\nLinux支持：\n- numactl：控制NUMA策略\n- /proc/cpuinfo：查看NUMA信息\n- 透明大页(THP)在NUMA上的优化",
+      "code": {
+        "cpp": "// 查看NUMA信息\n// $ numactl --hardware\n// $ lscpu | grep NUMA\n\n// NUMA-aware内存分配\n#include <numa.h>\n\nvoid* allocate_on_node(int node, size_t size) {\n    return numa_alloc_onnode(size, node);\n}\n\n// 绑定线程到特定CPU\n#include <sched.h>\n\nvoid bind_to_cpu(int cpu) {\n    cpu_set_t cpuset;\n    CPU_ZERO(&cpuset);\n    CPU_SET(cpu, &cpuset);\n    sched_setaffinity(0, sizeof(cpuset), &cpuset);\n}\n\n// C++17 NUMA-aware allocator（概念）\ntemplate<typename T>\nstruct NumaAllocator {\n    int node;\n    \n    T* allocate(size_t n) {\n        return (T*)numa_alloc_onnode(n * sizeof(T), node);\n    }\n    \n    void deallocate(T* p, size_t n) {\n        numa_free(p, n * sizeof(T));\n    }\n};\n\n// 使用\nstd::vector<int, NumaAllocator<int>> vec;"
+      }
+    },
+    {
+      "id": "os-045",
+      "title": "systemd工作原理",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "low",
+      "importance": "low",
+      "tags": [
+        "systemd",
+        "init系统",
+        "服务管理",
+        "Linux启动"
+      ],
+      "content": "systemd是什么？与传统init系统有什么区别？",
+      "answer": "systemd：Linux系统和服务管理器，PID 1进程，替代传统的SysV init。\n\n核心特性：\n1. 并行启动：依赖关系驱动，加快启动速度\n2. 按需启动：socket激活、D-Bus激活\n3. 自动依赖管理：服务间依赖自动处理\n4. 日志统一：journald二进制日志\n5. 快照与恢复：保存/恢复系统状态\n\n与SysV init对比：\n| 特性 | SysV init | systemd |\n|------|-----------|---------|\n| 启动方式 | 串行 | 并行 |\n| 服务管理 | 脚本 | unit文件 |\n| 日志 | 文本 | 二进制 |\n| 依赖 | 手动 | 自动 |\n\n常用命令：\n- systemctl start/stop/restart/enable/disable service\n- journalctl：查看日志\n- systemd-analyze：分析启动时间",
+      "code": {
+        "cpp": "// systemd unit文件示例 /etc/systemd/system/myapp.service\n/*\n[Unit]\nDescription=My Application\nAfter=network.target\n\n[Service]\nType=simple\nExecStart=/usr/bin/myapp\nRestart=on-failure\nUser=myuser\n\n[Install]\nWantedBy=multi-user.target\n*/\n\n// 常用命令\n// $ systemctl daemon-reload\n// $ systemctl start myapp\n// $ systemctl enable myapp  // 开机启动\n// $ systemctl status myapp\n// $ journalctl -u myapp -f  // 查看日志\n\n// 查看启动耗时\n// $ systemd-analyze\n// $ systemd-analyze blame\n// $ systemd-analyze critical-chain\n\n// 创建定时任务（替代cron）\n// /etc/systemd/system/backup.timer\n/*\n[Unit]\nDescription=Run backup daily\n\n[Timer]\nOnCalendar=daily\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n*/"
+      }
+    },
+    {
+      "id": "os-046",
+      "title": "CPU缓存与伪共享（False Sharing）",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "CPU缓存",
+        "Cache Line",
+        "伪共享",
+        "False Sharing",
+        "内存屏障"
+      ],
+      "content": "什么是CPU缓存？什么是伪共享（False Sharing）？如何避免？",
+      "answer": "**CPU缓存层次：**\n- L1 Cache（32-64KB）：每个核心私有，最快\n- L2 Cache（256KB-1MB）：每个核心私有\n- L3 Cache（数MB-数十MB）：所有核心共享\n\n**Cache Line（缓存行）：**\n- CPU缓存以缓存行为单位读取，通常64字节\n- 即使只读1字节，也会加载整个缓存行\n- 缓存一致性协议（MESI）保证多核数据一致\n\n**伪共享（False Sharing）：**\n- 两个无关变量位于同一缓存行\n- 不同核心分别修改各自变量\n- 导致缓存行频繁失效，性能大幅下降\n\n**MESI协议：**\n- M（Modified）：已修改，与内存不一致\n- E（Exclusive）：独占，与内存一致\n- S（Shared）：共享，多核持有\n- I（Invalid）：无效\n\n**避免伪共享的方法：**\n1. 缓存行对齐：使用alignas(64)\n2. 填充无用字段：手动padding\n3. 线程局部存储：ThreadLocal\n4. @Contended注解（Java）",
+      "code": {
+        "cpp": "#include <iostream>\n#include <vector>\n#include <thread>\n#include <atomic>\n#include <chrono>\n\n// 错误示例：伪共享\nstruct CounterBad {\n    std::atomic<int> count1;  // 可能在同一缓存行\n    std::atomic<int> count2;  // 导致伪共享\n};\n\n// 正确示例：缓存行对齐，避免伪共享\n// 缓存行通常64字节\nclass alignas(64) PaddedInt {\n    std::atomic<int> value;\n    // 编译器自动填充到64字节\n};\n\nstruct CounterGood {\n    PaddedInt count1;  // 独占一个缓存行\n    PaddedInt count2;  // 独占另一个缓存行\n};\n\n// 手动padding方式\nclass alignas(64) AlignedCounter {\n    std::atomic<int> value;\n    char padding[64 - sizeof(std::atomic<int>)];\n};\n\nvoid benchmark() {\n    const int N = 10000000;\n    \n    // 伪共享测试\n    CounterBad bad;\n    bad.count1 = 0;\n    bad.count2 = 0;\n    \n    auto start = std::chrono::high_resolution_clock::now();\n    std::thread t1([&]() { for (int i = 0; i < N; i++) bad.count1++; });\n    std::thread t2([&]() { for (int i = 0; i < N; i++) bad.count2++; });\n    t1.join(); t2.join();\n    auto end = std::chrono::high_resolution_clock::now();\n    \n    std::cout << \"False Sharing: \"\n              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()\n              << \"ms\" << std::endl;\n    \n    // 缓存行对齐测试\n    CounterGood good;\n    good.count1.value = 0;\n    good.count2.value = 0;\n    \n    start = std::chrono::high_resolution_clock::now();\n    std::thread t3([&]() { for (int i = 0; i < N; i++) good.count1.value++; });\n    std::thread t4([&]() { for (int i = 0; i < N; i++) good.count2.value++; });\n    t3.join(); t4.join();\n    end = std::chrono::high_resolution_clock::now();\n    \n    std::cout << \"Cache Line Aligned: \"\n              << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()\n              << \"ms\" << std::endl;\n}"
+      }
+    },
+    {
+      "id": "os-047",
+      "title": "TCP/IP协议栈详解",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "TCP/IP",
+        "网络协议",
+        "OSI",
+        "socket",
+        "网络编程"
+      ],
+      "content": "TCP/IP协议栈的分层结构是什么？各层的主要协议有哪些？",
+      "answer": "**TCP/IP四层模型：**\n\n1. **应用层：**\n   - HTTP/HTTPS：Web通信\n   - FTP：文件传输\n   - SMTP/POP3/IMAP：邮件\n   - DNS：域名解析\n   - SSH/Telnet：远程登录\n\n2. **传输层：**\n   - TCP：面向连接，可靠传输\n   - UDP：无连接，快速传输\n   - 端口：标识应用进程\n\n3. **网络层：**\n   - IP：逻辑寻址和路由\n   - ICMP：网络诊断（ping）\n   - ARP：IP地址转MAC地址\n\n4. **链路层：**\n   - Ethernet：局域网通信\n   - MAC地址：物理寻址\n   - 帧：数据链路层传输单位",
+      "code": {
+        "python": "# socket编程示例\nimport socket\n\n# TCP客户端\ndef tcp_client():\n    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n    s.connect((\"example.com\", 80))\n    s.send(b\"GET / HTTP/1.1\\r\\nHost: example.com\\r\\n\\r\\n\")\n    data = s.recv(1024)\n    s.close()\n    return data\n\n# TCP服务器\ndef tcp_server():\n    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n    s.bind((\"0.0.0.0\", 8080))\n    s.listen(5)\n    while True:\n        conn, addr = s.accept()\n        data = conn.recv(1024)\n        conn.send(b\"Hello\")\n        conn.close()"
+      }
+    },
+    {
+      "id": "os-048",
+      "title": "Linux系统编程：fork/exec/wait",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "high",
+      "tags": [
+        "Linux",
+        "系统编程",
+        "fork",
+        "exec",
+        "wait",
+        "进程控制"
+      ],
+      "content": "fork、exec和wait系统调用的作用是什么？如何使用？",
+      "answer": "**fork()：**\n- 创建子进程，复制父进程地址空间\n- 父子进程从fork返回处继续执行\n- 返回值：父进程返回子进程PID，子进程返回0\n- 写时复制（COW）优化性能\n\n**exec()系列：**\n- 用新程序替换当前进程映像\n- 不创建新进程，只是替换\n- 成功不返回，失败返回-1\n\n**wait()/waitpid()：**\n- 父进程等待子进程结束\n- 获取子进程退出状态\n- 防止僵尸进程\n\n**典型流程：**\nfork -> 子进程exec -> 父进程wait",
+      "code": {
+        "cpp": "#include <unistd.h>\n#include <sys/wait.h>\n#include <stdio.h>\n\nint main() {\n    pid_t pid = fork();\n    \n    if (pid < 0) {\n        perror(\"fork failed\");\n        return 1;\n    } else if (pid == 0) {\n        // 子进程\n        printf(\"Child: PID=%d, PPID=%d\\n\", getpid(), getppid());\n        \n        // 执行新程序\n        execlp(\"ls\", \"ls\", \"-l\", NULL);\n        \n        // execlp成功不返回，到这里说明失败\n        perror(\"execlp failed\");\n        return 1;\n    } else {\n        // 父进程\n        printf(\"Parent: PID=%d, Child PID=%d\\n\", getpid(), pid);\n        \n        int status;\n        pid_t child_pid = wait(&status);  // 等待子进程结束\n        \n        if (WIFEXITED(status)) {\n            printf(\"Child %d exited with code %d\\n\", \n                   child_pid, WEXITSTATUS(status));\n        }\n    }\n    \n    return 0;\n}"
+      }
+    },
+    {
+      "id": "os-049",
+      "title": "守护进程（Daemon）的编写",
+      "category": "os",
+      "difficulty": "hard",
+      "frequency": "medium",
+      "importance": "medium",
+      "tags": [
+        "守护进程",
+        "Daemon",
+        "后台进程",
+        "Linux编程",
+        "系统服务"
+      ],
+      "content": "什么是守护进程？如何编写一个守护进程？",
+      "answer": "**守护进程特点：**\n- 后台运行，无控制终端\n- 长期运行，系统启动时启动\n- 通常以d结尾（sshd, httpd）\n\n**创建步骤：**\n1. fork()创建子进程，父进程退出\n2. setsid()创建新会话，脱离终端\n3. fork()再次创建子进程，防止获取控制终端\n4. chdir(\"/\")改变工作目录\n5. umask(0)重设文件权限掩码\n6. 关闭不需要的文件描述符\n\n**现代替代方案：**\n- systemd服务\n- Docker容器\n- supervisor进程管理",
+      "code": {
+        "cpp": "#include <unistd.h>\n#include <sys/types.h>\n#include <sys/stat.h>\n#include <fcntl.h>\n\nvoid create_daemon() {\n    // 1. 第一次fork\n    pid_t pid = fork();\n    if (pid < 0) exit(1);\n    if (pid > 0) exit(0);  // 父进程退出\n    \n    // 2. 创建新会话\n    if (setsid() < 0) exit(1);\n    \n    // 3. 第二次fork\n    pid = fork();\n    if (pid < 0) exit(1);\n    if (pid > 0) exit(0);\n    \n    // 4. 改变工作目录\n    chdir(\"/\");\n    \n    // 5. 重设文件权限掩码\n    umask(0);\n    \n    // 6. 关闭文件描述符\n    for (int i = 0; i < 1024; i++) {\n        close(i);\n    }\n    \n    // 守护进程主逻辑\n    while (1) {\n        // 执行任务\n        sleep(60);\n    }\n}"
+      }
+    },
+    {
+      "id": "os-050",
+      "title": "HTTP/HTTPS协议详解",
+      "category": "os",
+      "difficulty": "medium",
+      "frequency": "high",
+      "importance": "high",
+      "tags": [
+        "HTTP",
+        "HTTPS",
+        "SSL/TLS",
+        "Web协议",
+        "网络安全"
+      ],
+      "content": "HTTP和HTTPS的区别是什么？HTTPS的握手过程？",
+      "answer": "**HTTP特点：**\n- 明文传输，无状态\n- 基于请求-响应模型\n- 常用方法：GET、POST、PUT、DELETE\n- 状态码：1xx-5xx\n\n**HTTPS = HTTP + SSL/TLS：**\n- 加密传输，防止窃听和篡改\n- 身份认证（证书）\n- 端口443（HTTP是80）\n\n**TLS握手过程（简化）：**\n1. 客户端发送ClientHello（支持的加密套件）\n2. 服务器返回ServerHello + 证书\n3. 客户端验证证书，生成预主密钥\n4. 双方生成会话密钥\n5. 加密通信开始\n\n**证书体系：**\n- CA（证书颁发机构）\n- 证书链验证\n- 自签名证书",
+      "code": {
+        "python": "# HTTP请求示例\nimport http.client\n\nconn = http.client.HTTPSConnection(\"api.example.com\")\nconn.request(\"GET\", \"/users\")\nresponse = conn.getresponse()\nprint(response.status, response.reason)\ndata = response.read()\nconn.close()\n\n# 使用requests库\nimport requests\n\nresponse = requests.get(\"https://api.example.com/users\")\nprint(response.json())\n\n# 验证SSL证书\nresponse = requests.get(\"https://self-signed.badssl.com\", verify=False)"
+      }
+    }
+  ]
+}

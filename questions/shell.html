@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shell脚本面试题列表 | 上岸吧DevPrep</title>
+<meta name="description" content="上岸吧DevPrep Shell脚本面试题列表，共 36 道题目，涵盖Shell脚本执行方式区别、变量作用域与环境变量、特殊变量$? $$ $! $0 $# $@ $*、引号的区别：单引号、双引号、反引号、条件判断：test、[ ]、[[ ]]等核心知识点。助你顺利上岸！">
+<meta name="keywords" content="Shell脚本面试题,Shell脚本八股文,Shell脚本执行方式区别,变量作用域与环境变量,特殊变量$? $$ $! $0 $# $@ $*,引号的区别：单引号、双引号、反引号,条件判断：test、[ ]、[[ ]],循环语句：for、while、until,重定向与管道,grep命令详解,编程面试,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/shell.html">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 8px; color: #e2e8f0; }
+  .seo-count { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
+  .seo-list { list-style: none; }
+  .seo-list li { margin-bottom: 12px; }
+  .seo-list a { color: #00d4ff; text-decoration: none; font-size: 16px; transition: color .25s; }
+  .seo-list a:hover { color: #fff; text-decoration: underline; }
+  .seo-list .diff { font-size: 12px; margin-left: 8px; }
+  .seo-difficulty-easy { color: #00ff88; }
+  .seo-difficulty-medium { color: #ffb800; }
+  .seo-difficulty-hard { color: #ff4757; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Shell脚本面试题</h1>
+  <div class="seo-count">共 36 道题目</div>
+  <ul class="seo-list">
+    <li><a href="shell-001.html">Shell脚本执行方式区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-002.html">变量作用域与环境变量</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-003.html">特殊变量$? $$ $! $0 $# $@ $*</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-004.html">引号的区别：单引号、双引号、反引号</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-005.html">条件判断：test、[ ]、[[ ]]</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-006.html">循环语句：for、while、until</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-007.html">重定向与管道</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-008.html">grep命令详解</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-009.html">sed流编辑器</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-010.html">awk文本处理</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-011.html">find文件查找</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-012.html">信号处理与trap命令</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-013.html">进程管理命令</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-014.html">数组操作</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-015.html">字符串操作</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-016.html">函数定义与参数传递</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-017.html">正则表达式在Shell中的应用</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-018.html">Shell脚本调试技巧</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-019.html">并发与并行处理</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-020.html">Shell脚本最佳实践</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-021.html">cut/sort/uniq文本处理</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-022.html">head/tail/wc文件查看统计</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-023.html">tar/gzip压缩解压</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-024.html">crontab定时任务</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-025.html">ssh/scp/rsync远程操作</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-026.html">日志分析脚本实战</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-027.html">自动化部署脚本</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-028.html">系统监控脚本</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-029.html">Linux基础命令：权限与磁盘管理</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="shell-030.html">Linux网络工具：curl/wget/nc</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-031.html">systemctl与Linux服务管理</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="shell-032.html">sed分组捕获与保持空间</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-033.html">awk自定义函数与关联数组</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-034.html">xargs高级用法与expect自动化交互</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-035.html">进程替换与Here Document高级用法</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="shell-036.html">Linux性能分析工具：perf/strace/vmstat</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+  </ul>
+</div>
+</body>
+</html>

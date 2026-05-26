@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内存屏障与内存序 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="内存屏障（Memory Barrier）：防止编译器和CPU对内存操作进行重排序的指令。  为什么需要： - 编译器优化可能重排指令 - CPU乱序执行 - 多核CPU缓存不一致  C++11 memory_order： 1. memory_order_relaxed：最宽松，只保证原子性 2. memory_orde...">
+<meta name="keywords" content="内存屏障与内存序,C/C++面试题,内存屏障, memory_order, 原子操作, 无锁编程,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-051.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存屏障与内存序 - C/C++面试题">
+<meta property="og:description" content="内存屏障（Memory Barrier）：防止编译器和CPU对内存操作进行重排序的指令。  为什么需要： - 编译器优化可能重排指令 - CPU乱序执行 - 多核CPU缓存不一致  C++11 memory_order： 1. memory_order_relaxed：最宽松，只保证原子性 2. memory_orde...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-051.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "内存屏障与内存序",
+    "text": "什么是内存屏障？C++中的memory_order有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "内存屏障（Memory Barrier）：防止编译器和CPU对内存操作进行重排序的指令。  为什么需要： - 编译器优化可能重排指令 - CPU乱序执行 - 多核CPU缓存不一致  C++11 memory_order： 1. memory_order_relaxed：最宽松，只保证原子性 2. memory_order_consume：数据依赖顺序（很少使用） 3. memory_order_acquire：读操作，之后的读写不会重排到前面 4. memory_order_release：写操作，之前的读写不会重排到后面 5. memory_order_acq_rel：读写操作，acquire+release 6. memory_order_seq_cst：顺序一致性，最严格（默认）  使用原则： - 默认用seq_cst，简单但性能较低 - 性能敏感场景用acquire/release - relaxed只用于计数器等简单场景"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>内存屏障与内存序</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：内存屏障, memory_order, 原子操作, 无锁编程</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是内存屏障？C++中的memory_order有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">内存屏障（Memory Barrier）：防止编译器和CPU对内存操作进行重排序的指令。</div><br><div class="answer-line">为什么需要：</div><div class="answer-line">- 编译器优化可能重排指令</div><div class="answer-line">- CPU乱序执行</div><div class="answer-line">- 多核CPU缓存不一致</div><br><div class="answer-line">C++11 memory_order：</div><div class="answer-line"><strong>1. memory_order_relaxed：最宽松，只保证原子性</strong></div><div class="answer-line"><strong>2. memory_order_consume：数据依赖顺序（很少使用）</strong></div><div class="answer-line"><strong>3. memory_order_acquire：读操作，之后的读写不会重排到前面</strong></div><div class="answer-line"><strong>4. memory_order_release：写操作，之前的读写不会重排到后面</strong></div><div class="answer-line"><strong>5. memory_order_acq_rel：读写操作，acquire+release</strong></div><div class="answer-line"><strong>6. memory_order_seq_cst：顺序一致性，最严格（默认）</strong></div><br><div class="answer-line">使用原则：</div><div class="answer-line">- 默认用seq_cst，简单但性能较低</div><div class="answer-line">- 性能敏感场景用acquire/release</div><div class="answer-line">- relaxed只用于计数器等简单场景</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;atomic&gt;
+
+std::atomic&lt;int&gt; data(0);
+std::atomic&lt;bool&gt; ready(false);
+
+// 生产者
+void producer() {
+    data.store(42, std::memory_order_relaxed);
+    ready.store(true, std::memory_order_release);  // 写屏障
+}
+
+// 消费者
+void consumer() {
+    while (!ready.load(std::memory_order_acquire))  // 读屏障
+        ;
+    // 保证看到data=42
+    int value = data.load(std::memory_order_relaxed);
+}
+
+// 无锁计数器用relaxed
+class LockFreeCounter {
+    std::atomic&lt;int&gt; count{0};
+public:
+    void increment() {
+        count.fetch_add(1, std::memory_order_relaxed);
+    }
+    int get() {
+        return count.load(std::memory_order_relaxed);
+    }
+};</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

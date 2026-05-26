@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进程调度算法 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="1. 先来先服务（FCFS）：    - 按到达顺序执行，非抢占式    - 优点：简单公平    - 缺点：短作业等待时间长，平均等待时间长  2. 短作业优先（SJF）：    - 选择执行时间最短的进程    - 优点：平均等待时间最短    - 缺点：长作业可能饥饿，难以预知执行时间  3. 时间片轮转（RR）...">
+<meta name="keywords" content="进程调度算法,操作系统面试题,调度, FCFS, SJF, RR, 优先级,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-002.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程调度算法 - 操作系统面试题">
+<meta property="og:description" content="1. 先来先服务（FCFS）：    - 按到达顺序执行，非抢占式    - 优点：简单公平    - 缺点：短作业等待时间长，平均等待时间长  2. 短作业优先（SJF）：    - 选择执行时间最短的进程    - 优点：平均等待时间最短    - 缺点：长作业可能饥饿，难以预知执行时间  3. 时间片轮转（RR）...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-002.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "进程调度算法",
+    "text": "常见的进程调度算法有哪些？各有什么优缺点？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1. 先来先服务（FCFS）：    - 按到达顺序执行，非抢占式    - 优点：简单公平    - 缺点：短作业等待时间长，平均等待时间长  2. 短作业优先（SJF）：    - 选择执行时间最短的进程    - 优点：平均等待时间最短    - 缺点：长作业可能饥饿，难以预知执行时间  3. 时间片轮转（RR）：    - 每个进程分配固定时间片，用完切换    - 优点：响应时间快，适合分时系统    - 缺点：时间片太大退化为FCFS，太小切换开销大  4. 优先级调度：    - 按优先级选择进程    - 优点：灵活    - 缺点：低优先级进程可能饥饿  5. 多级反馈队列：    - 多个队列，优先级递减，时间片递增    - 综合以上算法优点，现代操作系统常用"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>进程调度算法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：调度, FCFS, SJF, RR, 优先级</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>常见的进程调度算法有哪些？各有什么优缺点？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line"><strong>1. 先来先服务（FCFS）：</strong></div><div class="answer-line">   - 按到达顺序执行，非抢占式</div><div class="answer-line">   - 优点：简单公平</div><div class="answer-line">   - 缺点：短作业等待时间长，平均等待时间长</div><br><div class="answer-line"><strong>2. 短作业优先（SJF）：</strong></div><div class="answer-line">   - 选择执行时间最短的进程</div><div class="answer-line">   - 优点：平均等待时间最短</div><div class="answer-line">   - 缺点：长作业可能饥饿，难以预知执行时间</div><br><div class="answer-line"><strong>3. 时间片轮转（RR）：</strong></div><div class="answer-line">   - 每个进程分配固定时间片，用完切换</div><div class="answer-line">   - 优点：响应时间快，适合分时系统</div><div class="answer-line">   - 缺点：时间片太大退化为FCFS，太小切换开销大</div><br><div class="answer-line"><strong>4. 优先级调度：</strong></div><div class="answer-line">   - 按优先级选择进程</div><div class="answer-line">   - 优点：灵活</div><div class="answer-line">   - 缺点：低优先级进程可能饥饿</div><br><div class="answer-line"><strong>5. 多级反馈队列：</strong></div><div class="answer-line">   - 多个队列，优先级递减，时间片递增</div><div class="answer-line">   - 综合以上算法优点，现代操作系统常用</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 时间片轮转模拟
+struct Process {
+    int pid, burst_time, remaining_time;
+};
+
+void roundRobin(Process p[], int n, int quantum) {
+    queue&lt;int&gt; ready;
+    for (int i = 0; i &lt; n; i++) ready.push(i);
+    
+    while (!ready.empty()) {
+        int idx = ready.front(); ready.pop();
+        int exec = min(quantum, p[idx].remaining_time);
+        p[idx].remaining_time -= exec;
+        if (p[idx].remaining_time &gt; 0)
+            ready.push(idx);  // 未完成，放回队尾
+    }
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

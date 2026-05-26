@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Django框架核心概念 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Django MTV架构：** - Model：数据模型，负责数据存取 - Template：模板，负责展示逻辑 - View：视图，负责业务逻辑  **ORM核心：** 1. 模型定义：继承models.Model 2. 查询API：objects.filter(), get(), create() 3. 关系字...">
+<meta name="keywords" content="Django框架核心概念,Python面试题,Django, MTV, ORM, 中间件, 信号,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-046.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django框架核心概念 - Python面试题">
+<meta property="og:description" content="**Django MTV架构：** - Model：数据模型，负责数据存取 - Template：模板，负责展示逻辑 - View：视图，负责业务逻辑  **ORM核心：** 1. 模型定义：继承models.Model 2. 查询API：objects.filter(), get(), create() 3. 关系字...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-046.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Django框架核心概念",
+    "text": "Django框架的MTV架构是什么？ORM和中间件如何工作？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Django MTV架构：** - Model：数据模型，负责数据存取 - Template：模板，负责展示逻辑 - View：视图，负责业务逻辑  **ORM核心：** 1. 模型定义：继承models.Model 2. 查询API：objects.filter(), get(), create() 3. 关系字段：ForeignKey, ManyToManyField, OneToOneField 4. 数据迁移：makemigrations, migrate  **中间件：** - 请求阶段：process_request - 视图阶段：process_view - 响应阶段：process_response - 异常阶段：process_exception  **信号机制：** - 内置信号：pre_save, post_save, pre_delete - 自定义信号：Signal()"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Django框架核心概念</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：Django, MTV, ORM, 中间件, 信号</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Django框架的MTV架构是什么？ORM和中间件如何工作？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Django MTV架构：**</div><div class="answer-line">- Model：数据模型，负责数据存取</div><div class="answer-line">- Template：模板，负责展示逻辑</div><div class="answer-line">- View：视图，负责业务逻辑</div><br><div class="answer-line">**ORM核心：**</div><div class="answer-line"><strong>1. 模型定义：继承models.Model</strong></div><div class="answer-line"><strong>2. 查询API：objects.filter(), get(), create()</strong></div><div class="answer-line"><strong>3. 关系字段：ForeignKey, ManyToManyField, OneToOneField</strong></div><div class="answer-line"><strong>4. 数据迁移：makemigrations, migrate</strong></div><br><div class="answer-line">**中间件：**</div><div class="answer-line">- 请求阶段：process_request</div><div class="answer-line">- 视图阶段：process_view</div><div class="answer-line">- 响应阶段：process_response</div><div class="answer-line">- 异常阶段：process_exception</div><br><div class="answer-line">**信号机制：**</div><div class="answer-line">- 内置信号：pre_save, post_save, pre_delete</div><div class="answer-line">- 自定义信号：Signal()</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># models.py
+from django.db import models
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    published = models.DateField()
+
+# views.py
+from django.shortcuts import render, get_object_or_404
+from .models import Book
+
+def book_list(request):
+    books = Book.objects.select_related(&#039;author&#039;).all()
+    return render(request, &#039;books/list.html&#039;, {&#039;books&#039;: books})
+
+def book_detail(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    return render(request, &#039;books/detail.html&#039;, {&#039;book&#039;: book})
+
+# ORM查询示例
+# 创建
+author = Author.objects.create(name=&#039;Alice&#039;, email=&#039;alice@example.com&#039;)
+# 查询
+books = Book.objects.filter(author=author, published__year=2024)
+# 更新
+Book.objects.filter(author=author).update(title=&#039;New Title&#039;)
+# 删除
+author.delete()
+
+# 中间件示例
+class CustomMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+    
+    def __call__(self, request):
+        # 请求前
+        print(f&#039;请求路径: {request.path}&#039;)
+        response = self.get_response(request)
+        # 响应后
+        response[&#039;X-Custom&#039;] = &#039;value&#039;
+        return response</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPU缓存与伪共享（False Sharing） - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**CPU缓存层次：** - L1 Cache（32-64KB）：每个核心私有，最快 - L2 Cache（256KB-1MB）：每个核心私有 - L3 Cache（数MB-数十MB）：所有核心共享  **Cache Line（缓存行）：** - CPU缓存以缓存行为单位读取，通常64字节 - 即使只读1字节，也会加载...">
+<meta name="keywords" content="CPU缓存与伪共享（False Sharing）,操作系统面试题,CPU缓存, Cache Line, 伪共享, False Sharing, 内存屏障,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-046.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPU缓存与伪共享（False Sharing） - 操作系统面试题">
+<meta property="og:description" content="**CPU缓存层次：** - L1 Cache（32-64KB）：每个核心私有，最快 - L2 Cache（256KB-1MB）：每个核心私有 - L3 Cache（数MB-数十MB）：所有核心共享  **Cache Line（缓存行）：** - CPU缓存以缓存行为单位读取，通常64字节 - 即使只读1字节，也会加载...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-046.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "CPU缓存与伪共享（False Sharing）",
+    "text": "什么是CPU缓存？什么是伪共享（False Sharing）？如何避免？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**CPU缓存层次：** - L1 Cache（32-64KB）：每个核心私有，最快 - L2 Cache（256KB-1MB）：每个核心私有 - L3 Cache（数MB-数十MB）：所有核心共享  **Cache Line（缓存行）：** - CPU缓存以缓存行为单位读取，通常64字节 - 即使只读1字节，也会加载整个缓存行 - 缓存一致性协议（MESI）保证多核数据一致  **伪共享（False Sharing）：** - 两个无关变量位于同一缓存行 - 不同核心分别修改各自变量 - 导致缓存行频繁失效，性能大幅下降  **MESI协议：** - M（Modified）：已修改，与内存不一致 - E（Exclusive）：独占，与内存一致 - S（Shared）：共享，多核持有 - I（Invalid）：无效  **避免伪共享的方法：** 1. 缓存行对齐：使用alignas(64) 2. 填充无用字段：手动padding 3. 线程局部存储：ThreadLocal 4. @Contended注解（Java）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>CPU缓存与伪共享（False Sharing）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：CPU缓存, Cache Line, 伪共享, False Sharing, 内存屏障</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是CPU缓存？什么是伪共享（False Sharing）？如何避免？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**CPU缓存层次：**</div><div class="answer-line">- L1 Cache（32-64KB）：每个核心私有，最快</div><div class="answer-line">- L2 Cache（256KB-1MB）：每个核心私有</div><div class="answer-line">- L3 Cache（数MB-数十MB）：所有核心共享</div><br><div class="answer-line">**Cache Line（缓存行）：**</div><div class="answer-line">- CPU缓存以缓存行为单位读取，通常64字节</div><div class="answer-line">- 即使只读1字节，也会加载整个缓存行</div><div class="answer-line">- 缓存一致性协议（MESI）保证多核数据一致</div><br><div class="answer-line">**伪共享（False Sharing）：**</div><div class="answer-line">- 两个无关变量位于同一缓存行</div><div class="answer-line">- 不同核心分别修改各自变量</div><div class="answer-line">- 导致缓存行频繁失效，性能大幅下降</div><br><div class="answer-line">**MESI协议：**</div><div class="answer-line">- M（Modified）：已修改，与内存不一致</div><div class="answer-line">- E（Exclusive）：独占，与内存一致</div><div class="answer-line">- S（Shared）：共享，多核持有</div><div class="answer-line">- I（Invalid）：无效</div><br><div class="answer-line">**避免伪共享的方法：**</div><div class="answer-line"><strong>1. 缓存行对齐：使用alignas(64)</strong></div><div class="answer-line"><strong>2. 填充无用字段：手动padding</strong></div><div class="answer-line"><strong>3. 线程局部存储：ThreadLocal</strong></div><div class="answer-line"><strong>4. @Contended注解（Java）</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;thread&gt;
+#include &lt;atomic&gt;
+#include &lt;chrono&gt;
+
+// 错误示例：伪共享
+struct CounterBad {
+    std::atomic&lt;int&gt; count1;  // 可能在同一缓存行
+    std::atomic&lt;int&gt; count2;  // 导致伪共享
+};
+
+// 正确示例：缓存行对齐，避免伪共享
+// 缓存行通常64字节
+class alignas(64) PaddedInt {
+    std::atomic&lt;int&gt; value;
+    // 编译器自动填充到64字节
+};
+
+struct CounterGood {
+    PaddedInt count1;  // 独占一个缓存行
+    PaddedInt count2;  // 独占另一个缓存行
+};
+
+// 手动padding方式
+class alignas(64) AlignedCounter {
+    std::atomic&lt;int&gt; value;
+    char padding[64 - sizeof(std::atomic&lt;int&gt;)];
+};
+
+void benchmark() {
+    const int N = 10000000;
+    
+    // 伪共享测试
+    CounterBad bad;
+    bad.count1 = 0;
+    bad.count2 = 0;
+    
+    auto start = std::chrono::high_resolution_clock::now();
+    std::thread t1([&amp;]() { for (int i = 0; i &lt; N; i++) bad.count1++; });
+    std::thread t2([&amp;]() { for (int i = 0; i &lt; N; i++) bad.count2++; });
+    t1.join(); t2.join();
+    auto end = std::chrono::high_resolution_clock::now();
+    
+    std::cout &lt;&lt; &quot;False Sharing: &quot;
+              &lt;&lt; std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(end - start).count()
+              &lt;&lt; &quot;ms&quot; &lt;&lt; std::endl;
+    
+    // 缓存行对齐测试
+    CounterGood good;
+    good.count1.value = 0;
+    good.count2.value = 0;
+    
+    start = std::chrono::high_resolution_clock::now();
+    std::thread t3([&amp;]() { for (int i = 0; i &lt; N; i++) good.count1.value++; });
+    std::thread t4([&amp;]() { for (int i = 0; i &lt; N; i++) good.count2.value++; });
+    t3.join(); t4.join();
+    end = std::chrono::high_resolution_clock::now();
+    
+    std::cout &lt;&lt; &quot;Cache Line Aligned: &quot;
+              &lt;&lt; std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(end - start).count()
+              &lt;&lt; &quot;ms&quot; &lt;&lt; std::endl;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

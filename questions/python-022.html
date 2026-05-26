@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>list的底层实现（动态数组） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python列表基于动态数组实现，底层是一个连续的内存块，存储指向Python对象的指针（不是对象本身）。  底层结构： - 一个连续的指针数组，每个元素是一个PyObject*指针。 - 维护已用大小（ob_size）和分配的总容量（allocated）。 - 当已用大小等于总容量时触发扩容。  动态扩容机制： - ...">
+<meta name="keywords" content="list的底层实现（动态数组）,Python面试题,数据结构, 列表, 动态数组, 底层实现,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-022.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="list的底层实现（动态数组） - Python面试题">
+<meta property="og:description" content="Python列表基于动态数组实现，底层是一个连续的内存块，存储指向Python对象的指针（不是对象本身）。  底层结构： - 一个连续的指针数组，每个元素是一个PyObject*指针。 - 维护已用大小（ob_size）和分配的总容量（allocated）。 - 当已用大小等于总容量时触发扩容。  动态扩容机制： - ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-022.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "list的底层实现（动态数组）",
+    "text": "解释Python列表的底层实现原理，包括动态扩容机制和操作的时间复杂度。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python列表基于动态数组实现，底层是一个连续的内存块，存储指向Python对象的指针（不是对象本身）。  底层结构： - 一个连续的指针数组，每个元素是一个PyObject*指针。 - 维护已用大小（ob_size）和分配的总容量（allocated）。 - 当已用大小等于总容量时触发扩容。  动态扩容机制： - 当空间不足时，按增长模式分配新空间：new_allocated = (newsize &gt;&gt; 3) + (newsize &lt; 9 ? 3 : 6) + newsize。 - 大致规律：每次扩容增长约12.5%或25%（取决于当前大小）。 - 扩容时分配新的更大数组，将旧数组元素复制到新数组，释放旧数组。 - 均摊时间复杂度：追加操作均摊O(1)。  时间复杂度： - 索引访问/修改：O(1)。 - 尾部追加（append）：均摊O(1)。 - 头部/中间插入（insert）：O(n)，需要移动后续元素。 - 尾部删除（pop）：O(1)。 - 头部/中间删除（pop(index)）：O(n)。 - 查找（in操作）：O(n)。  与链表的区别： - 列表是动态数组，随机访问O(1)，插入删除O(n)。 - 链表随机访问O(n)，已知位置插入删除O(1)。 - 列表缓存友好（连续内存），实际性能通常优于链表。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>list的底层实现（动态数组）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：数据结构, 列表, 动态数组, 底层实现</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python列表的底层实现原理，包括动态扩容机制和操作的时间复杂度。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python列表基于动态数组实现，底层是一个连续的内存块，存储指向Python对象的指针（不是对象本身）。</div><br><div class="answer-line">底层结构：</div><div class="answer-line">- 一个连续的指针数组，每个元素是一个PyObject*指针。</div><div class="answer-line">- 维护已用大小（ob_size）和分配的总容量（allocated）。</div><div class="answer-line">- 当已用大小等于总容量时触发扩容。</div><br><div class="answer-line">动态扩容机制：</div><div class="answer-line">- 当空间不足时，按增长模式分配新空间：new_allocated = (newsize &gt;&gt; 3) + (newsize &lt; 9 ? 3 : 6) + newsize。</div><div class="answer-line">- 大致规律：每次扩容增长约12.5%或25%（取决于当前大小）。</div><div class="answer-line">- 扩容时分配新的更大数组，将旧数组元素复制到新数组，释放旧数组。</div><div class="answer-line">- 均摊时间复杂度：追加操作均摊O(1)。</div><br><div class="answer-line">时间复杂度：</div><div class="answer-line">- 索引访问/修改：O(1)。</div><div class="answer-line">- 尾部追加（append）：均摊O(1)。</div><div class="answer-line">- 头部/中间插入（insert）：O(n)，需要移动后续元素。</div><div class="answer-line">- 尾部删除（pop）：O(1)。</div><div class="answer-line">- 头部/中间删除（pop(index)）：O(n)。</div><div class="answer-line">- 查找（in操作）：O(n)。</div><br><div class="answer-line">与链表的区别：</div><div class="answer-line">- 列表是动态数组，随机访问O(1)，插入删除O(n)。</div><div class="answer-line">- 链表随机访问O(n)，已知位置插入删除O(1)。</div><div class="answer-line">- 列表缓存友好（连续内存），实际性能通常优于链表。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 列表操作时间复杂度
+import timeit
+
+# O(1) 索引访问
+print(timeit.timeit(&#039;lst[500]&#039;, setup=&#039;lst=list(range(1000))&#039;, number=1000000))
+
+# O(1) 尾部追加（均摊）
+print(timeit.timeit(&#039;lst.append(1)&#039;, setup=&#039;lst=[]&#039;, number=1000000))
+
+# O(n) 头部插入
+print(timeit.timeit(&#039;lst.insert(0, 1)&#039;, setup=&#039;lst=list(range(1000))&#039;, number=10000))
+
+# O(n) 中间删除
+print(timeit.timeit(&#039;lst.pop(500)&#039;, setup=&#039;lst=list(range(1000))&#039;, number=10000))
+
+# 预分配空间提升性能
+def append_no_prealloc(n):
+    lst = []
+    for i in range(n):
+        lst.append(i)
+
+def append_with_prealloc(n):
+    lst = [None] * n  # 预分配
+    for i in range(n):
+        lst[i] = i
+
+# 预分配版本更快（减少扩容次数）</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

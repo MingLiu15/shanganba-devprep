@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上岸吧DevPrep - 编程面试题库 | C/C++ Python 操作系统 算法题</title>
+<meta name="description" content="上岸吧DevPrep 开发者面试题库，涵盖 C/C++、Python、Shell脚本、操作系统、算法与自动化测试等核心知识点，支持音频朗读，助你顺利上岸！">
+<meta name="keywords" content="编程面试,面试题库,开发者面试,C++面试题,Python面试题,操作系统面试题,算法题,Shell脚本,自动化测试,八股文,校招面试,秋招,春招,上岸">
+<meta name="author" content="上岸吧DevPrep">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="上岸吧DevPrep - 编程面试题库">
+<meta property="og:description" content="上岸吧DevPrep 编程面试题库，支持音频朗读，涵盖 C/C++、Python、操作系统、算法等核心知识点，助你顺利上岸！">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/">
+<meta property="og:site_name" content="上岸吧DevPrep">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "上岸吧DevPrep",
+  "description": "编程面试题库，涵盖 C/C++、Python、操作系统、算法等核心知识点",
+  "url": "https://yourusername.github.io/shanganba/"
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ==================== Sidebar ==================== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">上岸吧<span>DevPrep</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">导航</div>
+    <div class="nav-item active" data-page="home" onclick="navigateTo('home')">
+      <span class="icon">&#9751;</span> 首页
+    </div>
+    <div class="nav-item" data-page="stats" onclick="navigateTo('stats')">
+      <span class="icon">&#9733;</span> 统计
+    </div>
+
+    <div class="nav-section-title">题库分类</div>
+    <div class="nav-item" data-page="category" data-category="cpp" onclick="navigateToCategory('cpp')">
+      <span class="icon" style="color:#00599c">&#9881;</span> C/C++
+      <span class="badge" id="badge-cpp">0</span>
+    </div>
+    <div class="nav-item" data-page="category" data-category="os" onclick="navigateToCategory('os')">
+      <span class="icon" style="color:#a855f7">&#128187;</span> 操作系统
+      <span class="badge" id="badge-os">0</span>
+    </div>
+    <div class="nav-item" data-page="category" data-category="python" onclick="navigateToCategory('python')">
+      <span class="icon" style="color:#3776ab">&#128013;</span> Python
+      <span class="badge" id="badge-python">0</span>
+    </div>
+    <div class="nav-item" data-page="category" data-category="algorithm" onclick="navigateToCategory('algorithm')">
+      <span class="icon" style="color:#ef4444">&#128640;</span> 算法题
+      <span class="badge" id="badge-algorithm">0</span>
+    </div>
+    <div class="nav-item" data-page="category" data-category="testing" onclick="navigateToCategory('testing')">
+      <span class="icon" style="color:#22c55e">&#9989;</span> 自动化测试
+      <span class="badge" id="badge-testing">0</span>
+    </div>
+    <div class="nav-item" data-page="category" data-category="shell" onclick="navigateToCategory('shell')">
+      <span class="icon" style="color:#4ade80">&#62;</span> Shell脚本
+      <span class="badge" id="badge-shell">0</span>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    上岸吧DevPrep v1.0 &middot; 助你上岸
+  </div>
+</aside>
+
+<!-- ==================== Main Content ==================== -->
+<div class="main-content" id="mainContent">
+
+  <!-- Header -->
+  <header class="header">
+    <button class="menu-toggle" onclick="toggleSidebar()" title="切换侧边栏">&#9776;</button>
+    <div class="search-box">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="searchInput" placeholder="搜索题目、标签..." oninput="handleSearch(this.value)">
+    </div>
+    <div class="header-actions">
+      <button class="header-btn streak-badge" id="streakBtn" title="连续打卡天数">
+        &#128293; <span id="streakCount">0</span> 天
+      </button>
+      <button class="header-btn" onclick="resetProgress()" title="重置进度">&#128260; 重置</button>
+      <button class="header-btn login-btn" id="loginBtn" onclick="showLoginModal()" title="登录/注册">&#128100; 登录</button>
+      <div class="user-menu" id="userMenu" style="display:none;">
+        <span id="usernameDisplay"></span>
+        <button onclick="logout()">退出</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Home Page ========== -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <h1 class="hero-title">上岸吧<span style="font-size:0.6em;color:var(--accent-cyan)">DevPrep</span></h1>
+      <p class="hero-subtitle">开发者面试题库，支持音频朗读，助你顺利上岸！涵盖C/C++、Python、Shell脚本、操作系统、算法与自动化测试等必备知识。</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="number" id="totalQuestions">0</div>
+          <div class="label">总题数</div>
+        </div>
+        <div class="hero-stat">
+          <div class="number" id="solvedCount">0</div>
+          <div class="label">已解决</div>
+        </div>
+        <div class="hero-stat">
+          <div class="number" id="attemptedCount">0</div>
+          <div class="label">已尝试</div>
+        </div>
+        <div class="hero-stat">
+          <div class="number" id="completionRate">0%</div>
+          <div class="label">完成率</div>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <!-- Terminal animation will be injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">题库分类</h2>
+    <div class="category-grid" id="categoryGrid">
+      <!-- Category cards will be injected by JS -->
+    </div>
+  </div>
+
+  <!-- ========== Category Page ========== -->
+  <div class="page" id="page-category">
+    <div class="category-header">
+      <h2 id="categoryTitle">分类名称</h2>
+      <span class="count" id="categoryCount">0 题</span>
+    </div>
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-difficulty="all" onclick="filterQuestions('all')">全部</button>
+      <button class="filter-btn" data-difficulty="easy" onclick="filterQuestions('easy')">&#9679; 简单</button>
+      <button class="filter-btn" data-difficulty="medium" onclick="filterQuestions('medium')">&#9679; 中等</button>
+      <button class="filter-btn" data-difficulty="hard" onclick="filterQuestions('hard')">&#9679; 困难</button>
+      <button class="filter-btn" data-difficulty="solved" onclick="filterQuestions('solved')">&#10003; 已解决</button>
+      <button class="filter-btn" data-difficulty="unsolved" onclick="filterQuestions('unsolved')">&#9675; 未解决</button>
+    </div>
+    <div class="filter-bar frequency-filter" id="frequencyFilterBar">
+      <span class="filter-label">频率：</span>
+      <button class="filter-btn active" data-frequency="all" onclick="filterByFrequency('all')">全部</button>
+      <button class="filter-btn freq-high" data-frequency="high" onclick="filterByFrequency('high')">&#128293; 高频</button>
+      <button class="filter-btn freq-medium" data-frequency="medium" onclick="filterByFrequency('medium')">中频</button>
+      <button class="filter-btn freq-low" data-frequency="low" onclick="filterByFrequency('low')">低频</button>
+    </div>
+    <div class="question-list" id="questionList">
+      <!-- Questions will be injected by JS -->
+    </div>
+  </div>
+
+  <!-- ========== Question Detail Page (面试知识点模式 - 左右布局) ========== -->
+  <div class="page" id="page-question">
+    <div class="knowledge-detail">
+      <div class="knowledge-header">
+        <h2 id="questionTitle">题目标题</h2>
+        <div class="question-meta" id="questionMeta">
+          <span class="difficulty" id="questionDifficulty">中等</span>
+        </div>
+      </div>
+      <div class="q-tags" id="questionTags"></div>
+      
+      <div class="knowledge-layout">
+        <!-- 左侧：题目 + 答案 -->
+        <div class="knowledge-left">
+          <div class="q-section">
+            <div class="q-section-title">&#128209; 题目</div>
+            <div class="q-content" id="questionContent"></div>
+          </div>
+          <div class="q-section answer-section" id="answerSection">
+            <div class="answer-section-header">
+              <div class="q-section-title answer-toggle" id="answerToggle" onclick="toggleAnswer()">
+                &#128161; 参考答案 <span class="answer-hint" id="answerHint">（点击展开）</span>
+              </div>
+              <button class="tts-btn" id="ttsBtn" onclick="toggleTTS()" title="朗读答案" style="display:none;">
+                <span class="tts-icon" id="ttsIcon">&#128266;</span>
+                <span class="tts-label" id="ttsLabel">朗读</span>
+              </button>
+            </div>
+            <div class="answer-content" id="answerContent" style="display:none;"></div>
+          </div>
+        </div>
+        
+        <!-- 右侧：代码示例 -->
+        <div class="knowledge-right" id="codeSection" style="display:none;">
+          <div class="q-section-title">&#128187; 代码示例</div>
+          <pre class="code-block"><code id="codeBlock"></code></pre>
+        </div>
+      </div>
+      
+      <div class="q-actions">
+        <button class="action-btn btn-back" onclick="goBackToList()">&#128281; 返回列表</button>
+        <button class="action-btn btn-solved" id="btnSolved" onclick="markCurrentSolved()">&#10003; 标记已掌握</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Coding Question Page (编程题模式) ========== -->
+  <div class="page" id="page-coding">
+    <div class="coding-detail">
+      <div class="coding-header">
+        <h2 id="codingTitle">题目标题</h2>
+        <div class="question-meta">
+          <span class="difficulty" id="codingDifficulty">中等</span>
+        </div>
+      </div>
+      <div class="q-tags" id="codingTags"></div>
+
+      <div class="coding-layout">
+        <!-- 左侧：题目描述 + 测试用例 -->
+        <div class="coding-left">
+          <div class="q-section">
+            <div class="q-section-title">&#128209; 题目描述</div>
+            <div class="q-content" id="codingDescription"></div>
+          </div>
+          <div class="q-section" id="codingTestCaseSection">
+            <div class="q-section-title">&#9989; 测试用例</div>
+            <div id="codingTestCases"></div>
+          </div>
+        </div>
+
+        <!-- 右侧：代码编辑器 -->
+        <div class="coding-right">
+          <div class="editor-toolbar">
+            <div class="lang-tabs" id="langTabs">
+              <button class="lang-tab active" data-lang="cpp" onclick="switchLang('cpp')">C++</button>
+              <button class="lang-tab" data-lang="python" onclick="switchLang('python')">Python</button>
+              <button class="lang-tab" data-lang="java" onclick="switchLang('java')">Java</button>
+              <button class="lang-tab" data-lang="go" onclick="switchLang('go')">Go</button>
+              <button class="lang-tab" data-lang="javascript" onclick="switchLang('javascript')">JavaScript</button>
+            </div>
+            <div class="editor-actions">
+              <button class="action-btn btn-reset" onclick="resetCode()">&#128260; 重置</button>
+              <button class="action-btn btn-run" onclick="runCode()">&#9654; 运行</button>
+              <button class="action-btn btn-solution" onclick="showSolution()">&#128161; 题解</button>
+            </div>
+          </div>
+          <textarea id="codeEditor"></textarea>
+          <div class="output-panel" id="outputPanel" style="display:none;">
+            <div class="output-header">
+              <span class="status-dot" id="outputStatusDot"></span>
+              <span id="outputStatusText">运行结果</span>
+            </div>
+            <div class="output-body" id="outputBody"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-actions">
+        <button class="action-btn btn-back" onclick="goBackCodingToList()">&#128281; 返回列表</button>
+        <button class="action-btn btn-solved" id="btnCodingSolved" onclick="markCodingSolved()">&#10003; 标记已掌握</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Stats Page ========== -->
+  <div class="page" id="page-stats">
+    <h2 class="section-title">学习统计</h2>
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-value" id="stat-solved">0</div>
+        <div class="stat-label">已解决</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">总题数</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-value" id="stat-rate">0%</div>
+        <div class="stat-label">完成率</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-value" id="stat-streak">0</div>
+        <div class="stat-label">连续打卡 (天)</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h3>各分类进度</h3>
+      <div class="bar-chart" id="categoryChart">
+        <!-- Bars will be injected by JS -->
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <h3>难度分布</h3>
+      <div class="difficulty-chart" id="difficultyChart">
+        <!-- Difficulty stats will be injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Search Results Page ========== -->
+  <div class="page" id="page-search">
+    <h2 class="section-title">搜索结果</h2>
+    <p style="color:var(--text-muted);margin-bottom:20px;" id="searchInfo"></p>
+    <div class="question-list" id="searchResults">
+      <!-- Search results will be injected by JS -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ========== Solution Modal ========== -->
+<div class="solution-overlay" id="solutionOverlay" onclick="closeSolution(event)">
+  <div class="solution-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeSolution()">&times;</button>
+    <h3>&#128161; 参考题解</h3>
+    <div id="solutionContent">
+      <!-- Solution will be injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ========== Login Modal ========== -->
+<div class="login-overlay" id="loginOverlay" onclick="closeLoginModal(event)">
+  <div class="login-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeLoginModal()">&times;</button>
+    <h3>&#128100; 用户登录</h3>
+    <div class="login-tabs">
+      <button class="login-tab active" data-tab="login" onclick="switchLoginTab('login')">登录</button>
+      <button class="login-tab" data-tab="register" onclick="switchLoginTab('register')">注册</button>
+    </div>
+    <div class="login-form" id="loginForm">
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" id="loginUsername" placeholder="请输入用户名">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" id="loginPassword" placeholder="请输入密码">
+      </div>
+      <div class="form-error" id="loginError"></div>
+      <button class="btn-login-submit" onclick="handleLogin()">登录</button>
+    </div>
+    <div class="login-form" id="registerForm" style="display:none;">
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" id="registerUsername" placeholder="请输入用户名（3-20字符）">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" id="registerPassword" placeholder="请输入密码（至少6位）">
+      </div>
+      <div class="form-group">
+        <label>确认密码</label>
+        <input type="password" id="registerPassword2" placeholder="请再次输入密码">
+      </div>
+      <div class="form-error" id="registerError"></div>
+      <button class="btn-login-submit" onclick="handleRegister()">注册</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Scripts ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js"></script>
+
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>

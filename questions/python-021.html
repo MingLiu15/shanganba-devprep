@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dict的底层实现（哈希表） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python字典基于哈希表实现，Python 3.6+保持插入顺序。  底层结构： - 哈希表由两个数组组成：indices数组（存储索引）和entries数组（存储键值对）。 - 每个entry包含：hash值、key指针、value指针。 - indices数组用于快速定位，entries数组按插入顺序存储，保证有...">
+<meta name="keywords" content="dict的底层实现（哈希表）,Python面试题,数据结构, 字典, 哈希表, 底层实现,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-021.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dict的底层实现（哈希表） - Python面试题">
+<meta property="og:description" content="Python字典基于哈希表实现，Python 3.6+保持插入顺序。  底层结构： - 哈希表由两个数组组成：indices数组（存储索引）和entries数组（存储键值对）。 - 每个entry包含：hash值、key指针、value指针。 - indices数组用于快速定位，entries数组按插入顺序存储，保证有...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-021.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "dict的底层实现（哈希表）",
+    "text": "解释Python字典的底层实现原理，包括哈希表结构、冲突解决和扩容机制。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python字典基于哈希表实现，Python 3.6+保持插入顺序。  底层结构： - 哈希表由两个数组组成：indices数组（存储索引）和entries数组（存储键值对）。 - 每个entry包含：hash值、key指针、value指针。 - indices数组用于快速定位，entries数组按插入顺序存储，保证有序性。  哈希冲突解决： - 使用开放寻址法（Open Addressing），不是链地址法。 - 发生冲突时，通过探测序列（线性探测）寻找下一个空位。 - 探测公式：i = (5*i + 1) mod 2^n，使用二次探测减少聚集。  哈希计算： - 调用对象的__hash__()方法获取哈希值。 - 哈希值与表大小取模确定初始位置。 - 发生冲突时按探测序列查找。  扩容机制： - 维护负载因子（元素数/表大小），当负载因子超过2/3时触发扩容。 - 扩容时创建更大的哈希表（通常为原来的2-3倍），重新哈希所有元素。 - 扩容操作是O(n)时间复杂度，但均摊后每次操作仍为O(1)。  时间复杂度： - 平均查找、插入、删除：O(1)。 - 最坏情况（大量冲突）：O(n)。  key的要求：必须是可哈希的（不可变类型），实现了__hash__和__eq__。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>dict的底层实现（哈希表）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：数据结构, 字典, 哈希表, 底层实现</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python字典的底层实现原理，包括哈希表结构、冲突解决和扩容机制。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python字典基于哈希表实现，Python 3.6+保持插入顺序。</div><br><div class="answer-line">底层结构：</div><div class="answer-line">- 哈希表由两个数组组成：indices数组（存储索引）和entries数组（存储键值对）。</div><div class="answer-line">- 每个entry包含：hash值、key指针、value指针。</div><div class="answer-line">- indices数组用于快速定位，entries数组按插入顺序存储，保证有序性。</div><br><div class="answer-line">哈希冲突解决：</div><div class="answer-line">- 使用开放寻址法（Open Addressing），不是链地址法。</div><div class="answer-line">- 发生冲突时，通过探测序列（线性探测）寻找下一个空位。</div><div class="answer-line">- 探测公式：i = (5*i + 1) mod 2^n，使用二次探测减少聚集。</div><br><div class="answer-line">哈希计算：</div><div class="answer-line">- 调用对象的__hash__()方法获取哈希值。</div><div class="answer-line">- 哈希值与表大小取模确定初始位置。</div><div class="answer-line">- 发生冲突时按探测序列查找。</div><br><div class="answer-line">扩容机制：</div><div class="answer-line">- 维护负载因子（元素数/表大小），当负载因子超过2/3时触发扩容。</div><div class="answer-line">- 扩容时创建更大的哈希表（通常为原来的2-3倍），重新哈希所有元素。</div><div class="answer-line">- 扩容操作是O(n)时间复杂度，但均摊后每次操作仍为O(1)。</div><br><div class="answer-line">时间复杂度：</div><div class="answer-line">- 平均查找、插入、删除：O(1)。</div><div class="answer-line">- 最坏情况（大量冲突）：O(n)。</div><br><div class="answer-line">key的要求：必须是可哈希的（不可变类型），实现了__hash__和__eq__。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 哈希冲突演示
+# 自定义类作为dict的key
+class Point:
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+d = {Point(1,2): &#039;A&#039;, Point(3,4): &#039;B&#039;}
+print(d[Point(1,2)])  # A
+
+# 字典性能特点
+import timeit
+print(timeit.timeit(&#039;d[999999]&#039;, setup=&#039;d={i:i for i in range(1000000)}&#039;))
+# 查找接近O(1)
+
+# 不可哈希类型
+# {[1,2]: &#039;value&#039;}  # TypeError: unhashable type: &#039;list&#039;
+
+# Python 3.7+ 字典保持插入顺序
+d = {&#039;a&#039;: 1, &#039;b&#039;: 2, &#039;c&#039;: 3}
+print(list(d.keys()))  # [&#039;a&#039;, &#039;b&#039;, &#039;c&#039;]</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

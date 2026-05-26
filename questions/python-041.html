@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>typing模块高级用法 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="typing：Python类型注解支持模块，用于静态类型检查。  高级特性： 1. TypeVar：泛型类型变量 2. Generic：自定义泛型类 3. Protocol：结构子类型（鸭子类型形式化） 4. Union/Optional：联合类型 5. Callable：函数类型 6. Type：类本身类型  类型检...">
+<meta name="keywords" content="typing模块高级用法,Python面试题,typing, 类型注解, TypeVar, Generic, Protocol, 类型提示,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-041.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="typing模块高级用法 - Python面试题">
+<meta property="og:description" content="typing：Python类型注解支持模块，用于静态类型检查。  高级特性： 1. TypeVar：泛型类型变量 2. Generic：自定义泛型类 3. Protocol：结构子类型（鸭子类型形式化） 4. Union/Optional：联合类型 5. Callable：函数类型 6. Type：类本身类型  类型检...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-041.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "typing模块高级用法",
+    "text": "介绍typing模块的高级用法。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "typing：Python类型注解支持模块，用于静态类型检查。  高级特性： 1. TypeVar：泛型类型变量 2. Generic：自定义泛型类 3. Protocol：结构子类型（鸭子类型形式化） 4. Union/Optional：联合类型 5. Callable：函数类型 6. Type：类本身类型  类型检查工具： - mypy：静态类型检查器 - pyright：微软的类型检查器 - IDE支持：PyCharm、VSCode等"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>typing模块高级用法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：typing, 类型注解, TypeVar, Generic, Protocol, 类型提示</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍typing模块的高级用法。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">typing：Python类型注解支持模块，用于静态类型检查。</div><br><div class="answer-line">高级特性：</div><div class="answer-line"><strong>1. TypeVar：泛型类型变量</strong></div><div class="answer-line"><strong>2. Generic：自定义泛型类</strong></div><div class="answer-line"><strong>3. Protocol：结构子类型（鸭子类型形式化）</strong></div><div class="answer-line"><strong>4. Union/Optional：联合类型</strong></div><div class="answer-line"><strong>5. Callable：函数类型</strong></div><div class="answer-line"><strong>6. Type：类本身类型</strong></div><br><div class="answer-line">类型检查工具：</div><div class="answer-line">- mypy：静态类型检查器</div><div class="answer-line">- pyright：微软的类型检查器</div><div class="answer-line">- IDE支持：PyCharm、VSCode等</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from typing import TypeVar, Generic, Protocol, Union, Optional, Callable, List, Dict
+
+# TypeVar - 泛型变量
+T = TypeVar(&#039;T&#039;)
+K = TypeVar(&#039;K&#039;)
+V = TypeVar(&#039;V&#039;)
+
+def first(items: List[T]) -&gt; Optional[T]:
+    return items[0] if items else None
+
+# Generic - 自定义泛型
+class Stack(Generic[T]):
+    def __init__(self) -&gt; None:
+        self._items: List[T] = []
+    
+    def push(self, item: T) -&gt; None:
+        self._items.append(item)
+    
+    def pop(self) -&gt; Optional[T]:
+        return self._items.pop() if self._items else None
+
+# Protocol - 结构子类型
+class Drawable(Protocol):
+    def draw(self) -&gt; None: ...
+
+def render(item: Drawable) -&gt; None:
+    item.draw()
+
+# 任何有draw方法的类都符合Drawable
+class Circle:
+    def draw(self) -&gt; None: ...
+
+render(Circle())  # OK
+
+# Union - 联合类型
+def parse(value: Union[str, int]) -&gt; int:
+    if isinstance(value, str):
+        return int(value)
+    return value
+
+# Callable - 函数类型
+def apply(f: Callable[[int, int], int], x: int, y: int) -&gt; int:
+    return f(x, y)
+
+# Optional = Union[X, None]
+def find(items: List[T], target: T) -&gt; Optional[int]: ...</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

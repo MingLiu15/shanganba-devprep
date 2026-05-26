@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>僵尸进程与孤儿进程 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="僵尸进程（Zombie）： - 子进程终止后，父进程未调用wait/waitpid回收其退出状态 - 子进程的PCB（进程控制块）仍保留在内核中 - 占用PID和少量内存，无法被kill - 大量僵尸进程会耗尽PID资源  处理方法： - 父进程调用wait()/waitpid()回收 - 杀死父进程，僵尸进程被ini...">
+<meta name="keywords" content="僵尸进程与孤儿进程,操作系统面试题,僵尸进程, 孤儿进程, wait, init,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-017.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="僵尸进程与孤儿进程 - 操作系统面试题">
+<meta property="og:description" content="僵尸进程（Zombie）： - 子进程终止后，父进程未调用wait/waitpid回收其退出状态 - 子进程的PCB（进程控制块）仍保留在内核中 - 占用PID和少量内存，无法被kill - 大量僵尸进程会耗尽PID资源  处理方法： - 父进程调用wait()/waitpid()回收 - 杀死父进程，僵尸进程被ini...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-017.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "僵尸进程与孤儿进程",
+    "text": "什么是僵尸进程和孤儿进程？如何处理？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "僵尸进程（Zombie）： - 子进程终止后，父进程未调用wait/waitpid回收其退出状态 - 子进程的PCB（进程控制块）仍保留在内核中 - 占用PID和少量内存，无法被kill - 大量僵尸进程会耗尽PID资源  处理方法： - 父进程调用wait()/waitpid()回收 - 杀死父进程，僵尸进程被init进程接管并回收  孤儿进程（Orphan）： - 父进程先于子进程终止 - 子进程被init进程（PID=1）收养 - init进程会自动调用wait回收 - 孤儿进程无害  预防僵尸进程： 1. 父进程调用wait/waitpid 2. 使用信号处理：SIGCHLD信号处理中调用wait 3. 两次fork：创建子进程再创建孙子进程，子进程退出，孙子进程成为孤儿"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>僵尸进程与孤儿进程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：僵尸进程, 孤儿进程, wait, init</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是僵尸进程和孤儿进程？如何处理？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">僵尸进程（Zombie）：</div><div class="answer-line">- 子进程终止后，父进程未调用wait/waitpid回收其退出状态</div><div class="answer-line">- 子进程的PCB（进程控制块）仍保留在内核中</div><div class="answer-line">- 占用PID和少量内存，无法被kill</div><div class="answer-line">- 大量僵尸进程会耗尽PID资源</div><br><div class="answer-line">处理方法：</div><div class="answer-line">- 父进程调用wait()/waitpid()回收</div><div class="answer-line">- 杀死父进程，僵尸进程被init进程接管并回收</div><br><div class="answer-line">孤儿进程（Orphan）：</div><div class="answer-line">- 父进程先于子进程终止</div><div class="answer-line">- 子进程被init进程（PID=1）收养</div><div class="answer-line">- init进程会自动调用wait回收</div><div class="answer-line">- 孤儿进程无害</div><br><div class="answer-line">预防僵尸进程：</div><div class="answer-line"><strong>1. 父进程调用wait/waitpid</strong></div><div class="answer-line"><strong>2. 使用信号处理：SIGCHLD信号处理中调用wait</strong></div><div class="answer-line"><strong>3. 两次fork：创建子进程再创建孙子进程，子进程退出，孙子进程成为孤儿</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;sys/wait.h&gt;
+
+// 方法1：父进程wait
+pid_t pid = fork();
+if (pid == 0) { exit(0); }
+else { wait(NULL); }  // 回收子进程
+
+// 方法2：SIGCHLD信号处理
+void sigchld_handler(int sig) {
+    while (waitpid(-1, NULL, WNOHANG) &gt; 0);
+}
+signal(SIGCHLD, sigchld_handler);
+
+// 方法3：两次fork避免僵尸
+if (fork() == 0) {
+    if (fork() == 0) {
+        // 孙子进程，成为孤儿被init收养
+        do_work();
+        exit(0);
+    }
+    exit(0);  // 子进程立即退出
+}
+wait(NULL);  // 回收子进程</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>asyncio异步编程 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="asyncio是Python的异步I/O框架，基于事件循环和协程实现，适合处理大量I/O密集型任务。  核心概念： - 协程（coroutine）：使用async def定义的函数，调用后返回协程对象。 - 事件循环（event loop）：异步程序的核心调度器，负责执行协程和处理I/O事件。 - await：暂停协程...">
+<meta name="keywords" content="asyncio异步编程,Python面试题,并发, asyncio, 协程, 异步编程,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-024.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="asyncio异步编程 - Python面试题">
+<meta property="og:description" content="asyncio是Python的异步I/O框架，基于事件循环和协程实现，适合处理大量I/O密集型任务。  核心概念： - 协程（coroutine）：使用async def定义的函数，调用后返回协程对象。 - 事件循环（event loop）：异步程序的核心调度器，负责执行协程和处理I/O事件。 - await：暂停协程...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-024.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "asyncio异步编程",
+    "text": "解释Python asyncio异步编程的核心概念、使用方式及适用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "asyncio是Python的异步I/O框架，基于事件循环和协程实现，适合处理大量I/O密集型任务。  核心概念： - 协程（coroutine）：使用async def定义的函数，调用后返回协程对象。 - 事件循环（event loop）：异步程序的核心调度器，负责执行协程和处理I/O事件。 - await：暂停协程执行，等待异步操作完成，期间事件循环可以执行其他协程。 - Task：对协程的封装，提供并发执行的能力。 - Future：代表未来某个时刻的结果。  关键API： - asyncio.run()：运行最高层级的入口点。 - asyncio.create_task()：将协程包装为Task并发执行。 - asyncio.gather()：并发运行多个协程，等待全部完成。 - asyncio.wait()：更灵活的并发控制（FIRST_COMPLETED等）。 - async with / async for：异步上下文管理和异步迭代。  适用场景： - 高并发网络请求（HTTP客户端、WebSocket）。 - 数据库异步操作。 - 高性能Web服务器（FastAPI、Sanic）。 - 实时通信和流式处理。  注意事项： - asyncio是单线程的，CPU密集型任务会阻塞事件循环。 - 不能在同步函数中直接调用异步函数，需要使用asyncio.run()或loop.run_until_complete()。 - 避免在协程中调用阻塞的同步I/O。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>asyncio异步编程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：并发, asyncio, 协程, 异步编程</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python asyncio异步编程的核心概念、使用方式及适用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">asyncio是Python的异步I/O框架，基于事件循环和协程实现，适合处理大量I/O密集型任务。</div><br><div class="answer-line">核心概念：</div><div class="answer-line">- 协程（coroutine）：使用async def定义的函数，调用后返回协程对象。</div><div class="answer-line">- 事件循环（event loop）：异步程序的核心调度器，负责执行协程和处理I/O事件。</div><div class="answer-line">- await：暂停协程执行，等待异步操作完成，期间事件循环可以执行其他协程。</div><div class="answer-line">- Task：对协程的封装，提供并发执行的能力。</div><div class="answer-line">- Future：代表未来某个时刻的结果。</div><br><div class="answer-line">关键API：</div><div class="answer-line">- asyncio.run()：运行最高层级的入口点。</div><div class="answer-line">- asyncio.create_task()：将协程包装为Task并发执行。</div><div class="answer-line">- asyncio.gather()：并发运行多个协程，等待全部完成。</div><div class="answer-line">- asyncio.wait()：更灵活的并发控制（FIRST_COMPLETED等）。</div><div class="answer-line">- async with / async for：异步上下文管理和异步迭代。</div><br><div class="answer-line">适用场景：</div><div class="answer-line">- 高并发网络请求（HTTP客户端、WebSocket）。</div><div class="answer-line">- 数据库异步操作。</div><div class="answer-line">- 高性能Web服务器（FastAPI、Sanic）。</div><div class="answer-line">- 实时通信和流式处理。</div><br><div class="answer-line">注意事项：</div><div class="answer-line">- asyncio是单线程的，CPU密集型任务会阻塞事件循环。</div><div class="answer-line">- 不能在同步函数中直接调用异步函数，需要使用asyncio.run()或loop.run_until_complete()。</div><div class="answer-line">- 避免在协程中调用阻塞的同步I/O。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import asyncio
+
+async def fetch_data(url, delay):
+    print(f&#039;开始获取 {url}&#039;)
+    await asyncio.sleep(delay)  # 模拟异步I/O
+    print(f&#039;完成获取 {url}&#039;)
+    return f&#039;{url} 的数据&#039;
+
+async def main():
+    # 并发执行多个协程
+    results = await asyncio.gather(
+        fetch_data(&#039;url1&#039;, 2),
+        fetch_data(&#039;url2&#039;, 1),
+        fetch_data(&#039;url3&#039;, 3),
+    )
+    print(results)
+
+    # 使用Task
+    task1 = asyncio.create_task(fetch_data(&#039;url4&#039;, 1))
+    task2 = asyncio.create_task(fetch_data(&#039;url5&#039;, 2))
+    r1 = await task1
+    r2 = await task2
+
+asyncio.run(main())
+# 总耗时约3秒（最慢的任务时间），而非6秒</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

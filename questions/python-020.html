@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python单例模式的实现 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="单例模式确保一个类只有一个实例，并提供全局访问点。  常见实现方式：  1. 使用__new__方法：重写__new__控制实例创建，最常用的方式。简单直观，但__init__会被多次调用。  2. 使用装饰器：通过闭包保存唯一实例。灵活，可以给任意类添加单例行为，但不支持多线程。  3. 使用元类：通过元类控制类的实...">
+<meta name="keywords" content="Python单例模式的实现,Python面试题,设计模式, 单例模式, 创建型模式,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-020.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python单例模式的实现 - Python面试题">
+<meta property="og:description" content="单例模式确保一个类只有一个实例，并提供全局访问点。  常见实现方式：  1. 使用__new__方法：重写__new__控制实例创建，最常用的方式。简单直观，但__init__会被多次调用。  2. 使用装饰器：通过闭包保存唯一实例。灵活，可以给任意类添加单例行为，但不支持多线程。  3. 使用元类：通过元类控制类的实...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-020.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python单例模式的实现",
+    "text": "列举Python中实现单例模式的多种方式，并比较各自的优缺点。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "单例模式确保一个类只有一个实例，并提供全局访问点。  常见实现方式：  1. 使用__new__方法：重写__new__控制实例创建，最常用的方式。简单直观，但__init__会被多次调用。  2. 使用装饰器：通过闭包保存唯一实例。灵活，可以给任意类添加单例行为，但不支持多线程。  3. 使用元类：通过元类控制类的实例化。最Pythonic的方式，但复杂度较高。  4. 使用模块：Python模块天然是单例的（模块只加载一次）。最简单推荐的方式。  5. 使用类变量：在类中保存实例引用。简单但不够优雅。  线程安全： - 以上基本实现都不是线程安全的。 - 需要使用Lock或threading.RLock来保证线程安全。  优缺点比较： - 模块方式最简单，推荐优先使用。 - __new__方式最常用，适合大多数场景。 - 装饰器方式灵活但可能影响isinstance检查。 - 元类方式最强大但复杂度最高。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python单例模式的实现</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：设计模式, 单例模式, 创建型模式</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>列举Python中实现单例模式的多种方式，并比较各自的优缺点。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">单例模式确保一个类只有一个实例，并提供全局访问点。</div><br><div class="answer-line">常见实现方式：</div><br><div class="answer-line"><strong>1. 使用__new__方法：重写__new__控制实例创建，最常用的方式。简单直观，但__init__会被多次调用。</strong></div><br><div class="answer-line"><strong>2. 使用装饰器：通过闭包保存唯一实例。灵活，可以给任意类添加单例行为，但不支持多线程。</strong></div><br><div class="answer-line"><strong>3. 使用元类：通过元类控制类的实例化。最Pythonic的方式，但复杂度较高。</strong></div><br><div class="answer-line"><strong>4. 使用模块：Python模块天然是单例的（模块只加载一次）。最简单推荐的方式。</strong></div><br><div class="answer-line"><strong>5. 使用类变量：在类中保存实例引用。简单但不够优雅。</strong></div><br><div class="answer-line">线程安全：</div><div class="answer-line">- 以上基本实现都不是线程安全的。</div><div class="answer-line">- 需要使用Lock或threading.RLock来保证线程安全。</div><br><div class="answer-line">优缺点比较：</div><div class="answer-line">- 模块方式最简单，推荐优先使用。</div><div class="answer-line">- __new__方式最常用，适合大多数场景。</div><div class="answer-line">- 装饰器方式灵活但可能影响isinstance检查。</div><div class="answer-line">- 元类方式最强大但复杂度最高。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 方式1：__new__（推荐）
+class Singleton:
+    _instance = None
+    _lock = threading.Lock()
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            with cls._lock:
+                if cls._instance is None:  # 双重检查
+                    cls._instance = super().__new__(cls)
+        return cls._instance
+
+# 方式2：装饰器
+def singleton(cls):
+    instances = {}
+    @functools.wraps(cls)
+    def wrapper(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return wrapper
+
+@singleton
+class Database:
+    def __init__(self):
+        self.connection = &#039;connected&#039;
+
+# 方式3：模块（最简单）
+# config.py
+# class Config: pass
+# config = Config()  # 模块级实例，天然单例</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

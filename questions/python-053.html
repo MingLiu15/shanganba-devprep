@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python项目打包与发布 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**现代打包方式（PEP 517/518）：** - pyproject.toml：统一项目配置文件 - 替代setup.py、setup.cfg、requirements.txt  **核心概念：** 1. **wheel（.whl）**：二进制分发格式，安装快 2. **sdist（.tar.gz）**：源码分发格...">
+<meta name="keywords" content="Python项目打包与发布,Python面试题,setuptools, pyproject.toml, pip, wheel, 打包发布,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-053.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python项目打包与发布 - Python面试题">
+<meta property="og:description" content="**现代打包方式（PEP 517/518）：** - pyproject.toml：统一项目配置文件 - 替代setup.py、setup.cfg、requirements.txt  **核心概念：** 1. **wheel（.whl）**：二进制分发格式，安装快 2. **sdist（.tar.gz）**：源码分发格...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-053.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python项目打包与发布",
+    "text": "如何打包和发布Python项目？pyproject.toml和setup.py的区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**现代打包方式（PEP 517/518）：** - pyproject.toml：统一项目配置文件 - 替代setup.py、setup.cfg、requirements.txt  **核心概念：** 1. **wheel（.whl）**：二进制分发格式，安装快 2. **sdist（.tar.gz）**：源码分发格式 3. **build**：构建工具（pip install build）  **pyproject.toml结构：** - [build-system]：构建后端（setuptools/hatch/poetry） - [project]：项目元数据（PEP 621） - [tool.xxx]：工具配置  **发布流程：** 1. 编写pyproject.toml 2. pip install build 3. python -m build 4. twine upload dist/*  **依赖管理：** - dependencies：运行时依赖 - optional-dependencies：可选依赖 - dev-dependencies：开发依赖"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python项目打包与发布</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：setuptools, pyproject.toml, pip, wheel, 打包发布</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何打包和发布Python项目？pyproject.toml和setup.py的区别？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**现代打包方式（PEP 517/518）：**</div><div class="answer-line">- pyproject.toml：统一项目配置文件</div><div class="answer-line">- 替代setup.py、setup.cfg、requirements.txt</div><br><div class="answer-line">**核心概念：**</div><div class="answer-line"><strong>1. **wheel（.whl）**：二进制分发格式，安装快</strong></div><div class="answer-line"><strong>2. **sdist（.tar.gz）**：源码分发格式</strong></div><div class="answer-line"><strong>3. **build**：构建工具（pip install build）</strong></div><br><div class="answer-line">**pyproject.toml结构：**</div><div class="answer-line">- [build-system]：构建后端（setuptools/hatch/poetry）</div><div class="answer-line">- [project]：项目元数据（PEP 621）</div><div class="answer-line">- [tool.xxx]：工具配置</div><br><div class="answer-line">**发布流程：**</div><div class="answer-line"><strong>1. 编写pyproject.toml</strong></div><div class="answer-line"><strong>2. pip install build</strong></div><div class="answer-line"><strong>3. python -m build</strong></div><div class="answer-line"><strong>4. twine upload dist/*</strong></div><br><div class="answer-line">**依赖管理：**</div><div class="answer-line">- dependencies：运行时依赖</div><div class="answer-line">- optional-dependencies：可选依赖</div><div class="answer-line">- dev-dependencies：开发依赖</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># ===== pyproject.toml 示例 =====
+config = &quot;&quot;&quot;
+[build-system]
+requires = [&quot;setuptools&gt;=68.0&quot;, &quot;wheel&quot;]
+build-backend = &quot;setuptools.build_meta&quot;
+
+[project]
+name = &quot;my-package&quot;
+version = &quot;1.0.0&quot;
+description = &quot;My awesome package&quot;
+readme = &quot;README.md&quot;
+license = {text = &quot;MIT&quot;}
+requires-python = &quot;&gt;=3.8&quot;
+authors = [{name = &quot;Author&quot;, email = &quot;author@example.com&quot;}]
+
+# 运行时依赖
+dependencies = [
+    &quot;requests&gt;=2.28.0&quot;,
+    &quot;numpy&gt;=1.20.0&quot;,
+]
+
+# 可选依赖
+[project.optional-dependencies]
+dev = [&quot;pytest&gt;=7.0&quot;, &quot;black&quot;, &quot;mypy&quot;]
+docs = [&quot;sphinx&quot;, &quot;sphinx-rtd-theme&quot;]
+
+# 入口点
+[project.scripts]
+mytool = &quot;my_package.cli:main&quot;
+
+[project.entry-points.&quot;myapp.plugins&quot;]
+plugin1 = &quot;my_package.plugin1&quot;
+
+# setuptools配置
+[tool.setuptools.packages.find]
+where = [&quot;src&quot;]
+&quot;&quot;&quot;
+
+print(config)
+
+# ===== 构建和发布命令 =====
+build_commands = &quot;&quot;&quot;
+# 1. 安装构建工具
+pip install build twine
+
+# 2. 构建包（生成dist/目录下的.whl和.tar.gz）
+python -m build
+
+# 3. 检查包
+twine check dist/*
+
+# 4. 上传到PyPI
+twine upload dist/*
+
+# 5. 安装测试
+pip install my-package  # 从PyPI安装
+pip install ./dist/my_package-1.0.0-py3-none-any.whl  # 从本地安装
+
+# ===== setup.py（旧方式，仍广泛使用）=====
+# from setuptools import setup, find_packages
+# setup(
+#     name=&quot;my-package&quot;,
+#     version=&quot;1.0.0&quot;,
+#     packages=find_packages(where=&quot;src&quot;),
+#     install_requires=[&quot;requests&gt;=2.28.0&quot;],
+#     entry_points={&quot;console_scripts&quot;: [&quot;mytool=my_package.cli:main&quot;]},
+# )
+&quot;&quot;&quot;
+
+print(build_commands)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

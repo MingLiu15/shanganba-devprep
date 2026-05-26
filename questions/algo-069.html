@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字符串哈希（Rolling Hash） - 算法题面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**字符串哈希原理：** 将字符串映射为一个整数（哈希值），利用滚动哈希在O(1)时间内比较子串。  **多项式哈希：** hash(s) = s[0]*base^(n-1) + s[1]*base^(n-2) + ... + s[n-1]*base^0  **滚动哈希：** - 预处理前缀哈希 - 利用前缀哈希快速计...">
+<meta name="keywords" content="字符串哈希（Rolling Hash）,算法题面试题,字符串哈希, Rabin-Karp, 滚动哈希, 哈希冲突,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/algo-069.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串哈希（Rolling Hash） - 算法题面试题">
+<meta property="og:description" content="**字符串哈希原理：** 将字符串映射为一个整数（哈希值），利用滚动哈希在O(1)时间内比较子串。  **多项式哈希：** hash(s) = s[0]*base^(n-1) + s[1]*base^(n-2) + ... + s[n-1]*base^0  **滚动哈希：** - 预处理前缀哈希 - 利用前缀哈希快速计...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/algo-069.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "字符串哈希（Rolling Hash）",
+    "text": "什么是字符串哈希？如何解决哈希冲突？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**字符串哈希原理：** 将字符串映射为一个整数（哈希值），利用滚动哈希在O(1)时间内比较子串。  **多项式哈希：** hash(s) = s[0]*base^(n-1) + s[1]*base^(n-2) + ... + s[n-1]*base^0  **滚动哈希：** - 预处理前缀哈希 - 利用前缀哈希快速计算任意子串哈希 - 时间复杂度O(1)查询  **哈希冲突处理：** 1. 双哈希：使用两个不同模数 2. 自然溢出：利用unsigned long long溢出 3. 选择大质数作为模数"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>字符串哈希（Rolling Hash）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">算法题</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：字符串哈希, Rabin-Karp, 滚动哈希, 哈希冲突</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是字符串哈希？如何解决哈希冲突？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**字符串哈希原理：**</div><div class="answer-line">将字符串映射为一个整数（哈希值），利用滚动哈希在O(1)时间内比较子串。</div><br><div class="answer-line">**多项式哈希：**</div><div class="answer-line">hash(s) = s[0]*base^(n-1) + s[1]*base^(n-2) + ... + s[n-1]*base^0</div><br><div class="answer-line">**滚动哈希：**</div><div class="answer-line">- 预处理前缀哈希</div><div class="answer-line">- 利用前缀哈希快速计算任意子串哈希</div><div class="answer-line">- 时间复杂度O(1)查询</div><br><div class="answer-line">**哈希冲突处理：**</div><div class="answer-line"><strong>1. 双哈希：使用两个不同模数</strong></div><div class="answer-line"><strong>2. 自然溢出：利用unsigned long long溢出</strong></div><div class="answer-line"><strong>3. 选择大质数作为模数</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">class StringHash:
+    def __init__(self, s, base=131, mod=10**18 + 9):
+        self.n = len(s)
+        self.base = base
+        self.mod = mod
+        self.prefix = [0] * (self.n + 1)
+        self.power = [1] * (self.n + 1)
+        for i in range(self.n):
+            self.power[i + 1] = (self.power[i] * base) % mod
+            self.prefix[i + 1] = (self.prefix[i] * base + ord(s[i])) % mod
+    
+    def get_hash(self, left, right):
+        res = (self.prefix[right + 1] - self.prefix[left] * self.power[right - left + 1]) % self.mod
+        return res if res &gt;= 0 else res + self.mod
+
+# Rabin-Karp字符串匹配
+def rabin_karp(text, pattern):
+    if len(pattern) &gt; len(text):
+        return []
+    ph = StringHash(pattern)
+    th = StringHash(text)
+    pattern_hash = ph.get_hash(0, len(pattern) - 1)
+    positions = []
+    for i in range(len(text) - len(pattern) + 1):
+        if th.get_hash(i, i + len(pattern) - 1) == pattern_hash:
+            if text[i:i + len(pattern)] == pattern:
+                positions.append(i)
+    return positions
+
+print(f&quot;匹配位置: {rabin_karp(&#039;ABABDABACDABABCABAB&#039;, &#039;ABABCABAB&#039;)}&quot;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

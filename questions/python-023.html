@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python排序算法（Timsort） - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python使用Timsort排序算法，由Tim Peters于2002年实现，是一种混合稳定的排序算法。  Timsort原理： - 结合了归并排序和插入排序的优点。 - 将数组划分为已排序的连续子序列（称为run）。 - 对较短的run使用插入排序（对小数组效率高）。 - 对已排序的run使用归并排序合并。 - 利...">
+<meta name="keywords" content="Python排序算法（Timsort）,Python面试题,数据结构, 排序, Timsort, 算法,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-023.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python排序算法（Timsort） - Python面试题">
+<meta property="og:description" content="Python使用Timsort排序算法，由Tim Peters于2002年实现，是一种混合稳定的排序算法。  Timsort原理： - 结合了归并排序和插入排序的优点。 - 将数组划分为已排序的连续子序列（称为run）。 - 对较短的run使用插入排序（对小数组效率高）。 - 对已排序的run使用归并排序合并。 - 利...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-023.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python排序算法（Timsort）",
+    "text": "解释Python内置排序算法Timsort的原理及sorted()和list.sort()的使用。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python使用Timsort排序算法，由Tim Peters于2002年实现，是一种混合稳定的排序算法。  Timsort原理： - 结合了归并排序和插入排序的优点。 - 将数组划分为已排序的连续子序列（称为run）。 - 对较短的run使用插入排序（对小数组效率高）。 - 对已排序的run使用归并排序合并。 - 利用数据中已有的有序性（自然有序的run直接使用）。  时间复杂度： - 最好情况（已排序）：O(n)。 - 平均情况：O(n log n)。 - 最坏情况：O(n log n)。 - 空间复杂度：O(n)。  sorted() vs list.sort()： - sorted(iterable)：返回新列表，适用于任何可迭代对象。 - list.sort()：原地排序，返回None，只适用于列表。 - 两者都支持key参数（指定排序键）和reverse参数（降序）。  key参数的使用： - key=str.lower：不区分大小写排序。 - key=lambda x: x[1]：按元组第二个元素排序。 - key=operator.itemgetter(1)：同上但更快。 - key=len：按长度排序。  稳定排序：相等元素的相对顺序不变，可以实现多级排序。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python排序算法（Timsort）</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：数据结构, 排序, Timsort, 算法</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python内置排序算法Timsort的原理及sorted()和list.sort()的使用。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python使用Timsort排序算法，由Tim Peters于2002年实现，是一种混合稳定的排序算法。</div><br><div class="answer-line">Timsort原理：</div><div class="answer-line">- 结合了归并排序和插入排序的优点。</div><div class="answer-line">- 将数组划分为已排序的连续子序列（称为run）。</div><div class="answer-line">- 对较短的run使用插入排序（对小数组效率高）。</div><div class="answer-line">- 对已排序的run使用归并排序合并。</div><div class="answer-line">- 利用数据中已有的有序性（自然有序的run直接使用）。</div><br><div class="answer-line">时间复杂度：</div><div class="answer-line">- 最好情况（已排序）：O(n)。</div><div class="answer-line">- 平均情况：O(n log n)。</div><div class="answer-line">- 最坏情况：O(n log n)。</div><div class="answer-line">- 空间复杂度：O(n)。</div><br><div class="answer-line">sorted() vs list.sort()：</div><div class="answer-line">- sorted(iterable)：返回新列表，适用于任何可迭代对象。</div><div class="answer-line">- list.sort()：原地排序，返回None，只适用于列表。</div><div class="answer-line">- 两者都支持key参数（指定排序键）和reverse参数（降序）。</div><br><div class="answer-line">key参数的使用：</div><div class="answer-line">- key=str.lower：不区分大小写排序。</div><div class="answer-line">- key=lambda x: x[1]：按元组第二个元素排序。</div><div class="answer-line">- key=operator.itemgetter(1)：同上但更快。</div><div class="answer-line">- key=len：按长度排序。</div><br><div class="answer-line">稳定排序：相等元素的相对顺序不变，可以实现多级排序。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># sorted() 返回新列表
+nums = [3, 1, 4, 1, 5, 9, 2, 6]
+print(sorted(nums))           # [1, 1, 2, 3, 4, 5, 6, 9]
+print(sorted(nums, reverse=True))  # [9, 6, 5, 4, 3, 2, 1, 1]
+print(nums)                   # 原列表不变
+
+# list.sort() 原地排序
+nums.sort()
+print(nums)                   # 已排序
+
+# key参数
+students = [(&#039;Tom&#039;, 85), (&#039;Jane&#039;, 92), (&#039;Bob&#039;, 85)]
+print(sorted(students, key=lambda x: x[1]))  # 按分数
+print(sorted(students, key=lambda x: x[0]))  # 按姓名
+
+# 多级排序（利用稳定性）
+students.sort(key=lambda x: x[0])   # 先按姓名
+students.sort(key=lambda x: x[1])   # 再按分数
+# 同分数的保持姓名排序
+
+# 自定义对象排序
+class Person:
+    def __init__(self, name, age): self.name, self.age = name, age
+    def __repr__(self): return f&#039;{self.name}:{self.age}&#039;
+
+people = [Person(&#039;Tom&#039;,25), Person(&#039;Jane&#039;,23)]
+print(sorted(people, key=lambda p: p.age))</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

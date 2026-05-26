@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python内存管理 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python的内存管理分为多个层次：  1. 内存分配器层次： - PyObject_Malloc：Python自己的内存分配器，针对小对象优化。 - pymalloc：管理小于512字节的小对象内存池，减少系统malloc调用。 - 大于512字节的对象直接调用系统malloc/free。  2. 对象缓存机制： -...">
+<meta name="keywords" content="Python内存管理,Python面试题,进阶特性, 内存管理, 垃圾回收,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-017.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python内存管理 - Python面试题">
+<meta property="og:description" content="Python的内存管理分为多个层次：  1. 内存分配器层次： - PyObject_Malloc：Python自己的内存分配器，针对小对象优化。 - pymalloc：管理小于512字节的小对象内存池，减少系统malloc调用。 - 大于512字节的对象直接调用系统malloc/free。  2. 对象缓存机制： -...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-017.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python内存管理",
+    "text": "介绍Python的内存管理机制，包括内存分配、对象池和缓存机制。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python的内存管理分为多个层次：  1. 内存分配器层次： - PyObject_Malloc：Python自己的内存分配器，针对小对象优化。 - pymalloc：管理小于512字节的小对象内存池，减少系统malloc调用。 - 大于512字节的对象直接调用系统malloc/free。  2. 对象缓存机制： - 小整数缓存：-5到256的整数对象被预创建并缓存。 - 字符串intern：短字符串和标识符会被intern，相同内容的字符串共享对象。 - 空元组缓存：()被全局缓存复用。  3. 内存优化技巧： - 使用__slots__减少实例的__dict__开销。 - 使用array模块或numpy代替大列表。 - 使用生成器代替列表处理大数据。 - 使用__slots__、弱引用（weakref）等减少内存占用。  4. 内存分析工具： - sys.getsizeof()：获取对象大小。 - gc.get_objects()：获取所有被GC管理的对象。 - tracemalloc：跟踪内存分配。 - 第三方工具：memory_profiler、objgraph、pympler。  5. 内存泄漏排查： - 循环引用 + __del__方法可能导致内存泄漏。 - 全局变量持有大对象引用。 - 使用weakref打破循环引用。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python内存管理</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：进阶特性, 内存管理, 垃圾回收</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>介绍Python的内存管理机制，包括内存分配、对象池和缓存机制。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python的内存管理分为多个层次：</div><br><div class="answer-line"><strong>1. 内存分配器层次：</strong></div><div class="answer-line">- PyObject_Malloc：Python自己的内存分配器，针对小对象优化。</div><div class="answer-line">- pymalloc：管理小于512字节的小对象内存池，减少系统malloc调用。</div><div class="answer-line">- 大于512字节的对象直接调用系统malloc/free。</div><br><div class="answer-line"><strong>2. 对象缓存机制：</strong></div><div class="answer-line">- 小整数缓存：-5到256的整数对象被预创建并缓存。</div><div class="answer-line">- 字符串intern：短字符串和标识符会被intern，相同内容的字符串共享对象。</div><div class="answer-line">- 空元组缓存：()被全局缓存复用。</div><br><div class="answer-line"><strong>3. 内存优化技巧：</strong></div><div class="answer-line">- 使用__slots__减少实例的__dict__开销。</div><div class="answer-line">- 使用array模块或numpy代替大列表。</div><div class="answer-line">- 使用生成器代替列表处理大数据。</div><div class="answer-line">- 使用__slots__、弱引用（weakref）等减少内存占用。</div><br><div class="answer-line"><strong>4. 内存分析工具：</strong></div><div class="answer-line">- sys.getsizeof()：获取对象大小。</div><div class="answer-line">- gc.get_objects()：获取所有被GC管理的对象。</div><div class="answer-line">- tracemalloc：跟踪内存分配。</div><div class="answer-line">- 第三方工具：memory_profiler、objgraph、pympler。</div><br><div class="answer-line"><strong>5. 内存泄漏排查：</strong></div><div class="answer-line">- 循环引用 + __del__方法可能导致内存泄漏。</div><div class="answer-line">- 全局变量持有大对象引用。</div><div class="answer-line">- 使用weakref打破循环引用。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import sys
+import weakref
+
+# 对象大小
+print(sys.getsizeof(1))          # 28
+print(sys.getsizeof(&#039;hello&#039;))    # 54
+print(sys.getsizeof([]))         # 56
+print(sys.getsizeof({}))         # 64
+
+# 小整数缓存
+a = 100
+b = 100
+print(a is b)  # True
+
+# __slots__ 减少内存
+class Normal:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Slotted:
+    __slots__ = (&#039;x&#039;, &#039;y&#039;)
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+print(sys.getsizeof(Normal(1,2)))   # 56 + __dict__
+print(sys.getsizeof(Slotted(1,2)))  # 48（更小）
+
+# 弱引用
+class Big:
+    pass
+obj = Big()
+ref = weakref.ref(obj)
+print(ref() is obj)  # True
+del obj
+print(ref())         # None（对象已被回收）</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

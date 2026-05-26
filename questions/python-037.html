@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WSGI与ASGI - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="WSGI（Web Server Gateway Interface）： - Python Web服务器网关接口标准 - 同步接口，一次处理一个请求 - 被Django、Flask等框架广泛使用  ASGI（Asynchronous Server Gateway Interface）： - WSGI的异步继任者 - 支持...">
+<meta name="keywords" content="WSGI与ASGI,Python面试题,WSGI, ASGI, Web服务器, 同步, 异步,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-037.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WSGI与ASGI - Python面试题">
+<meta property="og:description" content="WSGI（Web Server Gateway Interface）： - Python Web服务器网关接口标准 - 同步接口，一次处理一个请求 - 被Django、Flask等框架广泛使用  ASGI（Asynchronous Server Gateway Interface）： - WSGI的异步继任者 - 支持...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-037.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "WSGI与ASGI",
+    "text": "解释WSGI和ASGI的区别及应用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "WSGI（Web Server Gateway Interface）： - Python Web服务器网关接口标准 - 同步接口，一次处理一个请求 - 被Django、Flask等框架广泛使用  ASGI（Asynchronous Server Gateway Interface）： - WSGI的异步继任者 - 支持异步、非阻塞IO - 支持HTTP/1.1、HTTP/2、WebSocket - 被FastAPI、Django Channels等使用  对比：  | 特性 | WSGI | ASGI | |------|------|------| | 同步/异步 | 同步 | 异步 | | 协议支持 | HTTP/1.1 | HTTP/1.1, HTTP/2, WebSocket | | 并发处理 | 多进程/线程 | 单线程异步事件循环 | | 适用场景 | 传统Web应用 | 实时应用、高并发 |  选择建议： - 传统CRUD应用→WSGI（Django/Flask） - 实时通信、高并发→ASGI（FastAPI/Django Channels）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>WSGI与ASGI</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：WSGI, ASGI, Web服务器, 同步, 异步</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释WSGI和ASGI的区别及应用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">WSGI（Web Server Gateway Interface）：</div><div class="answer-line">- Python Web服务器网关接口标准</div><div class="answer-line">- 同步接口，一次处理一个请求</div><div class="answer-line">- 被Django、Flask等框架广泛使用</div><br><div class="answer-line">ASGI（Asynchronous Server Gateway Interface）：</div><div class="answer-line">- WSGI的异步继任者</div><div class="answer-line">- 支持异步、非阻塞IO</div><div class="answer-line">- 支持HTTP/1.1、HTTP/2、WebSocket</div><div class="answer-line">- 被FastAPI、Django Channels等使用</div><br><div class="answer-line">对比：</div><br><div class="answer-line">| 特性 | WSGI | ASGI |</div><div class="answer-line">|------|------|------|</div><div class="answer-line">| 同步/异步 | 同步 | 异步 |</div><div class="answer-line">| 协议支持 | HTTP/1.1 | HTTP/1.1, HTTP/2, WebSocket |</div><div class="answer-line">| 并发处理 | 多进程/线程 | 单线程异步事件循环 |</div><div class="answer-line">| 适用场景 | 传统Web应用 | 实时应用、高并发 |</div><br><div class="answer-line">选择建议：</div><div class="answer-line">- 传统CRUD应用→WSGI（Django/Flask）</div><div class="answer-line">- 实时通信、高并发→ASGI（FastAPI/Django Channels）</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># WSGI应用示例（同步）
+def wsgi_application(environ, start_response):
+    # environ: 包含请求信息的字典
+    # start_response: 设置响应状态的回调
+    
+    status = &#039;200 OK&#039;
+    headers = [(&#039;Content-Type&#039;, &#039;text/html&#039;)]
+    start_response(status, headers)
+    
+    return [b&#039;Hello, WSGI!&#039;]
+
+# ASGI应用示例（异步）
+async def asgi_application(scope, receive, send):
+    # scope: 连接信息
+    # receive: 接收消息的异步函数
+    # send: 发送消息的异步函数
+    
+    await send({
+        &#039;type&#039;: &#039;http.response.start&#039;,
+        &#039;status&#039;: 200,
+        &#039;headers&#039;: [[b&#039;content-type&#039;, b&#039;text/html&#039;]],
+    })
+    await send({
+        &#039;type&#039;: &#039;http.response.body&#039;,
+        &#039;body&#039;: b&#039;Hello, ASGI!&#039;,
+    })
+
+# 使用gunicorn运行WSGI
+# $ gunicorn myapp:wsgi_application
+
+# 使用uvicorn运行ASGI
+# $ uvicorn myapp:asgi_application
+
+# FastAPI（基于ASGI）
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get(&quot;/&quot;)
+async def root():
+    return {&quot;message&quot;: &quot;Hello ASGI&quot;}
+
+# Django支持ASGI（asgi.py）
+import os
+from django.core.asgi import get_asgi_application
+os.environ.setdefault(&#039;DJANGO_SETTINGS_MODULE&#039;, &#039;myproject.settings&#039;)
+application = get_asgi_application()</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

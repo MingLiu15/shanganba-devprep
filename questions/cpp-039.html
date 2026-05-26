@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCP三次握手和四次挥手 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="三次握手（建立连接）： 1. SYN：客户端发送SYN包，进入SYN_SENT状态 2. SYN-ACK：服务端回复SYN+ACK，进入SYN_RECV状态 3. ACK：客户端回复ACK，双方进入ESTABLISHED状态  为什么是三次： - 防止历史重复连接初始化 - 同步双方初始序列号 - 确认双方收发能力正常...">
+<meta name="keywords" content="TCP三次握手和四次挥手,C/C++面试题,TCP, 三次握手, 四次挥手, 网络,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-039.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP三次握手和四次挥手 - C/C++面试题">
+<meta property="og:description" content="三次握手（建立连接）： 1. SYN：客户端发送SYN包，进入SYN_SENT状态 2. SYN-ACK：服务端回复SYN+ACK，进入SYN_RECV状态 3. ACK：客户端回复ACK，双方进入ESTABLISHED状态  为什么是三次： - 防止历史重复连接初始化 - 同步双方初始序列号 - 确认双方收发能力正常...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-039.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "TCP三次握手和四次挥手",
+    "text": "解释TCP三次握手和四次挥手的过程及原因。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "三次握手（建立连接）： 1. SYN：客户端发送SYN包，进入SYN_SENT状态 2. SYN-ACK：服务端回复SYN+ACK，进入SYN_RECV状态 3. ACK：客户端回复ACK，双方进入ESTABLISHED状态  为什么是三次： - 防止历史重复连接初始化 - 同步双方初始序列号 - 确认双方收发能力正常  四次挥手（断开连接）： 1. FIN：主动方发送FIN，进入FIN_WAIT_1 2. ACK：被动方回复ACK，进入CLOSE_WAIT；主动方进入FIN_WAIT_2 3. FIN：被动方发送FIN，进入LAST_ACK 4. ACK：主动方回复ACK，进入TIME_WAIT，等待2MSL后关闭  为什么是四次： - TCP全双工，每个方向需要单独关闭 - 被动方可能需要继续发送数据"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>TCP三次握手和四次挥手</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：TCP, 三次握手, 四次挥手, 网络</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释TCP三次握手和四次挥手的过程及原因。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">三次握手（建立连接）：</div><div class="answer-line"><strong>1. SYN：客户端发送SYN包，进入SYN_SENT状态</strong></div><div class="answer-line"><strong>2. SYN-ACK：服务端回复SYN+ACK，进入SYN_RECV状态</strong></div><div class="answer-line"><strong>3. ACK：客户端回复ACK，双方进入ESTABLISHED状态</strong></div><br><div class="answer-line">为什么是三次：</div><div class="answer-line">- 防止历史重复连接初始化</div><div class="answer-line">- 同步双方初始序列号</div><div class="answer-line">- 确认双方收发能力正常</div><br><div class="answer-line">四次挥手（断开连接）：</div><div class="answer-line"><strong>1. FIN：主动方发送FIN，进入FIN_WAIT_1</strong></div><div class="answer-line"><strong>2. ACK：被动方回复ACK，进入CLOSE_WAIT；主动方进入FIN_WAIT_2</strong></div><div class="answer-line"><strong>3. FIN：被动方发送FIN，进入LAST_ACK</strong></div><div class="answer-line"><strong>4. ACK：主动方回复ACK，进入TIME_WAIT，等待2MSL后关闭</strong></div><br><div class="answer-line">为什么是四次：</div><div class="answer-line">- TCP全双工，每个方向需要单独关闭</div><div class="answer-line">- 被动方可能需要继续发送数据</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// socket状态查看（Linux）
+// $ netstat -an | grep TCP
+
+// TCP连接状态枚举
+enum TcpState {
+    CLOSED,
+    LISTEN,
+    SYN_SENT,
+    SYN_RECEIVED,
+    ESTABLISHED,
+    FIN_WAIT_1,
+    FIN_WAIT_2,
+    CLOSE_WAIT,
+    CLOSING,
+    LAST_ACK,
+    TIME_WAIT
+};</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

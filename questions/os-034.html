@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零拷贝技术 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="零拷贝：减少或消除数据在内核空间和用户空间之间的拷贝次数，提高IO性能。  传统IO流程（4次拷贝）： 1. 磁盘→内核缓冲区（DMA拷贝） 2. 内核缓冲区→用户缓冲区（CPU拷贝） 3. 用户缓冲区→Socket缓冲区（CPU拷贝） 4. Socket缓冲区→网卡（DMA拷贝）  零拷贝技术：  1. mmap +...">
+<meta name="keywords" content="零拷贝技术,操作系统面试题,零拷贝, sendfile, mmap, DMA, IO优化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-034.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="零拷贝技术 - 操作系统面试题">
+<meta property="og:description" content="零拷贝：减少或消除数据在内核空间和用户空间之间的拷贝次数，提高IO性能。  传统IO流程（4次拷贝）： 1. 磁盘→内核缓冲区（DMA拷贝） 2. 内核缓冲区→用户缓冲区（CPU拷贝） 3. 用户缓冲区→Socket缓冲区（CPU拷贝） 4. Socket缓冲区→网卡（DMA拷贝）  零拷贝技术：  1. mmap +...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-034.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "零拷贝技术",
+    "text": "什么是零拷贝技术？常见的实现方式有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "零拷贝：减少或消除数据在内核空间和用户空间之间的拷贝次数，提高IO性能。  传统IO流程（4次拷贝）： 1. 磁盘→内核缓冲区（DMA拷贝） 2. 内核缓冲区→用户缓冲区（CPU拷贝） 3. 用户缓冲区→Socket缓冲区（CPU拷贝） 4. Socket缓冲区→网卡（DMA拷贝）  零拷贝技术：  1. mmap + write：    - 将文件映射到用户空间内存    - 减少一次CPU拷贝（共3次拷贝）    - 仍需CPU参与从内核到Socket缓冲区  2. sendfile：    - 在内核空间直接将数据从文件缓冲区传输到Socket    - 减少到2次拷贝（DMA+DMA）    - 带有scatter/gather的sendfile只需2次拷贝+1次描述符传递  3. splice：    - 在两个文件描述符之间移动数据    - 零拷贝，至少一个必须是管道  应用场景： - 静态文件服务器（Nginx） - Kafka消息传输 - 文件上传下载"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>零拷贝技术</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：零拷贝, sendfile, mmap, DMA, IO优化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是零拷贝技术？常见的实现方式有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">零拷贝：减少或消除数据在内核空间和用户空间之间的拷贝次数，提高IO性能。</div><br><div class="answer-line">传统IO流程（4次拷贝）：</div><div class="answer-line"><strong>1. 磁盘→内核缓冲区（DMA拷贝）</strong></div><div class="answer-line"><strong>2. 内核缓冲区→用户缓冲区（CPU拷贝）</strong></div><div class="answer-line"><strong>3. 用户缓冲区→Socket缓冲区（CPU拷贝）</strong></div><div class="answer-line"><strong>4. Socket缓冲区→网卡（DMA拷贝）</strong></div><br><div class="answer-line">零拷贝技术：</div><br><div class="answer-line"><strong>1. mmap + write：</strong></div><div class="answer-line">   - 将文件映射到用户空间内存</div><div class="answer-line">   - 减少一次CPU拷贝（共3次拷贝）</div><div class="answer-line">   - 仍需CPU参与从内核到Socket缓冲区</div><br><div class="answer-line"><strong>2. sendfile：</strong></div><div class="answer-line">   - 在内核空间直接将数据从文件缓冲区传输到Socket</div><div class="answer-line">   - 减少到2次拷贝（DMA+DMA）</div><div class="answer-line">   - 带有scatter/gather的sendfile只需2次拷贝+1次描述符传递</div><br><div class="answer-line"><strong>3. splice：</strong></div><div class="answer-line">   - 在两个文件描述符之间移动数据</div><div class="answer-line">   - 零拷贝，至少一个必须是管道</div><br><div class="answer-line">应用场景：</div><div class="answer-line">- 静态文件服务器（Nginx）</div><div class="answer-line">- Kafka消息传输</div><div class="answer-line">- 文件上传下载</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// 传统方式：read + write（4次拷贝）
+char buf[8192];
+int fd = open(&quot;file.txt&quot;, O_RDONLY);
+while ((n = read(fd, buf, sizeof(buf))) &gt; 0) {
+    write(socket_fd, buf, n);  // 用户空间中转
+}
+
+// mmap方式（3次拷贝）
+void* addr = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, fd, 0);
+write(socket_fd, addr, file_size);
+munmap(addr, file_size);
+
+// sendfile方式（2次拷贝，零拷贝）
+off_t offset = 0;
+sendfile(socket_fd, fd, &amp;offset, file_size);
+
+// splice方式
+int pipefd[2];
+pipe(pipefd);
+splice(fd, &amp;offset, pipefd[1], NULL, file_size, SPLICE_F_MOVE);
+splice(pipefd[0], NULL, socket_fd, NULL, file_size, SPLICE_F_MOVE);
+
+// Nginx配置零拷贝
+// sendfile on;</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

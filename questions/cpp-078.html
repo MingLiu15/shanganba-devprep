@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++11 Lambda表达式详解 - C/C++面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**Lambda语法：** [capture](params) -&gt; ret { body }  **捕获方式：** - []：不捕获任何外部变量 - [=]：值捕获所有外部变量 - [&amp;]：引用捕获所有外部变量 - [this]：捕获当前对象指针 - [x, &amp;y]：混合捕获（x值捕获，y引用捕获）  **关键特性：...">
+<meta name="keywords" content="C++11 Lambda表达式详解,C/C++面试题,C++11, Lambda, 闭包, 函数对象, 现代C++,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/cpp-078.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++11 Lambda表达式详解 - C/C++面试题">
+<meta property="og:description" content="**Lambda语法：** [capture](params) -&gt; ret { body }  **捕获方式：** - []：不捕获任何外部变量 - [=]：值捕获所有外部变量 - [&amp;]：引用捕获所有外部变量 - [this]：捕获当前对象指针 - [x, &amp;y]：混合捕获（x值捕获，y引用捕获）  **关键特性：...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/cpp-078.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "C++11 Lambda表达式详解",
+    "text": "C++11 Lambda表达式的语法和捕获方式有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**Lambda语法：** [capture](params) -&gt; ret { body }  **捕获方式：** - []：不捕获任何外部变量 - [=]：值捕获所有外部变量 - [&amp;]：引用捕获所有外部变量 - [this]：捕获当前对象指针 - [x, &amp;y]：混合捕获（x值捕获，y引用捕获）  **关键特性：** 1. Lambda本质是匿名函数对象（编译器生成仿函数类） 2. 捕获变量存储在闭包中 3. mutable允许修改值捕获的变量 4. 可以转换为std::function  **C++14泛型Lambda：** auto lambda = [](auto x, auto y) { return x + y; };"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>C++11 Lambda表达式详解</h1>
+  <div class="seo-meta">
+    <span class="seo-category">C/C++</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：C++11, Lambda, 闭包, 函数对象, 现代C++</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>C++11 Lambda表达式的语法和捕获方式有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**Lambda语法：**</div><div class="answer-line">[capture](params) -&gt; ret { body }</div><br><div class="answer-line">**捕获方式：**</div><div class="answer-line">- []：不捕获任何外部变量</div><div class="answer-line">- [=]：值捕获所有外部变量</div><div class="answer-line">- [&amp;]：引用捕获所有外部变量</div><div class="answer-line">- [this]：捕获当前对象指针</div><div class="answer-line">- [x, &amp;y]：混合捕获（x值捕获，y引用捕获）</div><br><div class="answer-line">**关键特性：**</div><div class="answer-line"><strong>1. Lambda本质是匿名函数对象（编译器生成仿函数类）</strong></div><div class="answer-line"><strong>2. 捕获变量存储在闭包中</strong></div><div class="answer-line"><strong>3. mutable允许修改值捕获的变量</strong></div><div class="answer-line"><strong>4. 可以转换为std::function</strong></div><br><div class="answer-line">**C++14泛型Lambda：**</div><div class="answer-line">auto lambda = [](auto x, auto y) { return x + y; };</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;functional&gt;
+
+int main() {
+    int x = 10, y = 20;
+    
+    // 1. 基本Lambda
+    auto basic = []() { std::cout &lt;&lt; &quot;Hello Lambda&quot; &lt;&lt; std::endl; };
+    basic();
+    
+    // 2. 带参数和返回值
+    auto add = [](int a, int b) -&gt; int { return a + b; };
+    std::cout &lt;&lt; add(3, 4) &lt;&lt; std::endl;  // 7
+    
+    // 3. 捕获方式
+    // 值捕获（默认const，不可修改）
+    auto capture_val = [=]() { return x + y; };
+    
+    // 引用捕获
+    auto capture_ref = [&amp;]() { x++; y++; return x + y; };
+    
+    // 混合捕获
+    auto capture_mix = [x, &amp;y]() { y++; return x + y; };
+    
+    // mutable：允许修改值捕获的变量
+    auto mutable_lambda = [x]() mutable { x++; return x; };
+    std::cout &lt;&lt; mutable_lambda() &lt;&lt; std::endl;  // 11
+    std::cout &lt;&lt; x &lt;&lt; std::endl;                  // 10（原值不变）
+    
+    // 4. 泛型Lambda（C++14）
+    auto generic = [](auto a, auto b) { return a + b; };
+    std::cout &lt;&lt; generic(1, 2) &lt;&lt; std::endl;      // int
+    std::cout &lt;&lt; generic(1.5, 2.5) &lt;&lt; std::endl;  // double
+    
+    // 5. 实际应用：STL算法
+    std::vector&lt;int&gt; vec = {3, 1, 4, 1, 5, 9};
+    
+    // 排序
+    std::sort(vec.begin(), vec.end(), [](int a, int b) {
+        return a &gt; b;  // 降序
+    });
+    
+    // 查找
+    auto it = std::find_if(vec.begin(), vec.end(), [](int n) {
+        return n &gt; 4;
+    });
+    
+    // 6. 存储在std::function中
+    std::function&lt;int(int, int)&gt; func = [](int a, int b) {
+        return a * b;
+    };
+    
+    return 0;
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

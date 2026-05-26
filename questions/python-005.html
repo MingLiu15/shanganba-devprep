@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生成器（generator）与yield - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="生成器是一种特殊的迭代器，通过函数中包含yield关键字来定义。生成器不会一次性生成所有值，而是按需惰性生成，极大节省内存。  工作原理： - 函数遇到yield时暂停执行，返回yield后面的值。 - 下次调用__next__()时从暂停处继续执行。 - 函数执行完毕或遇到return时抛出StopIteration...">
+<meta name="keywords" content="生成器（generator）与yield,Python面试题,基础语法, 生成器, yield, 惰性求值,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-005.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成器（generator）与yield - Python面试题">
+<meta property="og:description" content="生成器是一种特殊的迭代器，通过函数中包含yield关键字来定义。生成器不会一次性生成所有值，而是按需惰性生成，极大节省内存。  工作原理： - 函数遇到yield时暂停执行，返回yield后面的值。 - 下次调用__next__()时从暂停处继续执行。 - 函数执行完毕或遇到return时抛出StopIteration...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-005.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "生成器（generator）与yield",
+    "text": "解释Python生成器的工作原理、yield关键字的作用及生成器的应用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "生成器是一种特殊的迭代器，通过函数中包含yield关键字来定义。生成器不会一次性生成所有值，而是按需惰性生成，极大节省内存。  工作原理： - 函数遇到yield时暂停执行，返回yield后面的值。 - 下次调用__next__()时从暂停处继续执行。 - 函数执行完毕或遇到return时抛出StopIteration异常。 - yield from可以将生成器委托给另一个生成器。  应用场景： - 处理大数据集时避免内存溢出。 - 实现无限序列（如斐波那契数列）。 - 流式处理文件或网络数据。 - 管道式数据处理。  生成器表达式：类似列表推导式，但使用圆括号，返回生成器对象，更节省内存。  send()方法可以向生成器发送值，throw()可以向生成器抛出异常，close()可以关闭生成器。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>生成器（generator）与yield</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：基础语法, 生成器, yield, 惰性求值</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python生成器的工作原理、yield关键字的作用及生成器的应用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">生成器是一种特殊的迭代器，通过函数中包含yield关键字来定义。生成器不会一次性生成所有值，而是按需惰性生成，极大节省内存。</div><br><div class="answer-line">工作原理：</div><div class="answer-line">- 函数遇到yield时暂停执行，返回yield后面的值。</div><div class="answer-line">- 下次调用__next__()时从暂停处继续执行。</div><div class="answer-line">- 函数执行完毕或遇到return时抛出StopIteration异常。</div><div class="answer-line">- yield from可以将生成器委托给另一个生成器。</div><br><div class="answer-line">应用场景：</div><div class="answer-line">- 处理大数据集时避免内存溢出。</div><div class="answer-line">- 实现无限序列（如斐波那契数列）。</div><div class="answer-line">- 流式处理文件或网络数据。</div><div class="answer-line">- 管道式数据处理。</div><br><div class="answer-line">生成器表达式：类似列表推导式，但使用圆括号，返回生成器对象，更节省内存。</div><br><div class="answer-line">send()方法可以向生成器发送值，throw()可以向生成器抛出异常，close()可以关闭生成器。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 基本生成器
+def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+for num in fibonacci(10):
+    print(num, end=&#039; &#039;)  # 0 1 1 2 3 5 8 13 21 34
+
+# 生成器表达式
+squares = (x**2 for x in range(1000000))  # 不占用大量内存
+print(next(squares))  # 0
+
+# yield from 委托
+def chain(*iterables):
+    for it in iterables:
+        yield from it
+
+list(chain([1,2], [3,4], [5]))  # [1, 2, 3, 4, 5]</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

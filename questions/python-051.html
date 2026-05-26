@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python安全编程 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**常见安全漏洞：** 1. SQL注入：使用参数化查询 2. XSS：转义用户输入 3. CSRF：使用token验证 4. 密码存储：使用哈希而非明文 5. 路径遍历：验证文件路径 6. 代码注入：避免eval/exec  **防护措施：** 1. 参数化查询：防止SQL注入 2. 输入验证：白名单验证 3. 输出...">
+<meta name="keywords" content="Python安全编程,Python面试题,安全, SQL注入, XSS, 密码哈希, 输入验证,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-051.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python安全编程 - Python面试题">
+<meta property="og:description" content="**常见安全漏洞：** 1. SQL注入：使用参数化查询 2. XSS：转义用户输入 3. CSRF：使用token验证 4. 密码存储：使用哈希而非明文 5. 路径遍历：验证文件路径 6. 代码注入：避免eval/exec  **防护措施：** 1. 参数化查询：防止SQL注入 2. 输入验证：白名单验证 3. 输出...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-051.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python安全编程",
+    "text": "Python中如何防止常见的安全漏洞？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**常见安全漏洞：** 1. SQL注入：使用参数化查询 2. XSS：转义用户输入 3. CSRF：使用token验证 4. 密码存储：使用哈希而非明文 5. 路径遍历：验证文件路径 6. 代码注入：避免eval/exec  **防护措施：** 1. 参数化查询：防止SQL注入 2. 输入验证：白名单验证 3. 输出转义：防止XSS 4. 密码哈希：bcrypt/argon2 5. HTTPS：加密传输 6. 最小权限：限制文件/网络访问"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python安全编程</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：安全, SQL注入, XSS, 密码哈希, 输入验证</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>Python中如何防止常见的安全漏洞？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**常见安全漏洞：**</div><div class="answer-line"><strong>1. SQL注入：使用参数化查询</strong></div><div class="answer-line"><strong>2. XSS：转义用户输入</strong></div><div class="answer-line"><strong>3. CSRF：使用token验证</strong></div><div class="answer-line"><strong>4. 密码存储：使用哈希而非明文</strong></div><div class="answer-line"><strong>5. 路径遍历：验证文件路径</strong></div><div class="answer-line"><strong>6. 代码注入：避免eval/exec</strong></div><br><div class="answer-line">**防护措施：**</div><div class="answer-line"><strong>1. 参数化查询：防止SQL注入</strong></div><div class="answer-line"><strong>2. 输入验证：白名单验证</strong></div><div class="answer-line"><strong>3. 输出转义：防止XSS</strong></div><div class="answer-line"><strong>4. 密码哈希：bcrypt/argon2</strong></div><div class="answer-line"><strong>5. HTTPS：加密传输</strong></div><div class="answer-line"><strong>6. 最小权限：限制文件/网络访问</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import bcrypt
+import secrets
+from pathlib import Path
+import re
+import html
+
+# 1. 防止SQL注入 - 使用参数化查询
+import sqlite3
+conn = sqlite3.connect(&#039;users.db&#039;)
+cursor = conn.cursor()
+
+# 错误方式（易受SQL注入）
+# cursor.execute(f&quot;SELECT * FROM users WHERE name = &#039;{user_input}&#039;&quot;)
+
+# 正确方式（参数化查询）
+user_input = &quot;admin&#039; OR &#039;1&#039;=&#039;1&quot;
+cursor.execute(&quot;SELECT * FROM users WHERE name = ?&quot;, (user_input,))
+
+# 2. 密码哈希
+password = b&quot;user_password&quot;
+# 生成盐并哈希
+hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+# 验证密码
+if bcrypt.checkpw(password, hashed):
+    print(&quot;密码正确&quot;)
+
+# 3. 防止XSS - 转义HTML
+user_input = &#039;&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;&#039;
+safe_output = html.escape(user_input)
+print(safe_output)  # &amp;lt;script&amp;gt;alert(&quot;XSS&quot;)&amp;lt;/script&amp;gt;
+
+# 4. 输入验证
+def validate_email(email):
+    pattern = r&#039;^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$&#039;
+    if not re.match(pattern, email):
+        raise ValueError(&quot;无效邮箱格式&quot;)
+    return email
+
+# 5. 防止路径遍历
+def safe_path(base_dir, filename):
+    base = Path(base_dir).resolve()
+    target = (base / filename).resolve()
+    if not str(target).startswith(str(base)):
+        raise ValueError(&quot;非法路径&quot;)
+    return target
+
+# 6. 安全随机数
+token = secrets.token_hex(32)  # 生成安全的随机token
+
+# 7. 避免代码注入
+# 危险
+# eval(user_input)
+# exec(user_code)
+
+# 安全替代
+import ast
+try:
+    result = ast.literal_eval(&quot;[1, 2, 3]&quot;)  # 只解析字面量
+except:
+    print(&quot;无效输入&quot;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

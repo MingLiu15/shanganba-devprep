@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python面试题列表 | 上岸吧DevPrep</title>
+<meta name="description" content="上岸吧DevPrep Python面试题列表，共 58 道题目，涵盖可变类型与不可变类型的区别、深拷贝与浅拷贝的区别、*args和**kwargs的作用、装饰器的原理和应用、生成器（generator）与yield等核心知识点。助你顺利上岸！">
+<meta name="keywords" content="Python面试题,Python八股文,可变类型与不可变类型的区别,深拷贝与浅拷贝的区别,*args和**kwargs的作用,装饰器的原理和应用,生成器（generator）与yield,迭代器与可迭代对象的区别,GIL全局解释器锁,Python垃圾回收机制,编程面试,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python.html">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 8px; color: #e2e8f0; }
+  .seo-count { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
+  .seo-list { list-style: none; }
+  .seo-list li { margin-bottom: 12px; }
+  .seo-list a { color: #00d4ff; text-decoration: none; font-size: 16px; transition: color .25s; }
+  .seo-list a:hover { color: #fff; text-decoration: underline; }
+  .seo-list .diff { font-size: 12px; margin-left: 8px; }
+  .seo-difficulty-easy { color: #00ff88; }
+  .seo-difficulty-medium { color: #ffb800; }
+  .seo-difficulty-hard { color: #ff4757; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python面试题</h1>
+  <div class="seo-count">共 58 道题目</div>
+  <ul class="seo-list">
+    <li><a href="python-001.html">可变类型与不可变类型的区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-002.html">深拷贝与浅拷贝的区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-003.html">*args和**kwargs的作用</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-004.html">装饰器的原理和应用</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-005.html">生成器（generator）与yield</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-006.html">迭代器与可迭代对象的区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-007.html">GIL全局解释器锁</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-008.html">Python垃圾回收机制</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-009.html">is与==的区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-010.html">Python多线程与多进程</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-011.html">类变量与实例变量的区别</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-012.html">__new__与__init__的区别</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-013.html">多继承与MRO（方法解析顺序）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-014.html">常用魔术方法</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-015.html">property装饰器与描述符</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-016.html">闭包（closure）的概念和应用</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-017.html">Python内存管理</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-018.html">上下文管理器（with语句）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-019.html">元类（metaclass）的原理</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-020.html">Python单例模式的实现</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-021.html">dict的底层实现（哈希表）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-022.html">list的底层实现（动态数组）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-023.html">Python排序算法（Timsort）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-024.html">asyncio异步编程</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-025.html">线程池与进程池（concurrent.futures）</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-026.html">多线程共享数据与线程安全</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-027.html">Python异常处理机制</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-028.html">Python包管理与虚拟环境</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-029.html">functools常用工具</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-030.html">Python3新特性</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-031.html">Python中__slots__的作用</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-032.html">Python描述符协议</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-033.html">Python的MRO算法（C3线性化）</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-034.html">collections模块常用类</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-035.html">Python中的鸭子类型</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-036.html">Python的import机制</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-037.html">WSGI与ASGI</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-038.html">LEGB变量查找规则</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-039.html">itertools模块</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-040.html">pathlib模块</a><span class="diff seo-difficulty-easy">[简单]</span></li>
+    <li><a href="python-041.html">typing模块高级用法</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-042.html">序列化pickle与json</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-043.html">正则表达式re模块</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-044.html">单元测试unittest与pytest</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-045.html">Flask框架核心概念</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-046.html">Django框架核心概念</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-047.html">FastAPI异步框架</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-048.html">SQLAlchemy ORM详解</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-049.html">Celery分布式任务队列</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-050.html">Python性能优化技巧</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-051.html">Python安全编程</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-052.html">Python数据科学基础：NumPy与Pandas</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-053.html">Python项目打包与发布</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-054.html">Python标准库：collections与itertools</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-055.html">Python文件与IO操作</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-056.html">Python异常处理深入</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+    <li><a href="python-057.html">Python异步编程：asyncio深入</a><span class="diff seo-difficulty-hard">[困难]</span></li>
+    <li><a href="python-058.html">Python类型提示与类型检查</a><span class="diff seo-difficulty-medium">[中等]</span></li>
+  </ul>
+</div>
+</body>
+</html>

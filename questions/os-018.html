@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IO多路复用 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="IO多路复用：一个线程同时监视多个文件描述符，等待一个或多个IO事件就绪。  适用场景：高并发连接，每个连接大部分时间空闲。  select： - 使用fd_set位图，最大1024个fd - 每次调用拷贝fd_set到内核 - 返回后遍历所有fd - 时间复杂度O(n)  poll： - 使用pollfd数组，无数量...">
+<meta name="keywords" content="IO多路复用,操作系统面试题,select, poll, epoll, IO多路复用, 高并发,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-018.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO多路复用 - 操作系统面试题">
+<meta property="og:description" content="IO多路复用：一个线程同时监视多个文件描述符，等待一个或多个IO事件就绪。  适用场景：高并发连接，每个连接大部分时间空闲。  select： - 使用fd_set位图，最大1024个fd - 每次调用拷贝fd_set到内核 - 返回后遍历所有fd - 时间复杂度O(n)  poll： - 使用pollfd数组，无数量...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-018.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "IO多路复用",
+    "text": "什么是IO多路复用？select、poll、epoll的区别？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "IO多路复用：一个线程同时监视多个文件描述符，等待一个或多个IO事件就绪。  适用场景：高并发连接，每个连接大部分时间空闲。  select： - 使用fd_set位图，最大1024个fd - 每次调用拷贝fd_set到内核 - 返回后遍历所有fd - 时间复杂度O(n)  poll： - 使用pollfd数组，无数量限制 - 仍需拷贝和遍历 - 时间复杂度O(n)  epoll（Linux最优）： - epoll_create创建实例 - epoll_ctl添加/修改/删除fd（红黑树存储） - epoll_wait只返回就绪的fd - 时间复杂度O(就绪fd数) - 支持LT（水平触发）和ET（边缘触发） - 内核中维护就绪链表，无需每次遍历"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>IO多路复用</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：select, poll, epoll, IO多路复用, 高并发</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是IO多路复用？select、poll、epoll的区别？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">IO多路复用：一个线程同时监视多个文件描述符，等待一个或多个IO事件就绪。</div><br><div class="answer-line">适用场景：高并发连接，每个连接大部分时间空闲。</div><br><div class="answer-line">select：</div><div class="answer-line">- 使用fd_set位图，最大1024个fd</div><div class="answer-line">- 每次调用拷贝fd_set到内核</div><div class="answer-line">- 返回后遍历所有fd</div><div class="answer-line">- 时间复杂度O(n)</div><br><div class="answer-line">poll：</div><div class="answer-line">- 使用pollfd数组，无数量限制</div><div class="answer-line">- 仍需拷贝和遍历</div><div class="answer-line">- 时间复杂度O(n)</div><br><div class="answer-line">epoll（Linux最优）：</div><div class="answer-line">- epoll_create创建实例</div><div class="answer-line">- epoll_ctl添加/修改/删除fd（红黑树存储）</div><div class="answer-line">- epoll_wait只返回就绪的fd</div><div class="answer-line">- 时间复杂度O(就绪fd数)</div><div class="answer-line">- 支持LT（水平触发）和ET（边缘触发）</div><div class="answer-line">- 内核中维护就绪链表，无需每次遍历</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// epoll服务端
+int epfd = epoll_create1(0);
+struct epoll_event ev;
+ev.events = EPOLLIN;
+ev.data.fd = listen_fd;
+epoll_ctl(epfd, EPOLL_CTL_ADD, listen_fd, &amp;ev);
+
+struct epoll_event events[1024];
+while (true) {
+    int n = epoll_wait(epfd, events, 1024, -1);
+    for (int i = 0; i &lt; n; i++) {
+        if (events[i].data.fd == listen_fd) {
+            int conn = accept(listen_fd, NULL, NULL);
+            ev.events = EPOLLIN | EPOLLET;
+            ev.data.fd = conn;
+            epoll_ctl(epfd, EPOLL_CTL_ADD, conn, &amp;ev);
+        } else {
+            handle(events[i].data.fd);
+        }
+    }
+}</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

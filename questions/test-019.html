@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口自动化测试框架 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**框架组成：** 1. 配置管理：环境、URL、认证 2. 请求封装：统一请求处理 3. 数据驱动：YAML/JSON测试数据 4. 断言封装：响应验证 5. 报告生成：Allure报告  **目录结构：** ``` api_test/ ├── config/          # 配置文件 ├── api/    ...">
+<meta name="keywords" content="接口自动化测试框架,自动化测试面试题,接口测试, requests, pytest, 框架设计,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-019.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="接口自动化测试框架 - 自动化测试面试题">
+<meta property="og:description" content="**框架组成：** 1. 配置管理：环境、URL、认证 2. 请求封装：统一请求处理 3. 数据驱动：YAML/JSON测试数据 4. 断言封装：响应验证 5. 报告生成：Allure报告  **目录结构：** ``` api_test/ ├── config/          # 配置文件 ├── api/    ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-019.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "接口自动化测试框架",
+    "text": "如何设计接口自动化测试框架？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**框架组成：** 1. 配置管理：环境、URL、认证 2. 请求封装：统一请求处理 3. 数据驱动：YAML/JSON测试数据 4. 断言封装：响应验证 5. 报告生成：Allure报告  **目录结构：** ``` api_test/ ├── config/          # 配置文件 ├── api/             # 接口封装 ├── testcases/       # 测试用例 ├── data/            # 测试数据 ├── utils/           # 工具函数 └── conftest.py      # 共享fixture ```"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>接口自动化测试框架</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-hard">困难</span>
+  </div>
+  <div class="seo-tags">标签：接口测试, requests, pytest, 框架设计</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何设计接口自动化测试框架？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**框架组成：**</div><div class="answer-line"><strong>1. 配置管理：环境、URL、认证</strong></div><div class="answer-line"><strong>2. 请求封装：统一请求处理</strong></div><div class="answer-line"><strong>3. 数据驱动：YAML/JSON测试数据</strong></div><div class="answer-line"><strong>4. 断言封装：响应验证</strong></div><div class="answer-line"><strong>5. 报告生成：Allure报告</strong></div><br><div class="answer-line">**目录结构：**</div><div class="answer-line">```</div><div class="answer-line">api_test/</div><div class="answer-line">├── config/          # 配置文件</div><div class="answer-line">├── api/             # 接口封装</div><div class="answer-line">├── testcases/       # 测试用例</div><div class="answer-line">├── data/            # 测试数据</div><div class="answer-line">├── utils/           # 工具函数</div><div class="answer-line">└── conftest.py      # 共享fixture</div><div class="answer-line">```</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># config/config.py
+import yaml
+
+class Config:
+    def __init__(self, env=&quot;test&quot;):
+        with open(f&quot;config/{env}.yaml&quot;) as f:
+            self.config = yaml.safe_load(f)
+    
+    @property
+    def base_url(self):
+        return self.config[&quot;base_url&quot;]
+
+# api/base.py
+import requests
+
+class BaseAPI:
+    def __init__(self, base_url):
+        self.base_url = base_url
+        self.session = requests.Session()
+    
+    def request(self, method, endpoint, **kwargs):
+        url = f&quot;{self.base_url}{endpoint}&quot;
+        response = self.session.request(method, url, **kwargs)
+        return response
+    
+    def get(self, endpoint, **kwargs):
+        return self.request(&quot;GET&quot;, endpoint, **kwargs)
+    
+    def post(self, endpoint, **kwargs):
+        return self.request(&quot;POST&quot;, endpoint, **kwargs)
+
+# api/user_api.py
+class UserAPI(BaseAPI):
+    def login(self, username, password):
+        return self.post(&quot;/api/login&quot;, json={
+            &quot;username&quot;: username,
+            &quot;password&quot;: password
+        })
+    
+    def get_user(self, user_id):
+        return self.get(f&quot;/api/users/{user_id}&quot;)
+
+# conftest.py
+import pytest
+from config.config import Config
+from api.user_api import UserAPI
+
+@pytest.fixture(scope=&quot;session&quot;)
+def config():
+    return Config()
+
+@pytest.fixture(scope=&quot;session&quot;)
+def user_api(config):
+    return UserAPI(config.base_url)
+
+# testcases/test_user.py
+import pytest
+import allure
+
+@allure.feature(&quot;用户接口&quot;)
+class TestUserAPI:
+    
+    @allure.story(&quot;登录&quot;)
+    def test_login_success(self, user_api):
+        response = user_api.login(&quot;admin&quot;, &quot;password&quot;)
+        assert response.status_code == 200
+        assert response.json()[&quot;token&quot;] is not None
+    
+    @allure.story(&quot;获取用户&quot;)
+    def test_get_user(self, user_api):
+        response = user_api.get_user(1)
+        assert response.status_code == 200
+        assert response.json()[&quot;id&quot;] == 1</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

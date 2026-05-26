@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>*args和**kwargs的作用 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="*args和**kwargs是Python函数的可变参数语法，用于处理不确定数量的参数。  *args：接收任意数量的位置参数，以元组(tuple)形式传递。args只是约定名称，可以用其他名称。 **kwargs：接收任意数量的关键字参数，以字典(dict)形式传递。kwargs也只是约定名称。  使用场景： - 装...">
+<meta name="keywords" content="*args和**kwargs的作用,Python面试题,基础语法, 函数参数, 可变参数,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-003.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="*args和**kwargs的作用 - Python面试题">
+<meta property="og:description" content="*args和**kwargs是Python函数的可变参数语法，用于处理不确定数量的参数。  *args：接收任意数量的位置参数，以元组(tuple)形式传递。args只是约定名称，可以用其他名称。 **kwargs：接收任意数量的关键字参数，以字典(dict)形式传递。kwargs也只是约定名称。  使用场景： - 装...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-003.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "*args和**kwargs的作用",
+    "text": "解释Python中*args和**kwargs的作用、使用场景及注意事项。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "*args和**kwargs是Python函数的可变参数语法，用于处理不确定数量的参数。  *args：接收任意数量的位置参数，以元组(tuple)形式传递。args只是约定名称，可以用其他名称。 **kwargs：接收任意数量的关键字参数，以字典(dict)形式传递。kwargs也只是约定名称。  使用场景： - 装饰器中包装函数时保持原函数签名。 - 函数需要灵活接受不同数量参数时。 - 子类调用父类方法时传递参数。  注意事项： - *args必须在**kwargs之前。 - 函数参数顺序：普通参数、*args、默认参数、**kwargs。 - 单独使用*可以强制后续参数必须以关键字形式传入。 - 可以用*解包列表/元组，用**解包字典传参。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>*args和**kwargs的作用</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-easy">简单</span>
+  </div>
+  <div class="seo-tags">标签：基础语法, 函数参数, 可变参数</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中*args和**kwargs的作用、使用场景及注意事项。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">*args和**kwargs是Python函数的可变参数语法，用于处理不确定数量的参数。</div><br><div class="answer-line">*args：接收任意数量的位置参数，以元组(tuple)形式传递。args只是约定名称，可以用其他名称。</div><div class="answer-line">**kwargs：接收任意数量的关键字参数，以字典(dict)形式传递。kwargs也只是约定名称。</div><br><div class="answer-line">使用场景：</div><div class="answer-line">- 装饰器中包装函数时保持原函数签名。</div><div class="answer-line">- 函数需要灵活接受不同数量参数时。</div><div class="answer-line">- 子类调用父类方法时传递参数。</div><br><div class="answer-line">注意事项：</div><div class="answer-line">- *args必须在**kwargs之前。</div><div class="answer-line">- 函数参数顺序：普通参数、*args、默认参数、**kwargs。</div><div class="answer-line">- 单独使用*可以强制后续参数必须以关键字形式传入。</div><div class="answer-line">- 可以用*解包列表/元组，用**解包字典传参。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">def func(a, b, *args, key=&#039;default&#039;, **kwargs):
+    print(f&#039;a={a}, b={b}&#039;)
+    print(f&#039;args={args}&#039;)
+    print(f&#039;key={key}&#039;)
+    print(f&#039;kwargs={kwargs}&#039;)
+
+func(1, 2, 3, 4, 5, key=&#039;hello&#039;, x=10, y=20)
+# a=1, b=2
+# args=(3, 4, 5)
+# key=hello
+# kwargs={&#039;x&#039;: 10, &#039;y&#039;: 20}
+
+# 解包传参
+args = [1, 2, 3]
+kwargs = {&#039;a&#039;: 10, &#039;b&#039;: 20}
+def show(x, y, z, a, b): print(x, y, z, a, b)
+show(*args, **kwargs)  # 1 2 3 10 20</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

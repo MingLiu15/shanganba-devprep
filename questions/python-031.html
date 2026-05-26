@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python中__slots__的作用 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="__slots__是一个类属性，用于显式声明实例可以拥有的属性名称列表，替代默认的__dict__。  作用： 1. 节省内存：不使用__dict__，每个实例节省约40-50%的内存。 2. 加快属性访问速度：通过描述符直接访问，比字典查找更快。 3. 限制属性：只能赋值__slots__中声明的属性，防止动态添加属...">
+<meta name="keywords" content="Python中__slots__的作用,Python面试题,高级特性, __slots__, 内存优化, 属性限制,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-031.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python中__slots__的作用 - Python面试题">
+<meta property="og:description" content="__slots__是一个类属性，用于显式声明实例可以拥有的属性名称列表，替代默认的__dict__。  作用： 1. 节省内存：不使用__dict__，每个实例节省约40-50%的内存。 2. 加快属性访问速度：通过描述符直接访问，比字典查找更快。 3. 限制属性：只能赋值__slots__中声明的属性，防止动态添加属...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-031.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python中__slots__的作用",
+    "text": "解释Python中__slots__的作用、优缺点及适用场景。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "__slots__是一个类属性，用于显式声明实例可以拥有的属性名称列表，替代默认的__dict__。  作用： 1. 节省内存：不使用__dict__，每个实例节省约40-50%的内存。 2. 加快属性访问速度：通过描述符直接访问，比字典查找更快。 3. 限制属性：只能赋值__slots__中声明的属性，防止动态添加属性。  工作原理： - 定义__slots__后，Python为每个slot创建描述符（descriptor），存储在类级别。 - 实例不再有__dict__（除非__slots__中包含&#039;__dict__&#039;）。 - 属性值直接存储在实例的底层结构中，而非字典中。  注意事项： - 子类不会继承父类的__slots__，除非子类也定义了__slots__。 - 如果父类没有定义__slots__，子类定义__slots__不会节省内存（因为__dict__仍存在）。 - 不能在实例上添加__slots__中未声明的属性。 - __slots__中可以包含&#039;__dict__&#039;和&#039;__weakref__&#039;来保留这些功能。 - 与某些序列化库（如pickle）可能有兼容性问题。  适用场景： - 创建大量实例时（如ORM模型、游戏对象、数据容器）。 - 属性固定的类。 - 内存敏感的应用。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python中__slots__的作用</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：高级特性, __slots__, 内存优化, 属性限制</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>解释Python中__slots__的作用、优缺点及适用场景。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">__slots__是一个类属性，用于显式声明实例可以拥有的属性名称列表，替代默认的__dict__。</div><br><div class="answer-line">作用：</div><div class="answer-line"><strong>1. 节省内存：不使用__dict__，每个实例节省约40-50%的内存。</strong></div><div class="answer-line"><strong>2. 加快属性访问速度：通过描述符直接访问，比字典查找更快。</strong></div><div class="answer-line"><strong>3. 限制属性：只能赋值__slots__中声明的属性，防止动态添加属性。</strong></div><br><div class="answer-line">工作原理：</div><div class="answer-line">- 定义__slots__后，Python为每个slot创建描述符（descriptor），存储在类级别。</div><div class="answer-line">- 实例不再有__dict__（除非__slots__中包含&#039;__dict__&#039;）。</div><div class="answer-line">- 属性值直接存储在实例的底层结构中，而非字典中。</div><br><div class="answer-line">注意事项：</div><div class="answer-line">- 子类不会继承父类的__slots__，除非子类也定义了__slots__。</div><div class="answer-line">- 如果父类没有定义__slots__，子类定义__slots__不会节省内存（因为__dict__仍存在）。</div><div class="answer-line">- 不能在实例上添加__slots__中未声明的属性。</div><div class="answer-line">- __slots__中可以包含&#039;__dict__&#039;和&#039;__weakref__&#039;来保留这些功能。</div><div class="answer-line">- 与某些序列化库（如pickle）可能有兼容性问题。</div><br><div class="answer-line">适用场景：</div><div class="answer-line">- 创建大量实例时（如ORM模型、游戏对象、数据容器）。</div><div class="answer-line">- 属性固定的类。</div><div class="answer-line">- 内存敏感的应用。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">class Normal:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Slotted:
+    __slots__ = (&#039;x&#039;, &#039;y&#039;)
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+import sys
+n = Normal(1, 2)
+s = Slotted(1, 2)
+print(f&#039;Normal: {sys.getsizeof(n)} bytes&#039;)   # 56
+print(f&#039;Slotted: {sys.getsizeof(s)} bytes&#039;)   # 48
+
+# 属性限制
+s.x = 10   # OK
+# s.z = 30  # AttributeError: &#039;Slotted&#039; object has no attribute &#039;z&#039;
+
+# 批量创建时内存差异明显
+import tracemalloc
+tracemalloc.start()
+normal_objs = [Normal(i, i) for i in range(100000)]
+n1, n2 = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+
+tracemalloc.start()
+slotted_objs = [Slotted(i, i) for i in range(100000)]
+s1, s2 = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+print(f&#039;Normal: {n1/1024:.1f}KB, Slotted: {s1/1024:.1f}KB&#039;)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试用例设计方法：场景法 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**场景法定义：** 根据用户实际使用场景来设计测试用例，模拟用户操作流程，验证业务逻辑。  **场景类型：** 1. **基本流（主场景）**：正常流程，用户按预期操作 2. **备选流（备选场景）**：异常或分支流程 3. **异常流**：错误处理流程  **设计步骤：** 1. 分析业务流程，绘制流程图 2. 确...">
+<meta name="keywords" content="测试用例设计方法：场景法,自动化测试面试题,测试设计, 场景法, 流程测试, 业务测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-015.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="测试用例设计方法：场景法 - 自动化测试面试题">
+<meta property="og:description" content="**场景法定义：** 根据用户实际使用场景来设计测试用例，模拟用户操作流程，验证业务逻辑。  **场景类型：** 1. **基本流（主场景）**：正常流程，用户按预期操作 2. **备选流（备选场景）**：异常或分支流程 3. **异常流**：错误处理流程  **设计步骤：** 1. 分析业务流程，绘制流程图 2. 确...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-015.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "测试用例设计方法：场景法",
+    "text": "什么是场景法？如何设计场景测试用例？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**场景法定义：** 根据用户实际使用场景来设计测试用例，模拟用户操作流程，验证业务逻辑。  **场景类型：** 1. **基本流（主场景）**：正常流程，用户按预期操作 2. **备选流（备选场景）**：异常或分支流程 3. **异常流**：错误处理流程  **设计步骤：** 1. 分析业务流程，绘制流程图 2. 确定基本流 3. 识别备选流和异常流 4. 组合场景生成测试用例  **示例：用户登录场景** - 基本流：输入正确账号密码 → 登录成功 - 备选流：账号不存在、密码错误、账号锁定 - 异常流：网络超时、服务不可用"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>测试用例设计方法：场景法</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：测试设计, 场景法, 流程测试, 业务测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是场景法？如何设计场景测试用例？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**场景法定义：**</div><div class="answer-line">根据用户实际使用场景来设计测试用例，模拟用户操作流程，验证业务逻辑。</div><br><div class="answer-line">**场景类型：**</div><div class="answer-line"><strong>1. **基本流（主场景）**：正常流程，用户按预期操作</strong></div><div class="answer-line"><strong>2. **备选流（备选场景）**：异常或分支流程</strong></div><div class="answer-line"><strong>3. **异常流**：错误处理流程</strong></div><br><div class="answer-line">**设计步骤：**</div><div class="answer-line"><strong>1. 分析业务流程，绘制流程图</strong></div><div class="answer-line"><strong>2. 确定基本流</strong></div><div class="answer-line"><strong>3. 识别备选流和异常流</strong></div><div class="answer-line"><strong>4. 组合场景生成测试用例</strong></div><br><div class="answer-line">**示例：用户登录场景**</div><div class="answer-line">- 基本流：输入正确账号密码 → 登录成功</div><div class="answer-line">- 备选流：账号不存在、密码错误、账号锁定</div><div class="answer-line">- 异常流：网络超时、服务不可用</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code"># 场景法测试示例
+import pytest
+
+class UserService:
+    def __init__(self):
+        self.users = {&quot;admin&quot;: &quot;password123&quot;}
+        self.locked_users = set()
+        self.login_attempts = {}
+    
+    def login(self, username, password):
+        # 检查账号是否锁定
+        if username in self.locked_users:
+            raise ValueError(&quot;账号已锁定&quot;)
+        
+        # 检查账号是否存在
+        if username not in self.users:
+            raise ValueError(&quot;账号不存在&quot;)
+        
+        # 检查密码
+        if self.users[username] != password:
+            # 记录失败次数
+            self.login_attempts[username] = self.login_attempts.get(username, 0) + 1
+            if self.login_attempts[username] &gt;= 3:
+                self.locked_users.add(username)
+                raise ValueError(&quot;密码错误次数过多，账号已锁定&quot;)
+            raise ValueError(&quot;密码错误&quot;)
+        
+        # 登录成功，重置失败次数
+        self.login_attempts[username] = 0
+        return {&quot;status&quot;: &quot;success&quot;, &quot;user&quot;: username}
+
+@pytest.fixture
+def user_service():
+    return UserService()
+
+class TestLoginScenarios:
+    &quot;&quot;&quot;登录场景测试&quot;&quot;&quot;
+    
+    def test_basic_flow_success(self, user_service):
+        &quot;&quot;&quot;基本流：正常登录成功&quot;&quot;&quot;
+        result = user_service.login(&quot;admin&quot;, &quot;password123&quot;)
+        assert result[&quot;status&quot;] == &quot;success&quot;
+    
+    def test_alternate_user_not_exist(self, user_service):
+        &quot;&quot;&quot;备选流：账号不存在&quot;&quot;&quot;
+        with pytest.raises(ValueError, match=&quot;账号不存在&quot;):
+            user_service.login(&quot;unknown&quot;, &quot;password&quot;)
+    
+    def test_alternate_wrong_password(self, user_service):
+        &quot;&quot;&quot;备选流：密码错误&quot;&quot;&quot;
+        with pytest.raises(ValueError, match=&quot;密码错误&quot;):
+            user_service.login(&quot;admin&quot;, &quot;wrongpassword&quot;)
+    
+    def test_alternate_account_locked(self, user_service):
+        &quot;&quot;&quot;备选流：账号锁定（连续3次密码错误）&quot;&quot;&quot;
+        # 连续输入错误密码3次
+        for _ in range(3):
+            try:
+                user_service.login(&quot;admin&quot;, &quot;wrong&quot;)
+            except ValueError:
+                pass
+        
+        # 第4次尝试登录
+        with pytest.raises(ValueError, match=&quot;账号已锁定&quot;):
+            user_service.login(&quot;admin&quot;, &quot;password123&quot;)
+    
+    # 组合场景测试
+    @pytest.mark.parametrize(&quot;username,password,expected&quot;, [
+        (&quot;admin&quot;, &quot;password123&quot;, &quot;success&quot;),      # 正常登录
+        (&quot;unknown&quot;, &quot;password&quot;, &quot;账号不存在&quot;),      # 账号不存在
+        (&quot;admin&quot;, &quot;wrong&quot;, &quot;密码错误&quot;),            # 密码错误
+    ])
+    def test_login_scenarios(self, user_service, username, password, expected):
+        if expected == &quot;success&quot;:
+            result = user_service.login(username, password)
+            assert result[&quot;status&quot;] == &quot;success&quot;
+        else:
+            with pytest.raises(ValueError, match=expected):
+                user_service.login(username, password)</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

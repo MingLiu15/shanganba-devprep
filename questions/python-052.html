@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python数据科学基础：NumPy与Pandas - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**NumPy核心：** 1. ndarray：N维数组，同构数据 2. 向量化运算：避免Python循环，底层C实现 3. 广播机制：不同形状数组运算 4. 切片和索引：支持高级索引  **Pandas核心：** 1. Series：一维带标签数组 2. DataFrame：二维表格数据 3. 索引：loc（标签）、...">
+<meta name="keywords" content="Python数据科学基础：NumPy与Pandas,Python面试题,NumPy, Pandas, 数据分析, DataFrame, 数据科学,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-052.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python数据科学基础：NumPy与Pandas - Python面试题">
+<meta property="og:description" content="**NumPy核心：** 1. ndarray：N维数组，同构数据 2. 向量化运算：避免Python循环，底层C实现 3. 广播机制：不同形状数组运算 4. 切片和索引：支持高级索引  **Pandas核心：** 1. Series：一维带标签数组 2. DataFrame：二维表格数据 3. 索引：loc（标签）、...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-052.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python数据科学基础：NumPy与Pandas",
+    "text": "NumPy和Pandas的核心概念和常用操作有哪些？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**NumPy核心：** 1. ndarray：N维数组，同构数据 2. 向量化运算：避免Python循环，底层C实现 3. 广播机制：不同形状数组运算 4. 切片和索引：支持高级索引  **Pandas核心：** 1. Series：一维带标签数组 2. DataFrame：二维表格数据 3. 索引：loc（标签）、iloc（位置） 4. 分组聚合：groupby + agg 5. 合并：merge、join、concat 6. 时间序列：datetime处理  **性能优化：** - 向量化替代循环 - 使用category类型减少内存 - 避免逐行操作（iterrows） - 使用eval/query加速表达式"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python数据科学基础：NumPy与Pandas</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：NumPy, Pandas, 数据分析, DataFrame, 数据科学</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>NumPy和Pandas的核心概念和常用操作有哪些？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**NumPy核心：**</div><div class="answer-line"><strong>1. ndarray：N维数组，同构数据</strong></div><div class="answer-line"><strong>2. 向量化运算：避免Python循环，底层C实现</strong></div><div class="answer-line"><strong>3. 广播机制：不同形状数组运算</strong></div><div class="answer-line"><strong>4. 切片和索引：支持高级索引</strong></div><br><div class="answer-line">**Pandas核心：**</div><div class="answer-line"><strong>1. Series：一维带标签数组</strong></div><div class="answer-line"><strong>2. DataFrame：二维表格数据</strong></div><div class="answer-line"><strong>3. 索引：loc（标签）、iloc（位置）</strong></div><div class="answer-line"><strong>4. 分组聚合：groupby + agg</strong></div><div class="answer-line"><strong>5. 合并：merge、join、concat</strong></div><div class="answer-line"><strong>6. 时间序列：datetime处理</strong></div><br><div class="answer-line">**性能优化：**</div><div class="answer-line">- 向量化替代循环</div><div class="answer-line">- 使用category类型减少内存</div><div class="answer-line">- 避免逐行操作（iterrows）</div><div class="answer-line">- 使用eval/query加速表达式</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import numpy as np
+import pandas as pd
+
+# ===== NumPy基础 =====
+# 创建数组
+arr = np.array([1, 2, 3, 4, 5])
+matrix = np.array([[1, 2], [3, 4]])
+zeros = np.zeros((3, 3))
+ones = np.ones((2, 4))
+rand = np.random.randn(3, 3)
+
+# 向量化运算（比Python循环快10-100倍）
+arr = np.arange(1000000)
+result = arr ** 2 + arr * 2  # 向量化
+
+# 广播机制
+a = np.array([[1], [2], [3]])    # shape (3,1)
+b = np.array([10, 20, 30])       # shape (3,)
+c = a + b  # shape (3,3) 广播
+
+# 切片和索引
+matrix = np.arange(12).reshape(3, 4)
+print(matrix[1:, 2:])      # 第2行起，第3列起
+print(matrix[matrix &gt; 5])  # 布尔索引
+
+# ===== Pandas基础 =====
+# 创建DataFrame
+df = pd.DataFrame({
+    &quot;name&quot;: [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;],
+    &quot;age&quot;: [25, 30, 35],
+    &quot;salary&quot;: [5000, 6000, 7000]
+})
+
+# 查看数据
+print(df.head())
+print(df.describe())
+print(df.info())
+
+# 索引
+print(df.loc[0])           # 按标签
+print(df.iloc[:, 1:3])     # 按位置
+
+# 条件筛选
+high_salary = df[df[&quot;salary&quot;] &gt; 5500]
+
+# 分组聚合
+df.groupby(&quot;age&quot;).agg({&quot;salary&quot;: [&quot;mean&quot;, &quot;sum&quot;, &quot;count&quot;]})
+
+# 合并
+df2 = pd.DataFrame({&quot;name&quot;: [&quot;Alice&quot;, &quot;Bob&quot;], &quot;dept&quot;: [&quot;IT&quot;, &quot;HR&quot;]})
+merged = pd.merge(df, df2, on=&quot;name&quot;, how=&quot;left&quot;)
+
+# 缺失值处理
+df.fillna(0)
+df.dropna()
+
+# 性能优化：避免iterrows
+# 慢：for idx, row in df.iterrows(): ...
+# 快：df[&quot;new_col&quot;] = df[&quot;col1&quot;] * df[&quot;col2&quot;]</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

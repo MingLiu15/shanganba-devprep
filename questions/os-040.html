@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>线程池的实现原理 - 操作系统面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="线程池：预先创建一组线程，复用执行多个任务，避免频繁创建销毁线程的开销。  为什么要用： 1. 减少线程创建/销毁开销 2. 控制并发线程数量 3. 提高响应速度（任务到达立即执行） 4. 便于线程管理  核心组件： 1. 工作线程：执行任务的线程 2. 任务队列：存放待执行的任务 3. 管理者：维护线程池状态  工作...">
+<meta name="keywords" content="线程池的实现原理,操作系统面试题,线程池, 并发, 任务队列, 性能优化,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/os-040.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程池的实现原理 - 操作系统面试题">
+<meta property="og:description" content="线程池：预先创建一组线程，复用执行多个任务，避免频繁创建销毁线程的开销。  为什么要用： 1. 减少线程创建/销毁开销 2. 控制并发线程数量 3. 提高响应速度（任务到达立即执行） 4. 便于线程管理  核心组件： 1. 工作线程：执行任务的线程 2. 任务队列：存放待执行的任务 3. 管理者：维护线程池状态  工作...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/os-040.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "线程池的实现原理",
+    "text": "什么是线程池？为什么要使用线程池？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "线程池：预先创建一组线程，复用执行多个任务，避免频繁创建销毁线程的开销。  为什么要用： 1. 减少线程创建/销毁开销 2. 控制并发线程数量 3. 提高响应速度（任务到达立即执行） 4. 便于线程管理  核心组件： 1. 工作线程：执行任务的线程 2. 任务队列：存放待执行的任务 3. 管理者：维护线程池状态  工作流程： 1. 提交任务到任务队列 2. 空闲线程从队列取任务执行 3. 线程执行完任务后继续等待新任务 4. 队列满时根据策略处理（拒绝/等待）"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>线程池的实现原理</h1>
+  <div class="seo-meta">
+    <span class="seo-category">操作系统</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：线程池, 并发, 任务队列, 性能优化</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>什么是线程池？为什么要使用线程池？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">线程池：预先创建一组线程，复用执行多个任务，避免频繁创建销毁线程的开销。</div><br><div class="answer-line">为什么要用：</div><div class="answer-line"><strong>1. 减少线程创建/销毁开销</strong></div><div class="answer-line"><strong>2. 控制并发线程数量</strong></div><div class="answer-line"><strong>3. 提高响应速度（任务到达立即执行）</strong></div><div class="answer-line"><strong>4. 便于线程管理</strong></div><br><div class="answer-line">核心组件：</div><div class="answer-line"><strong>1. 工作线程：执行任务的线程</strong></div><div class="answer-line"><strong>2. 任务队列：存放待执行的任务</strong></div><div class="answer-line"><strong>3. 管理者：维护线程池状态</strong></div><br><div class="answer-line">工作流程：</div><div class="answer-line"><strong>1. 提交任务到任务队列</strong></div><div class="answer-line"><strong>2. 空闲线程从队列取任务执行</strong></div><div class="answer-line"><strong>3. 线程执行完任务后继续等待新任务</strong></div><div class="answer-line"><strong>4. 队列满时根据策略处理（拒绝/等待）</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">// C++线程池简化实现
+class ThreadPool {
+    std::vector&lt;std::thread&gt; workers;
+    std::queue&lt;std::function&lt;void()&gt;&gt; tasks;
+    std::mutex queueMutex;
+    std::condition_variable condition;
+    bool stop = false;
+public:
+    ThreadPool(size_t threads) {
+        for (size_t i = 0; i &lt; threads; ++i) {
+            workers.emplace_back([this] {
+                while (true) {
+                    std::function&lt;void()&gt; task;
+                    {
+                        std::unique_lock&lt;std::mutex&gt; lock(queueMutex);
+                        condition.wait(lock, [this] {
+                            return stop || !tasks.empty();
+                        });
+                        if (stop &amp;&amp; tasks.empty()) return;
+                        task = std::move(tasks.front());
+                        tasks.pop();
+                    }
+                    task();
+                }
+            });
+        }
+    }
+    
+    template&lt;class F&gt;
+    void enqueue(F&amp;&amp; f) {
+        {
+            std::unique_lock&lt;std::mutex&gt; lock(queueMutex);
+            tasks.emplace(std::forward&lt;F&gt;(f));
+        }
+        condition.notify_one();
+    }
+    
+    ~ThreadPool() {
+        {
+            std::unique_lock&lt;std::mutex&gt; lock(queueMutex);
+            stop = true;
+        }
+        condition.notify_all();
+        for (auto&amp; worker : workers) worker.join();
+    }
+};</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

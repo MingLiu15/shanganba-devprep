@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python垃圾回收机制 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Python使用三种机制协同进行垃圾回收：  1. 引用计数（主要机制）： - 每个对象维护一个引用计数器，被引用时+1，引用解除时-1。 - 计数为0时立即回收内存。 - 优点：实时性好，回收及时。缺点：无法处理循环引用。  2. 标记-清除（处理循环引用）： - 针对可能存在循环引用的容器对象（list、dict、...">
+<meta name="keywords" content="Python垃圾回收机制,Python面试题,内存管理, 垃圾回收, 引用计数, 分代回收,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-008.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python垃圾回收机制 - Python面试题">
+<meta property="og:description" content="Python使用三种机制协同进行垃圾回收：  1. 引用计数（主要机制）： - 每个对象维护一个引用计数器，被引用时+1，引用解除时-1。 - 计数为0时立即回收内存。 - 优点：实时性好，回收及时。缺点：无法处理循环引用。  2. 标记-清除（处理循环引用）： - 针对可能存在循环引用的容器对象（list、dict、...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-008.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Python垃圾回收机制",
+    "text": "详细说明Python的垃圾回收机制，包括引用计数、标记清除和分代回收。",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Python使用三种机制协同进行垃圾回收：  1. 引用计数（主要机制）： - 每个对象维护一个引用计数器，被引用时+1，引用解除时-1。 - 计数为0时立即回收内存。 - 优点：实时性好，回收及时。缺点：无法处理循环引用。  2. 标记-清除（处理循环引用）： - 针对可能存在循环引用的容器对象（list、dict、class instance等）。 - 从根集合出发，标记所有可达对象，未被标记的对象视为垃圾。 - 会暂时将所有容器对象的引用计数复制一份，避免在标记过程中因计数变化导致误判。  3. 分代回收（优化性能）： - 将对象分为三代（0、1、2），新对象在第0代。 - 每代存活过一次GC后晋升到下一代。 - GC频率随代数递减：第0代最频繁，第2代最少。 - 基于经验：大多数对象生命周期短，存活越久的对象越可能继续存活。  可以通过gc模块手动控制：gc.collect()强制回收，gc.set_threshold()设置阈值，gc.disable()禁用自动GC。"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Python垃圾回收机制</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：内存管理, 垃圾回收, 引用计数, 分代回收</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>详细说明Python的垃圾回收机制，包括引用计数、标记清除和分代回收。</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Python使用三种机制协同进行垃圾回收：</div><br><div class="answer-line"><strong>1. 引用计数（主要机制）：</strong></div><div class="answer-line">- 每个对象维护一个引用计数器，被引用时+1，引用解除时-1。</div><div class="answer-line">- 计数为0时立即回收内存。</div><div class="answer-line">- 优点：实时性好，回收及时。缺点：无法处理循环引用。</div><br><div class="answer-line"><strong>2. 标记-清除（处理循环引用）：</strong></div><div class="answer-line">- 针对可能存在循环引用的容器对象（list、dict、class instance等）。</div><div class="answer-line">- 从根集合出发，标记所有可达对象，未被标记的对象视为垃圾。</div><div class="answer-line">- 会暂时将所有容器对象的引用计数复制一份，避免在标记过程中因计数变化导致误判。</div><br><div class="answer-line"><strong>3. 分代回收（优化性能）：</strong></div><div class="answer-line">- 将对象分为三代（0、1、2），新对象在第0代。</div><div class="answer-line">- 每代存活过一次GC后晋升到下一代。</div><div class="answer-line">- GC频率随代数递减：第0代最频繁，第2代最少。</div><div class="answer-line">- 基于经验：大多数对象生命周期短，存活越久的对象越可能继续存活。</div><br><div class="answer-line">可以通过gc模块手动控制：gc.collect()强制回收，gc.set_threshold()设置阈值，gc.disable()禁用自动GC。</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import gc
+import sys
+
+# 引用计数
+a = [1, 2, 3]
+print(sys.getrefcount(a))  # 2 (a + getrefcount参数)
+b = a
+print(sys.getrefcount(a))  # 3
+del b
+print(sys.getrefcount(a))  # 2
+
+# 循环引用
+x = []
+y = []
+x.append(y)
+y.append(x)
+del x, y  # 引用计数不为0，但已无法访问
+
+# 手动触发GC
+gc.collect()  # 回收循环引用
+
+# 查看GC信息
+print(gc.get_threshold())   # (700, 10, 10)
+print(gc.get_count())       # 当前各代对象计数
+
+# 禁用/启用自动GC
+gc.disable()
+gc.enable()</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selenium Web自动化测试 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="Selenium：Web应用自动化测试工具，支持多种浏览器和语言。  核心组件： 1. WebDriver：控制浏览器的驱动 2. WebElement：页面元素的抽象 3. Expected Conditions：等待条件  最佳实践： 1. Page Object模式：将页面封装为类 2. 显式等待：等待元素出现/...">
+<meta name="keywords" content="Selenium Web自动化测试,自动化测试面试题,Selenium, WebDriver, UI自动化, 浏览器测试, Page Object,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/testing-005.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Selenium Web自动化测试 - 自动化测试面试题">
+<meta property="og:description" content="Selenium：Web应用自动化测试工具，支持多种浏览器和语言。  核心组件： 1. WebDriver：控制浏览器的驱动 2. WebElement：页面元素的抽象 3. Expected Conditions：等待条件  最佳实践： 1. Page Object模式：将页面封装为类 2. 显式等待：等待元素出现/...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/testing-005.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Selenium Web自动化测试",
+    "text": "如何使用Selenium进行Web自动化测试？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Selenium：Web应用自动化测试工具，支持多种浏览器和语言。  核心组件： 1. WebDriver：控制浏览器的驱动 2. WebElement：页面元素的抽象 3. Expected Conditions：等待条件  最佳实践： 1. Page Object模式：将页面封装为类 2. 显式等待：等待元素出现/可点击 3. 数据驱动：测试数据与代码分离 4. 截图记录：失败时自动截图 5. 无头模式：CI/CD环境运行"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>Selenium Web自动化测试</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：Selenium, WebDriver, UI自动化, 浏览器测试, Page Object</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何使用Selenium进行Web自动化测试？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">Selenium：Web应用自动化测试工具，支持多种浏览器和语言。</div><br><div class="answer-line">核心组件：</div><div class="answer-line"><strong>1. WebDriver：控制浏览器的驱动</strong></div><div class="answer-line"><strong>2. WebElement：页面元素的抽象</strong></div><div class="answer-line"><strong>3. Expected Conditions：等待条件</strong></div><br><div class="answer-line">最佳实践：</div><div class="answer-line"><strong>1. Page Object模式：将页面封装为类</strong></div><div class="answer-line"><strong>2. 显式等待：等待元素出现/可点击</strong></div><div class="answer-line"><strong>3. 数据驱动：测试数据与代码分离</strong></div><div class="answer-line"><strong>4. 截图记录：失败时自动截图</strong></div><div class="answer-line"><strong>5. 无头模式：CI/CD环境运行</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pytest
+
+# Page Object模式
+class LoginPage:
+    def __init__(self, driver):
+        self.driver = driver
+        self.url = &#039;/login&#039;
+    
+    def open(self):
+        self.driver.get(self.url)
+        return self
+    
+    def login(self, username, password):
+        self.driver.find_element(By.ID, &#039;username&#039;).send_keys(username)
+        self.driver.find_element(By.ID, &#039;password&#039;).send_keys(password)
+        self.driver.find_element(By.ID, &#039;login-btn&#039;).click()
+        return DashboardPage(self.driver)
+
+class DashboardPage:
+    def __init__(self, driver):
+        self.driver = driver
+    
+    def get_welcome_message(self):
+        return self.driver.find_element(By.CLASS_NAME, &#039;welcome&#039;).text
+
+# 测试
+@pytest.fixture
+def driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument(&#039;--headless&#039;)
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(10)
+    yield driver
+    driver.quit()
+
+def test_successful_login(driver):
+    login_page = LoginPage(driver).open()
+    dashboard = login_page.login(&#039;admin&#039;, &#039;password&#039;)
+    assert &#039;Welcome, admin&#039; in dashboard.get_welcome_message()
+
+# 显式等待
+def test_async_content_loads(driver):
+    driver.get(&#039;/async-page&#039;)
+    element = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, &#039;async-content&#039;))
+    )
+    assert element.text == &#039;Loaded!&#039;</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

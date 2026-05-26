@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQLAlchemy ORM详解 - Python面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**核心组件：** 1. Engine：数据库引擎，管理连接池 2. Session：会话，管理对象状态 3. Base：声明基类，模型继承 4. Column：字段定义 5. relationship：关系定义  **关系类型：** - 一对多：ForeignKey + relationship - 多对多：asso...">
+<meta name="keywords" content="SQLAlchemy ORM详解,Python面试题,SQLAlchemy, ORM, 数据库, 会话, 关系映射,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/python-048.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLAlchemy ORM详解 - Python面试题">
+<meta property="og:description" content="**核心组件：** 1. Engine：数据库引擎，管理连接池 2. Session：会话，管理对象状态 3. Base：声明基类，模型继承 4. Column：字段定义 5. relationship：关系定义  **关系类型：** - 一对多：ForeignKey + relationship - 多对多：asso...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/python-048.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "SQLAlchemy ORM详解",
+    "text": "SQLAlchemy ORM的核心概念有哪些？如何定义模型和关系？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**核心组件：** 1. Engine：数据库引擎，管理连接池 2. Session：会话，管理对象状态 3. Base：声明基类，模型继承 4. Column：字段定义 5. relationship：关系定义  **关系类型：** - 一对多：ForeignKey + relationship - 多对多：association_proxy 或中间表 - 一对一：uselist=False  **会话操作：** - add()：添加对象 - commit()：提交事务 - rollback()：回滚 - query()：查询  **查询方法：** - filter()：过滤条件 - join()：连接查询 - order_by()：排序 - limit()/offset()：分页"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>SQLAlchemy ORM详解</h1>
+  <div class="seo-meta">
+    <span class="seo-category">Python</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：SQLAlchemy, ORM, 数据库, 会话, 关系映射</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>SQLAlchemy ORM的核心概念有哪些？如何定义模型和关系？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**核心组件：**</div><div class="answer-line"><strong>1. Engine：数据库引擎，管理连接池</strong></div><div class="answer-line"><strong>2. Session：会话，管理对象状态</strong></div><div class="answer-line"><strong>3. Base：声明基类，模型继承</strong></div><div class="answer-line"><strong>4. Column：字段定义</strong></div><div class="answer-line"><strong>5. relationship：关系定义</strong></div><br><div class="answer-line">**关系类型：**</div><div class="answer-line">- 一对多：ForeignKey + relationship</div><div class="answer-line">- 多对多：association_proxy 或中间表</div><div class="answer-line">- 一对一：uselist=False</div><br><div class="answer-line">**会话操作：**</div><div class="answer-line">- add()：添加对象</div><div class="answer-line">- commit()：提交事务</div><div class="answer-line">- rollback()：回滚</div><div class="answer-line">- query()：查询</div><br><div class="answer-line">**查询方法：**</div><div class="answer-line">- filter()：过滤条件</div><div class="answer-line">- join()：连接查询</div><div class="answer-line">- order_by()：排序</div><div class="answer-line">- limit()/offset()：分页</div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+
+Base = declarative_base()
+
+# 定义模型
+class Department(Base):
+    __tablename__ = &#039;departments&#039;
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100))
+    employees = relationship(&#039;Employee&#039;, back_populates=&#039;department&#039;)
+
+class Employee(Base):
+    __tablename__ = &#039;employees&#039;
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100))
+    dept_id = Column(Integer, ForeignKey(&#039;departments.id&#039;))
+    department = relationship(&#039;Department&#039;, back_populates=&#039;employees&#039;)
+
+# 创建引擎和会话
+engine = create_engine(&#039;sqlite:///company.db&#039;)
+Session = sessionmaker(bind=engine)
+
+# 创建表
+Base.metadata.create_all(engine)
+
+# 使用会话
+session = Session()
+
+# 创建
+dept = Department(name=&#039;Engineering&#039;)
+session.add(dept)
+session.commit()
+
+emp = Employee(name=&#039;Alice&#039;, dept_id=dept.id)
+session.add(emp)
+session.commit()
+
+# 查询
+employees = session.query(Employee).filter(Employee.name.like(&#039;A%&#039;)).all()
+
+# 连接查询
+results = session.query(Employee, Department).join(Department).all()
+
+# 关系访问
+for emp in dept.employees:
+    print(emp.name)
+
+session.close()</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>

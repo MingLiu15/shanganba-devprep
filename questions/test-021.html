@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据库测试与数据验证 - 自动化测试面试题 | 上岸吧DevPrep</title>
+<meta name="description" content="**数据库测试类型：** 1. **Schema测试**：验证表结构、字段类型、约束 2. **数据完整性测试**：主键、外键、唯一性约束 3. **CRUD测试**：增删改查操作验证 4. **事务测试**：ACID特性验证 5. **性能测试**：查询优化、索引效果 6. **迁移测试**：数据库升级、数据迁移  ...">
+<meta name="keywords" content="数据库测试与数据验证,自动化测试面试题,数据库测试, 数据验证, SQL, 事务测试,编程面试,八股文,上岸">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://yourusername.github.io/shanganba/questions/test-021.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库测试与数据验证 - 自动化测试面试题">
+<meta property="og:description" content="**数据库测试类型：** 1. **Schema测试**：验证表结构、字段类型、约束 2. **数据完整性测试**：主键、外键、唯一性约束 3. **CRUD测试**：增删改查操作验证 4. **事务测试**：ACID特性验证 5. **性能测试**：查询优化、索引效果 6. **迁移测试**：数据库升级、数据迁移  ...">
+<meta property="og:url" content="https://yourusername.github.io/shanganba/questions/test-021.html">
+<meta property="og:site_name" content="上岸吧DevPrep">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "数据库测试与数据验证",
+    "text": "如何进行数据库测试？有哪些数据验证方法？",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "**数据库测试类型：** 1. **Schema测试**：验证表结构、字段类型、约束 2. **数据完整性测试**：主键、外键、唯一性约束 3. **CRUD测试**：增删改查操作验证 4. **事务测试**：ACID特性验证 5. **性能测试**：查询优化、索引效果 6. **迁移测试**：数据库升级、数据迁移  **数据验证方法：** - 行数验证：验证操作影响的行数 - 数据内容验证：验证字段值正确性 - 状态验证：验证数据状态变化 - 关联验证：验证外键关联数据  **测试策略：** 1. 使用测试数据库，避免污染生产数据 2. 每个测试后回滚事务 3. 使用Fixture准备测试数据 4. 验证数据库触发器和存储过程"
+    }
+  }]
+}
+</script>
+<style>
+  .seo-page { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  .seo-page h1 { font-size: 24px; margin-bottom: 16px; color: #e2e8f0; }
+  .seo-meta { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .seo-meta span { padding: 4px 12px; border-radius: 20px; font-size: 13px; }
+  .seo-difficulty-easy { background: rgba(0,255,136,.1); color: #00ff88; }
+  .seo-difficulty-medium { background: rgba(255,184,0,.1); color: #ffb800; }
+  .seo-difficulty-hard { background: rgba(255,71,87,.1); color: #ff4757; }
+  .seo-category { background: rgba(0,212,255,.1); color: #00d4ff; }
+  .seo-tags { margin-bottom: 24px; color: #94a3b8; font-size: 14px; }
+  .seo-section { margin-bottom: 32px; }
+  .seo-section h2 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .seo-content { background: #1a1f2e; border: 1px solid #1e293b; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer { background: #1a1f2e; border: 1px solid #1e293b; border-left: 3px solid #00d4ff; border-radius: 10px; padding: 20px; line-height: 2; color: #e2e8f0; font-size: 14px; }
+  .seo-answer .answer-line { padding: 2px 0; }
+  .seo-code { background: #0a0e17; border: 1px solid #1e293b; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: #e6edf3; white-space: pre-wrap; }
+  .seo-back { display: inline-block; margin-top: 24px; padding: 10px 24px; background: #1a1f2e; color: #94a3b8; border: 1px solid #1e293b; border-radius: 10px; text-decoration: none; font-size: 14px; transition: all .25s; }
+  .seo-back:hover { background: #111827; color: #e2e8f0; }
+  .seo-home-link { display: inline-block; margin-bottom: 24px; color: #00d4ff; text-decoration: none; font-size: 14px; }
+  .seo-home-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body style="background:#0a0e17; min-height:100vh;">
+<div class="seo-page">
+  <a href="../index.html" class="seo-home-link">&larr; 返回 上岸吧DevPrep 首页</a>
+  <h1>数据库测试与数据验证</h1>
+  <div class="seo-meta">
+    <span class="seo-category">自动化测试</span>
+    <span class="seo-difficulty-medium">中等</span>
+  </div>
+  <div class="seo-tags">标签：数据库测试, 数据验证, SQL, 事务测试</div>
+  
+  <div class="seo-section">
+    <h2>&#128209; 题目</h2>
+    <div class="seo-content"><p>如何进行数据库测试？有哪些数据验证方法？</p></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128161; 参考答案</h2>
+    <div class="seo-answer"><div class="answer-line">**数据库测试类型：**</div><div class="answer-line"><strong>1. **Schema测试**：验证表结构、字段类型、约束</strong></div><div class="answer-line"><strong>2. **数据完整性测试**：主键、外键、唯一性约束</strong></div><div class="answer-line"><strong>3. **CRUD测试**：增删改查操作验证</strong></div><div class="answer-line"><strong>4. **事务测试**：ACID特性验证</strong></div><div class="answer-line"><strong>5. **性能测试**：查询优化、索引效果</strong></div><div class="answer-line"><strong>6. **迁移测试**：数据库升级、数据迁移</strong></div><br><div class="answer-line">**数据验证方法：**</div><div class="answer-line">- 行数验证：验证操作影响的行数</div><div class="answer-line">- 数据内容验证：验证字段值正确性</div><div class="answer-line">- 状态验证：验证数据状态变化</div><div class="answer-line">- 关联验证：验证外键关联数据</div><br><div class="answer-line">**测试策略：**</div><div class="answer-line"><strong>1. 使用测试数据库，避免污染生产数据</strong></div><div class="answer-line"><strong>2. 每个测试后回滚事务</strong></div><div class="answer-line"><strong>3. 使用Fixture准备测试数据</strong></div><div class="answer-line"><strong>4. 验证数据库触发器和存储过程</strong></div></div>
+  </div>
+  
+  <div class="seo-section">
+    <h2>&#128187; 代码示例</h2>
+    <div class="seo-code">import pytest
+import sqlite3
+from contextlib import contextmanager
+
+@contextmanager
+def get_db_connection():
+    conn = sqlite3.connect(&quot;:memory:&quot;)
+    conn.row_factory = sqlite3.Row
+    yield conn
+    conn.close()
+
+@pytest.fixture
+def db():
+    with get_db_connection() as conn:
+        conn.execute(&quot;CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, email TEXT NOT NULL)&quot;)
+        conn.commit()
+        yield conn
+
+class TestDatabaseOperations:
+    def test_insert_user(self, db):
+        cursor = db.execute(&quot;INSERT INTO users (username, email) VALUES (?, ?)&quot;, (&quot;testuser&quot;, &quot;test@example.com&quot;))
+        db.commit()
+        assert cursor.lastrowid == 1
+        result = db.execute(&quot;SELECT * FROM users WHERE id = ?&quot;, (cursor.lastrowid,)).fetchone()
+        assert result[&quot;username&quot;] == &quot;testuser&quot;
+    
+    def test_unique_constraint(self, db):
+        db.execute(&quot;INSERT INTO users (username, email) VALUES (?, ?)&quot;, (&quot;user1&quot;, &quot;user1@example.com&quot;))
+        db.commit()
+        with pytest.raises(sqlite3.IntegrityError):
+            db.execute(&quot;INSERT INTO users (username, email) VALUES (?, ?)&quot;, (&quot;user1&quot;, &quot;user2@example.com&quot;))
+            db.commit()
+    
+    def test_transaction_rollback(self, db):
+        try:
+            db.execute(&quot;BEGIN&quot;)
+            db.execute(&quot;INSERT INTO users (username, email) VALUES (?, ?)&quot;, (&quot;user2&quot;, &quot;user2@example.com&quot;))
+            raise Exception(&quot;模拟错误&quot;)
+        except:
+            db.rollback()
+        result = db.execute(&quot;SELECT * FROM users WHERE username = ?&quot;, (&quot;user2&quot;,)).fetchone()
+        assert result is None</div>
+  </div>
+  
+  <a href="../index.html" class="seo-back">&larr; 返回题库</a>
+</div>
+</body>
+</html>
