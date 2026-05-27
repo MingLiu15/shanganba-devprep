@@ -102,10 +102,10 @@
         "存储类",
         "作用域"
       ],
-      "content": "说明C++中static关键字在不同场景下的作用。",
-      "answer": "1. 局部静态变量：延长生命周期至程序结束，只初始化一次\n2. 全局静态变量/函数：限制作用域在当前文件（内部链接）\n3. 类静态成员变量：所有对象共享，类外初始化\n4. 类静态成员函数：属于类而非对象，只能访问静态成员",
+      "content": "static 是 C/C++ 中的一个常用关键字，用于控制变量的存储方式和作用范围。它可以修饰局部变量、全局变量和函数。",
+      "answer": "1. static 修饰局部变量：当 static 修饰局部变量时，该变量只会初始化一次，并且在函数调用结束后不会销毁，而是保留其值。\n2. static 修饰全局变量：当 static 修饰全局变量时，该变量的作用域仅限于定义它的文件，其他文件无法访问。\n3. static 修饰函数：当 static 修饰函数时，该函数的作用域仅限于定义它的文件，其他文件无法调用。\n4. C++ 中的 static：在 C++ 中，static 关键字还可以修饰类的成员变量和成员函数。静态成员变量属于整个类，而不是某个具体的对象。静态成员函数没有 this 指针，不能访问非静态成员。\n总结：static 关键字在 C/C++ 中有多种用途，可以修饰局部变量、全局变量和函数。在 C++ 中，还可以修饰类的成员变量和成员函数。使用 static 关键字可以控制变量的存储方式和作用范围，提高代码的可维护性和安全性。",
       "code": {
-        "cpp": "// 局部静态\nvoid foo() {\n    static int count = 0;  // 只初始化一次\n    count++;\n}\n\n// 类静态\nclass MyClass {\npublic:\n    static int shared;     // 声明\n    static void func() {}  // 静态方法\n};\nint MyClass::shared = 0;   // 定义初始化"
+        "cpp": "// static 修饰局部变量\nvoid test() {\n    static int x = 0;  // 只初始化一次，函数结束后不销毁\n    x++;\n}\n\n// static 修饰全局变量\nstatic int a = 10;  // 仅当前文件可访问\n\n// static 修饰函数\nstatic void printHello() {  // 仅当前文件可调用\n    printf(\"Hello\\n\");\n}\n\n// C++ 中 static 修饰类成员\nclass MyClass {\npublic:\n    static int count;          // 静态成员变量，属于整个类\n    static void increment() {  // 静态成员函数，无 this 指针\n        count++;\n    }\n};\nint MyClass::count = 0;  // 类外初始化"
       },
       "frequency": "medium",
       "importance": "medium"
